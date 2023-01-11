@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseObject : MonoBehaviour
+public abstract class BaseObject : MonoBehaviour
 {
-    protected virtual int Direction => 0;
-    protected virtual Vector2 Position => this.transform.position;
+    protected Animator anim;
+    protected bool bulletCanDestroyed;
+    public bool BulletCanDestroyed => bulletCanDestroyed;
 
     private void Awake()
     {
@@ -21,6 +22,12 @@ public class BaseObject : MonoBehaviour
     {
         OnUpdate();
     }
+
+    private void FixedUpdate()
+    {
+        OnFixedUpdate();
+    }
+
 
     private void LateUpdate()
     {
@@ -38,6 +45,11 @@ public class BaseObject : MonoBehaviour
     }
 
     protected virtual void OnUpdate()
+    {
+
+    }
+
+    protected virtual void OnFixedUpdate()
     {
 
     }

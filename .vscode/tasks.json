@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ts-dev",
+            "type": "shell",
+            "command": "npm run dev",
+            "group":"build",
+            "options": {
+                "cwd": "PuerTsProj"
+            }
+        },
+
+        {
+            "label": "ts-build",
+            "type": "shell",
+            "command": "npm run build",
+            "group":"build",
+            "options": {
+                "cwd": "PuerTsProj"
+            }
+        }
+    ]
+}

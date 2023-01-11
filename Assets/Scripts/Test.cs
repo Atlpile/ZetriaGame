@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        // GameManager.Instance.m_SceneLoader.LoadScene("TestScene", () => { });
+
+        // GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "MainPanel");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameManager.Instance.UIManager.HidePanel<MainPanel>();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            GameManager.Instance.UIManager.ShowPanel<MainPanel>();
+            // GameManager.Instance.UIManager.ShowPanelAsync<MainPanel>((MainPanel) => { });
+        }
     }
 }
