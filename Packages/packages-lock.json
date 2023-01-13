@@ -74,15 +74,16 @@
       "dependencies": {}
     },
     "com.unity.2d.tilemap.extras": {
-      "version": "file:D:/Desktop/唐老师Unity/Unity四部曲/3.Unity核心/2d-extras-master/2d-extras-master",
+      "version": "2.2.4",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.unity.modules.tilemap": "1.0.0",
         "com.unity.2d.tilemap": "1.0.0",
         "com.unity.ugui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
-      }
+      },
+      "url": "https://packages.unity.cn"
     },
     "com.unity.burst": {
       "version": "1.6.6",

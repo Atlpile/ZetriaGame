@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : BaseCharacter
 {
-    private E_PlayerStatus _playerStatus;
+    private E_PlayerStatus _status;
 
     [Header("Move")]
     private int _horizontalMove;
@@ -14,8 +14,8 @@ public class PlayerController : BaseCharacter
 
     [Header("Jump")]
     private float _jumpForce = 15f;
-    private int _currentJumpCount;
     private int _extraJumpCount = 1;
+    private int _currentJumpCount;
 
     [Header("Crouch & Stand")]
     private Vector2 _crouchSize;
@@ -34,10 +34,16 @@ public class PlayerController : BaseCharacter
     [Header("Attack")]
     private float _meleeAttackCD = 0.5f;
     private float _currentMeleeAttackCD;
+    private float _gunAttackCD = 0.45f;
+    private float _currentGunAttackCD;
 
     [Header("State")]
     private bool _isCrouch;
     private bool _canStand;
+
+    [Header("Reload")]
+    private float _reloadCD = 0.8f;
+    private float _currentReloadCD;
 
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
@@ -77,6 +83,10 @@ public class PlayerController : BaseCharacter
 
         if (_currentMeleeAttackCD > 0)
             _currentMeleeAttackCD -= Time.deltaTime;
+        if (_currentReloadCD > 0)
+            _currentReloadCD -= Time.deltaTime;
+        if (_currentGunAttackCD > 0)
+            _currentGunAttackCD -= Time.deltaTime;
 
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
         if (isGround)
@@ -84,7 +94,7 @@ public class PlayerController : BaseCharacter
             _currentJumpCount = _extraJumpCount;
             _canStand = CanStand();
 
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKey(KeyCode.S) && _currentReloadCD <= 0)
             {
                 Crouch();
             }
@@ -93,32 +103,35 @@ public class PlayerController : BaseCharacter
                 Stand();
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && _canStand)
+            if (Input.GetKeyDown(KeyCode.Space) && _canStand && _currentReloadCD <= 0 && _currentMeleeAttackCD <= 0)
             {
                 Jump();
             }
-            else if (Input.GetKeyDown(KeyCode.J))
+            else if (Input.GetKeyDown(KeyCode.J) && _currentMeleeAttackCD <= 0 && !_isCrouch)
             {
-                if (_currentMeleeAttackCD <= 0 && !_isCrouch)
-                {
-                    MeleeAttack();
-                    StopMove();
-                }
+                MeleeAttack();
+                StopMove();
             }
-            // else if (Input.GetKeyDown(KeyCode.K))
-            // {
-            //     anim.SetTrigger("GunAttack");
-            //     GunAttack();
-            // }
+            else if (Input.GetKey(KeyCode.K) && _currentGunAttackCD <= 0)
+            {
+                GunAttack(_status);
+            }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
-                _playerStatus = E_PlayerStatus.Pistol;
+                _status = E_PlayerStatus.Pistol;
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
-                _playerStatus = E_PlayerStatus.ShotGun;
+                _status = E_PlayerStatus.ShotGun;
             }
-
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (_currentReloadCD <= 0 && _canStand)
+                {
+                    Reload();
+                    StopMove();
+                }
+            }
         }
         else
         {
@@ -127,13 +140,19 @@ public class PlayerController : BaseCharacter
                 Jump();
                 _currentJumpCount--;
             }
+
+            if (Input.GetKey(KeyCode.K) && _currentGunAttackCD <= 0)
+            {
+                GunAttack(_status);
+            }
+
             Stand();
         }
     }
 
     protected override void OnFixedUpdate()
     {
-        if (_currentMeleeAttackCD <= 0)
+        if (_currentMeleeAttackCD <= 0 && _currentReloadCD <= 0)
         {
             Move();
             Flip();
@@ -146,7 +165,7 @@ public class PlayerController : BaseCharacter
         anim.SetFloat("Vertical", rb2D.velocity.y);
         anim.SetBool("IsGround", isGround);
         anim.SetBool("IsCrouch", _isCrouch);
-        anim.SetInteger("PlayerStatus", (int)_playerStatus);
+        anim.SetInteger("PlayerStatus", (int)_status);
     }
 
 
@@ -196,7 +215,28 @@ public class PlayerController : BaseCharacter
     {
         //TODO:设置攻击范围
         anim.SetTrigger("MeleeAttack");
+        GameManager.Instance.AudioManager.PlayAudio(E_AudioType.Effect, "player_meleeAttack");
         _currentMeleeAttackCD = _meleeAttackCD;
+    }
+
+    private void GunAttack(E_PlayerStatus status)
+    {
+        if (_horizontalMove == 0)
+            anim.SetTrigger("GunAttack");
+        else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
+            anim.SetTrigger("GunAttack");
+
+        switch (status)
+        {
+            case E_PlayerStatus.Pistol:
+                GameManager.Instance.AudioManager.PlayAudio(E_AudioType.Effect, "pistol_fire");
+                break;
+            case E_PlayerStatus.ShotGun:
+                break;
+            case E_PlayerStatus.NPC:
+                break;
+        }
+        _currentGunAttackCD = _gunAttackCD;
     }
 
     private void StopMove()
@@ -205,6 +245,14 @@ public class PlayerController : BaseCharacter
         _horizontalMove = 0;
         rb2D.velocity = new Vector2(0, 0);
     }
+
+    private void Reload()
+    {
+        anim.SetTrigger("Reload");
+        GameManager.Instance.AudioManager.PlayAudio(E_AudioType.Effect, "pistol_reload");
+        _currentReloadCD = _reloadCD;
+    }
+
 
 
     private void OnDrawGizmos()

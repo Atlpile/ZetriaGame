@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public ObjectPool ObjectPool { get; set; }
     public AudioManager AudioManager { get; set; }
     public UIManager UIManager { get; set; }
+    public BinaryDataManager DataManager { get; set; }
 
     private void Awake()
     {
@@ -33,5 +34,6 @@ public class GameManager : MonoBehaviour
         ObjectPool = new ObjectPool();
         AudioManager = new AudioManager();
         UIManager = new UIManager();
+        DataManager = new BinaryDataManager();
     }
 }

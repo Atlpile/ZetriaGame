@@ -1852,7 +1852,7 @@ TextureImporter:
         serializedVersion: 2
         x: 640
         y: 1280
-        width: 128
+        width: 256
         height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1863,27 +1863,6 @@ TextureImporter:
       bones: []
       spriteID: 3e7b21d23ffa2094c9cab41e005e99db
       internalID: -1893269608
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: env_01_86
-      rect:
-        serializedVersion: 2
-        x: 768
-        y: 1280
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c5b259a436bd3d9409fa76511a6bd2d0
-      internalID: 1936889174
       vertices: []
       indices: 
       edges: []

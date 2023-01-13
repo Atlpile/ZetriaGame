@@ -9,7 +9,7 @@ public class Bullet_Pistol : BaseObject
 
     private void OnEnable()
     {
-        Invoke("Hide", _destroyTime);
+        Create();
     }
 
     protected override void OnUpdate()
@@ -17,6 +17,13 @@ public class Bullet_Pistol : BaseObject
         transform.Translate(Vector3.right * Time.deltaTime * _moveSpeed);
     }
 
+
+
+
+    public void Create()
+    {
+        Invoke("Hide", _destroyTime);
+    }
 
     public void Hide()
     {
