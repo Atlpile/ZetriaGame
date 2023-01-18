@@ -11,12 +11,12 @@ public class UIManager
     public UIManager()
     {
         //创建Canvas
-        GameObject canvas = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
+        GameObject canvas = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
         rectCanvas = canvas.transform as RectTransform;
         GameObject.DontDestroyOnLoad(canvas);
 
         //创建EventSystem
-        GameObject eventSystem = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
+        GameObject eventSystem = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
         GameObject.DontDestroyOnLoad(eventSystem);
 
     }
@@ -46,7 +46,7 @@ public class UIManager
         }
         else
         {
-            GameObject uiPrefab = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
+            GameObject uiPrefab = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
 
             //TODO:添加至对象池
 
@@ -77,7 +77,7 @@ public class UIManager
         }
         else
         {
-            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.UI, panelName, (uiPrefab) =>
+            GameManager.Instance.m_ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.UI, panelName, (uiPrefab) =>
             {
                 uiPrefab.transform.SetParent(rectCanvas);
                 uiPrefab.transform.localPosition = Vector3.zero;

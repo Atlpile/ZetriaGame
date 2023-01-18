@@ -21,6 +21,11 @@ public abstract class BaseCharacter : BaseObject
         anim = this.GetComponent<Animator>();
     }
 
+    protected override void OnStart()
+    {
+        base.OnStart();
+    }
+
     protected override void OnUpdate()
     {
         base.OnUpdate();

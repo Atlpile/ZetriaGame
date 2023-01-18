@@ -27,7 +27,7 @@ public class Bullet_Pistol : BaseObject
 
     public void Hide()
     {
-        GameManager.Instance.ObjectPool.ReturnObject(this.gameObject.name, this.gameObject, Release);
+        GameManager.Instance.m_ObjectPool.ReturnObject(this.gameObject.name, this.gameObject, Release);
     }
 
     public void Release()

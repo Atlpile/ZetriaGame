@@ -789,7 +789,6 @@ TextureImporter:
       bomber_reward_12: -1456941141
       bomber_reward_31: -1028497836
       bomber_reward_30: -1045927420
-      bomber_reward_29: 1273864270
       bomber_reward_2: 682706390
       bomber_reward_4: -1101123334
       bomber_reward_5: 1907089874
@@ -816,6 +815,7 @@ TextureImporter:
       bomber_reward_23: -2003280784
       bomber_reward_17: -1688076451
       bomber_reward_18: 1235069384
+      bomber_reward_29: 1273864270
       bomber_reward_10: -1797264509
       bomber_reward_15: -1804882796
   spritePackingTag: 

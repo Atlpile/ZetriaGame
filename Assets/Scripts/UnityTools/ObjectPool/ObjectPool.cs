@@ -79,7 +79,7 @@ public class ObjectPool
         }
         else
         {
-            GameObject gameObject = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name);
+            GameObject gameObject = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name);
             gameObject.name = name;
             return gameObject;
         }
@@ -93,7 +93,7 @@ public class ObjectPool
         }
         else
         {
-            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(path, name, (obj) =>
+            GameManager.Instance.m_ResourcesLoader.LoadAsync<GameObject>(path, name, (obj) =>
             {
                 obj.name = name;
                 loadAction(obj);
@@ -101,19 +101,19 @@ public class ObjectPool
         }
     }
 
-    public void ReturnObject(string name, GameObject obj, UnityAction ReleaseAction)
+    public void ReturnObject(string name, GameObject obj, UnityAction ReleaseAction = null)
     {
         if (poolRoot == null)
             poolRoot = new GameObject("PoolRoot");
 
         if (GameObjectPools.ContainsKey(name))
         {
-            ReleaseAction();
+            ReleaseAction?.Invoke();
             GameObjectPools[name].ReturnObjectInPool(obj);
         }
         else
         {
-            ReleaseAction();
+            ReleaseAction?.Invoke();
             GameObjectPools.Add(name, new PoolInfo(obj, poolRoot));
             GameObjectPools[name].ReturnObjectInPool(obj);
         }

@@ -32,13 +32,13 @@ public class AudioManager
         if (AudioDict.ContainsKey(name))
         {
             //播放从对象池中获取的音频
-            GameObject poolObject = GameManager.Instance.ObjectPool.GetPoolObject(name);
+            GameObject poolObject = GameManager.Instance.m_ObjectPool.GetPoolObject(name);
             PlayAudioClip(name, audioType, AudioDict[name], poolObject, isLoop);
         }
         //字典中没有音频
         else
         {
-            AudioClip audioClip = GameManager.Instance.ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, name);
+            AudioClip audioClip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, name);
             if (audioClip == null)
             {
                 Debug.LogError("AudioManager:未找到该名称的音频：" + name + ",请检查Resources文件夹中的音频是否存在");
@@ -54,7 +54,7 @@ public class AudioManager
             AudioDict.Add(name, audioClip);
 
             //添加音频至对象池
-            GameObject poolObj = GameManager.Instance.ObjectPool.AddObject(name, newAudioObject);
+            GameObject poolObj = GameManager.Instance.m_ObjectPool.AddObject(name, newAudioObject);
 
             //播放音频
             PlayAudioClip(name, audioType, AudioDict[name], newAudioObject, isLoop);
@@ -65,7 +65,7 @@ public class AudioManager
     {
         if (BGMSource != null)
         {
-            GameManager.Instance.ObjectPool.ReturnObject(BGMSource.gameObject.name, BGMSource.gameObject, () => { });
+            GameManager.Instance.m_ObjectPool.ReturnObject(BGMSource.gameObject.name, BGMSource.gameObject, () => { });
             BGMSource = null;
         }
     }
@@ -88,7 +88,7 @@ public class AudioManager
     {
         BGMStop();
         AudioDict.Clear();
-        GameManager.Instance.ObjectPool.ClearPool();
+        GameManager.Instance.m_ObjectPool.ClearPool();
     }
 
     public void SetBGMVolume(float volume)
@@ -136,7 +136,7 @@ public class AudioManager
     private IEnumerator IE_PlayOnceAudio(string name, AudioClip clip, GameObject audioObj)
     {
         yield return new WaitForSeconds(clip.length);
-        GameManager.Instance.ObjectPool.ReturnObject(name, audioObj, () => { });
+        GameManager.Instance.m_ObjectPool.ReturnObject(name, audioObj);
     }
 
 }

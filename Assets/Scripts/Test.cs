@@ -15,11 +15,11 @@ public class Test : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GameManager.Instance.UIManager.HidePanel<MainPanel>();
+            GameManager.Instance.m_UIManager.HidePanel<MainPanel>();
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            GameManager.Instance.UIManager.ShowPanel<MainPanel>();
+            GameManager.Instance.m_UIManager.ShowPanel<MainPanel>();
             // GameManager.Instance.UIManager.ShowPanelAsync<MainPanel>((MainPanel) => { });
         }
     }
