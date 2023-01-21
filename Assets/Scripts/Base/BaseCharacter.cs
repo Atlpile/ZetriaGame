@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseCharacter : BaseObject
+public abstract class BaseCharacter : BaseEntity
 {
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
@@ -10,6 +10,17 @@ public abstract class BaseCharacter : BaseObject
     protected bool isRight;
     protected bool isGround;
 
+
+    private void Update()
+    {
+        OnUpdate();
+        SetAnimatorParameter();
+    }
+
+    private void FixedUpdate()
+    {
+        OnFixedUpdate();
+    }
 
 
     protected override void OnAwake()
@@ -26,12 +37,17 @@ public abstract class BaseCharacter : BaseObject
         base.OnStart();
     }
 
-    protected override void OnUpdate()
+    protected virtual void OnUpdate()
     {
-        base.OnUpdate();
 
-        SetAnimatorParameter();
     }
+
+    protected virtual void OnFixedUpdate()
+    {
+
+    }
+
+
 
     protected virtual void SetAnimatorParameter()
     {

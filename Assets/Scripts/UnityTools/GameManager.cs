@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public InputManager m_InputManager { get; set; }
     public EventManager m_EventManager { get; set; }
 
+    public AmmoManager m_AmmoManager { get; set; }
+
     private void Awake()
     {
         if (s_instance != null)
@@ -40,10 +42,28 @@ public class GameManager : MonoBehaviour
         m_InputManager = new InputManager();
         m_EventManager = new EventManager();
 
+        m_AmmoManager = new AmmoManager();
+
     }
 
-    private void Update()
+    private void Start()
     {
-        GameManager.Instance.m_InputManager.UpdateInput();
+        m_UIManager.ShowPanel<GamePanel>();
     }
+
+
+    // private void Update()
+    // {
+    //     // GameManager.Instance.m_InputManager.UpdateInput();
+
+    //     if (Input.GetMouseButtonDown(0))
+    //     {
+    //         GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
+    //     }
+    //     else if (Input.GetMouseButtonDown(1))
+    //     {
+    //         GameManager.Instance.m_UIManager.ShowPanel<GamePanel>();
+    //         // GameManager.Instance.UIManager.ShowPanelAsync<MainPanel>((MainPanel) => { });
+    //     }
+    // }
 }

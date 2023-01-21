@@ -17,7 +17,7 @@ public class ResourceLoader
         };
     }
 
-    public T Load<T>(E_ResourcesPath path, string name, bool canCreateObject = true) where T : UnityEngine.Object
+    public T Load<T>(E_ResourcesPath path, string name, bool canCreateEntity = true) where T : UnityEngine.Object
     {
         T resources = Resources.Load<T>(ResourcePath[path] + name);
 
@@ -27,18 +27,18 @@ public class ResourceLoader
             return null;
         }
 
-        if (resources is GameObject && canCreateObject)
+        if (resources is GameObject && canCreateEntity)
             return GameObject.Instantiate(resources);
         else
             return resources;
     }
 
-    public void LoadAsync<T>(E_ResourcesPath path, string name, UnityAction<T> asyncCallBack, bool canCreateObject = true) where T : UnityEngine.Object
+    public void LoadAsync<T>(E_ResourcesPath path, string name, UnityAction<T> asyncCallBack, bool canCreateEntity = true) where T : UnityEngine.Object
     {
-        GameManager.Instance.StartCoroutine(IE_LoadAsync(path, name, asyncCallBack, canCreateObject));
+        GameManager.Instance.StartCoroutine(IE_LoadAsync(path, name, asyncCallBack, canCreateEntity));
     }
 
-    private IEnumerator IE_LoadAsync<T>(E_ResourcesPath path, string name, UnityAction<T> asyncCallBack, bool canCreateObject) where T : UnityEngine.Object
+    private IEnumerator IE_LoadAsync<T>(E_ResourcesPath path, string name, UnityAction<T> asyncCallBack, bool canCreateEntity) where T : UnityEngine.Object
     {
         ResourceRequest resources = Resources.LoadAsync<T>(ResourcePath[path] + name);
         yield return resources;
@@ -48,7 +48,7 @@ public class ResourceLoader
             Debug.LogError("ResourcesLoader: 未找到该资源" + name + ", 请检查Resources文件夹中是否有该资源");
         }
 
-        if (resources.asset is GameObject && canCreateObject)
+        if (resources.asset is GameObject && canCreateEntity)
             asyncCallBack(GameObject.Instantiate(resources.asset) as T);
         else
             asyncCallBack(resources.asset as T);

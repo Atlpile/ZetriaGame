@@ -19,9 +19,9 @@ public class SleepWomen : BaseCharacter
     {
         base.OnUpdate();
 
-        if (_canPickUp && Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.E) && _canPickUp)
         {
-            GameManager.Instance.m_EventManager.EventTrigger("PickUpNPC");
+            GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpNPC);
             Hide();
         }
     }

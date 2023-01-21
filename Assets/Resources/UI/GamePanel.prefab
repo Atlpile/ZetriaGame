@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 2133771628466012463}
   - component: {fileID: 2133771628466012448}
   m_Layer: 5
-  m_Name: Pointer
+  m_Name: PistolAmmoPointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 2133771628562597815}
   - component: {fileID: 2133771628562597768}
   m_Layer: 5
-  m_Name: ShotGunAmmo
+  m_Name: ShoutGunAmmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 2133771628719239136}
   - component: {fileID: 2133771628719239150}
   - component: {fileID: 2133771628719239151}
+  - component: {fileID: -7188251730635361964}
   m_Layer: 5
   m_Name: GamePanel
   m_TagString: Untagged
@@ -465,6 +466,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-7188251730635361964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133771628719239137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 341064aa9cb867a40a89af667c5e210f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PistolAmmoCount: {fileID: 0}
+  ShoutGunAmmoCount: {fileID: 0}
+  HealthSlider: {fileID: 0}
+  PistolAmmoPointer: {fileID: 0}
+  ShoutGunAmmoPointer: {fileID: 0}
 --- !u!1 &2133771628806275693
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,7 +495,7 @@ GameObject:
   - component: {fileID: 2133771628806275690}
   - component: {fileID: 2133771628806275691}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: ShoutGunAmmoCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -633,7 +651,7 @@ GameObject:
   - component: {fileID: 2133771629088761700}
   - component: {fileID: 2133771629088761701}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: PistolAmmoCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -790,12 +808,12 @@ GameObject:
   - component: {fileID: 2133771629893450688}
   - component: {fileID: 2133771629893450689}
   m_Layer: 5
-  m_Name: Pointer
+  m_Name: ShoutGunAmmoPointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2133771629893450690
 RectTransform:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet_Pistol : BaseObject
+public class PistolBullet : BaseEntity
 {
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _destroyTime = 1f;
@@ -12,12 +12,10 @@ public class Bullet_Pistol : BaseObject
         Create();
     }
 
-    protected override void OnUpdate()
+    private void Update()
     {
         transform.Translate(Vector3.right * Time.deltaTime * _moveSpeed);
     }
-
-
 
 
     public void Create()

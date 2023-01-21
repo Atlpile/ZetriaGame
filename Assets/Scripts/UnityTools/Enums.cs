@@ -8,3 +8,12 @@ public enum E_InputType
     Pause
 
 }
+public enum E_EventType
+{
+    PickUpNPC,
+    InitGamePanelUI,
+    UpdatePistolAmmo, UpdateShotGunAmmo,
+    PlayerFire, PlayerReload
+
+}
+public enum E_AmmoType { Pistol, ShotGun }

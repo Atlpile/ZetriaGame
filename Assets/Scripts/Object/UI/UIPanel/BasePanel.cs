@@ -10,13 +10,13 @@ public class BasePanel : MonoBehaviour
 
     protected virtual void Awake()
     {
-        GetChildrenUIComponent<Button>();
-        GetChildrenUIComponent<Image>();
-        GetChildrenUIComponent<Text>();
-        GetChildrenUIComponent<Toggle>();
-        GetChildrenUIComponent<Slider>();
-        GetChildrenUIComponent<ScrollRect>();
-        GetChildrenUIComponent<InputField>();
+        // GetChildrenUIComponent<Button>();
+        // GetChildrenUIComponent<Image>();
+        // GetChildrenUIComponent<Text>();
+        // GetChildrenUIComponent<Toggle>();
+        // GetChildrenUIComponent<Slider>();
+        // GetChildrenUIComponent<ScrollRect>();
+        // GetChildrenUIComponent<InputField>();
     }
 
     public virtual void ShowSelf()
@@ -39,7 +39,22 @@ public class BasePanel : MonoBehaviour
 
     }
 
-    protected void GetChildrenUIComponent<T>() where T : UIBehaviour
+    protected T GetUIComponent<T>(string componentName) where T : UIBehaviour
+    {
+        if (UIComponentDic.ContainsKey(componentName))
+        {
+            for (int i = 0; i < UIComponentDic[componentName].Count; ++i)
+            {
+                if (UIComponentDic[componentName][i] is T)
+                    return UIComponentDic[componentName][i] as T;
+            }
+        }
+
+        Debug.LogError("该面板中没有名为" + componentName + "的组件,请检查UI组件名称是否正确");
+        return null;
+    }
+
+    protected void GetChildrenAllUIComponent<T>() where T : UIBehaviour
     {
         T[] components = this.GetComponentsInChildren<T>();
         for (int i = 0; i < components.Length; i++)
@@ -69,5 +84,10 @@ public class BasePanel : MonoBehaviour
                 });
             }
         }
+    }
+
+    public void ClearUIComponentDic()
+    {
+        UIComponentDic.Clear();
     }
 }

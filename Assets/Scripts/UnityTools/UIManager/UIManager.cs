@@ -18,29 +18,15 @@ public class UIManager
         //创建EventSystem
         GameObject eventSystem = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
         GameObject.DontDestroyOnLoad(eventSystem);
-
     }
 
     public T ShowPanel<T>() where T : BasePanel
     {
         string panelName = typeof(T).Name;
-        // if (PanelDic.ContainsKey(panelName))
-        // {
-        //     if (GameManager.Instance.ObjectPool.GetPoolStackCount(panelName) != 0)
-        //     {
-        //         GameObject poolPrefab = GameManager.Instance.ObjectPool.GetPoolObject(panelName);
-        //         poolPrefab.transform.SetParent(rectCanvas);
-        //         return poolPrefab as T;
-        //     }
-        //     else
-        //     {
-        //         Debug.LogWarning("UIManager:场景中存在该Panel");
-        //         return null;
-        //     }
-        // }
         if (PanelDic.ContainsKey(panelName))
         {
-            //TODO:从对象池中取出
+            // //TODO:从对象池中取出
+            // GameManager.Instance.m_ObjectPool.GetObject(panelName, rectCanvas);
             Debug.LogWarning("UIManager:场景中存在该Panel");
             return PanelDic[panelName] as T;
         }
@@ -48,13 +34,15 @@ public class UIManager
         {
             GameObject uiPrefab = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
 
-            //TODO:添加至对象池
 
             uiPrefab.transform.SetParent(rectCanvas);
             uiPrefab.transform.localPosition = Vector3.zero;
             uiPrefab.transform.localScale = Vector3.one;
             (uiPrefab.transform as RectTransform).offsetMax = Vector2.zero;
             (uiPrefab.transform as RectTransform).offsetMin = Vector2.zero;
+
+            // //TODO:添加至对象池
+            // GameManager.Instance.m_ObjectPool.AddObject(uiPrefab, panelName);
 
             T panel = uiPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
@@ -108,7 +96,7 @@ public class UIManager
         {
             PanelDic[panelName].HideSelf();
             //TODO：替换为对象池
-            // GameManager.Instance.ObjectPool.ReturnObject(panelName, PanelDic[panelName].gameObject, () => { });
+            // GameManager.Instance.m_ObjectPool.ReturnObject(panelName, PanelDic[panelName].gameObject);
             Object.Destroy(PanelDic[panelName].gameObject);
             PanelDic.Remove(panelName);
         }

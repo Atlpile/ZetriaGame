@@ -38,6 +38,35 @@ public class PoolInfo
         return newObj;
     }
 
+
+    public void ReturnObjectInPool(GameObject obj, RectTransform parent)
+    {
+        obj.SetActive(false);
+        poolStack.Push(obj);
+    }
+
+    public GameObject GetObjectInPool(RectTransform parent)
+    {
+        GameObject gameObject = poolStack.Pop();
+        gameObject.SetActive(true);
+
+        if (parent != null)
+            gameObject.transform.SetParent(parent);
+
+        return gameObject;
+    }
+
+    public GameObject CreateNewObjectFromPool(Transform parent)
+    {
+        GameObject newObj = GameObject.Instantiate(childrenObject, fatherObject.transform);
+        newObj.name = childrenObject.name;
+
+        if (parent != null)
+            newObj.transform.SetParent(parent);
+
+        return newObj;
+    }
+
 }
 
 public class ObjectPool
@@ -49,6 +78,48 @@ public class ObjectPool
     {
         GameObjectPools = new Dictionary<string, PoolInfo>();
     }
+
+
+    public void AddObject(GameObject obj, string name)
+    {
+        if (!GameObjectPools.ContainsKey(name))
+        {
+            if (poolRoot == null)
+                poolRoot = new GameObject("PoolRoot");
+
+            obj.name = name;
+            GameObjectPools.Add(name, new PoolInfo(obj, poolRoot));
+        }
+    }
+
+    public void ReturnObject(string name, GameObject obj)
+    {
+        if (GameObjectPools.ContainsKey(name))
+        {
+            GameObjectPools[name].ReturnObjectInPool(obj);
+        }
+        else
+        {
+            if (poolRoot == null)
+                poolRoot = new GameObject("PoolRoot");
+
+            GameObjectPools.Add(name, new PoolInfo(obj, poolRoot));
+            GameObjectPools[name].ReturnObjectInPool(obj);
+        }
+    }
+
+    public GameObject GetObject(string name, RectTransform parent = null)
+    {
+        if (GameObjectPools.ContainsKey(name) && GameObjectPools[name].poolStack.Count > 0)
+        {
+            return GameObjectPools[name].GetObjectInPool(parent);
+        }
+        else
+        {
+            return GameObjectPools[name].CreateNewObjectFromPool(parent);
+        }
+    }
+
 
 
     public GameObject AddObject(string name, GameObject gameObject)

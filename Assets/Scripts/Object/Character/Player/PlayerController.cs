@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : BaseCharacter
 {
-    private E_PlayerStatus _status;
+    [SerializeField] private E_PlayerStatus _status;
 
     [Header("Move")]
     private int _horizontalMove;
@@ -38,8 +38,10 @@ public class PlayerController : BaseCharacter
     private Vector2 _bulletOffsetRight;
     private float _meleeAttackCD = 0.4f;
     private float _currentMeleeAttackCD;
-    private float _gunAttackCD = 0.45f;
-    private float _currentGunAttackCD;
+    private float _pistolAttackCD = 0.45f;
+    private float _currentpistolAttackCD;
+    private float _shotGunAttackCD = 0.9f;
+    private float _currentShotGunAttackCD;
 
     [Header("State")]
     private bool _isCrouch;
@@ -47,7 +49,11 @@ public class PlayerController : BaseCharacter
 
     [Header("Reload")]
     private float _reloadCD = 0.8f;
-    private float _currentReloadCD;
+    [SerializeField] private float _currentReloadCD;
+
+    [Header("Hurt")]
+    private float _hurtCD = 0.4f;
+    private float _currentHurtCD;
 
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
@@ -90,7 +96,7 @@ public class PlayerController : BaseCharacter
         _bulletOffsetLeft = new Vector2(-1f, 1.15f);
         _bulletOffsetRight = new Vector2(1f, 1.15f);
 
-        GameManager.Instance.m_EventManager.AddEventListener("PickUpNPC", OnGetNPC);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
 
     }
 
@@ -104,9 +110,36 @@ public class PlayerController : BaseCharacter
             _currentMeleeAttackCD -= Time.deltaTime;
         if (_currentReloadCD > 0)
             _currentReloadCD -= Time.deltaTime;
-        if (_currentGunAttackCD > 0)
-            _currentGunAttackCD -= Time.deltaTime;
+        if (_currentpistolAttackCD > 0)
+            _currentpistolAttackCD -= Time.deltaTime;
+        if (_currentHurtCD > 0)
+            _currentHurtCD -= Time.deltaTime;
+        if (_currentShotGunAttackCD > 0)
+            _currentShotGunAttackCD -= Time.deltaTime;
 
+        UpdatePlayerState();
+    }
+
+    protected override void OnFixedUpdate()
+    {
+        if (_currentMeleeAttackCD <= 0 && _currentReloadCD <= 0)
+        {
+            Move();
+            Flip();
+        }
+    }
+
+    protected override void SetAnimatorParameter()
+    {
+        anim.SetInteger("Horizontal", _horizontalMove);
+        anim.SetFloat("Vertical", rb2D.velocity.y);
+        anim.SetBool("IsGround", isGround);
+        anim.SetBool("IsCrouch", _isCrouch);
+        anim.SetInteger("PlayerStatus", (int)_status);
+    }
+
+    private void UpdatePlayerState()
+    {
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
         if (isGround)
         {
@@ -131,29 +164,40 @@ public class PlayerController : BaseCharacter
                 MeleeAttack();
                 StopMove();
             }
-            else if (Input.GetMouseButton(0) && _currentGunAttackCD <= 0)
+            else if (Input.GetKeyDown(KeyCode.Tab) && _status != E_PlayerStatus.NPC)
             {
-                GunAttack(_status);
+                AlterWeapon();
             }
-            else if (Input.GetKeyDown(KeyCode.Q) && _status != E_PlayerStatus.NPC)
+            else if (Input.GetKeyDown(KeyCode.R) && _currentReloadCD <= 0 && _currentpistolAttackCD <= 0 && _currentShotGunAttackCD <= 0 && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status))
             {
-                _status = E_PlayerStatus.Pistol;
+                //BUG:装载子弹会出现负数情况，但不了解什么原因
+                Reload();
+                StopMove();
             }
-            else if (Input.GetKeyDown(KeyCode.E) && _status != E_PlayerStatus.NPC)
+            else if (Input.GetKeyDown(KeyCode.E) && _status == E_PlayerStatus.NPC)
             {
-                _status = E_PlayerStatus.ShotGun;
+                PutDownNPC();
             }
-            else if (Input.GetKeyDown(KeyCode.R))
+            else if (Input.GetKeyDown(KeyCode.H) && _currentHurtCD <= 0)
             {
-                if (_currentReloadCD <= 0 && _canStand)
-                {
-                    Reload();
-                    StopMove();
-                }
+                Hurt();
             }
-            else if (Input.GetKeyDown(KeyCode.C) && _status == E_PlayerStatus.NPC)
+
+            //TODO:优化代码
+            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && _status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC)
             {
-                OnPutDownNPC();
+                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                    PistolAttack();
+                else
+                    EmptyAttack();
+            }
+            //TODO:优化代码
+            if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
+            {
+                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                    ShotGunAttack();
+                else
+                    EmptyAttack();
             }
         }
         else
@@ -163,33 +207,32 @@ public class PlayerController : BaseCharacter
                 Jump();
                 _currentJumpCount--;
             }
-            else if (Input.GetMouseButton(0) && _currentGunAttackCD <= 0)
+            else if (Input.GetKeyDown(KeyCode.Tab) && _status != E_PlayerStatus.NPC)
             {
-                GunAttack(_status);
+                AlterWeapon();
+                //FIXME:在空中时改变动画状态
+            }
+
+            //TODO:优化代码
+            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && _status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC)
+            {
+                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                    PistolAttack();
+                else
+                    EmptyAttack();
+            }
+            //TODO:优化代码
+            if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
+            {
+                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                    ShotGunAttack();
+                else
+                    EmptyAttack();
             }
 
             Stand();
         }
     }
-
-    protected override void OnFixedUpdate()
-    {
-        if (_currentMeleeAttackCD <= 0 && _currentReloadCD <= 0)
-        {
-            Move();
-            Flip();
-        }
-    }
-
-    protected override void SetAnimatorParameter()
-    {
-        anim.SetInteger("Horizontal", _horizontalMove);
-        anim.SetFloat("Vertical", rb2D.velocity.y);
-        anim.SetBool("IsGround", isGround);
-        anim.SetBool("IsCrouch", _isCrouch);
-        anim.SetInteger("PlayerStatus", (int)_status);
-    }
-
 
     private void Move()
     {
@@ -243,35 +286,67 @@ public class PlayerController : BaseCharacter
         _currentMeleeAttackCD = _meleeAttackCD;
     }
 
-    private void GunAttack(E_PlayerStatus status)
+    private void PistolAttack()
     {
         if (_horizontalMove == 0)
             anim.SetTrigger("GunAttack");
         else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
             anim.SetTrigger("GunAttack");
 
-        switch (status)
+        PistolFire();
+        _currentpistolAttackCD = _pistolAttackCD;
+    }
+
+    private void ShotGunAttack()
+    {
+        if (_horizontalMove == 0)
+            anim.SetTrigger("GunAttack");
+        else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
+            anim.SetTrigger("GunAttack");
+
+        ShotGunFire();
+        _currentShotGunAttackCD = _shotGunAttackCD;
+    }
+
+    private void EmptyAttack()
+    {
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "gun_empty");
+
+        switch (_status)
         {
             case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
-                PistoFire();
+                _currentpistolAttackCD = _pistolAttackCD;
                 break;
             case E_PlayerStatus.ShotGun:
+                _currentShotGunAttackCD = _shotGunAttackCD;
                 break;
-
         }
-        _currentGunAttackCD = _gunAttackCD;
     }
 
-    private void PistoFire()
+    private void AlterWeapon()
+    {
+        _status = (int)_status >= 1 ? _status = 0 : ++_status;
+        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
+    }
+
+    private void PistolFire()
     {
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_fire");
+        GameManager.Instance.m_AmmoManager.UsePistolAmmo();
+
         GameObject pistolBullet = GameManager.Instance.m_ObjectPool.GetOrLoadObject("Bullet", E_ResourcesPath.Entity);
         if (isRight)
             pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetRight;
         else
             pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetLeft;
         pistolBullet.transform.localRotation = this.transform.localRotation;
+    }
+
+    private void ShotGunFire()
+    {
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "shotgun_fire");
+        GameManager.Instance.m_AmmoManager.UseShotGunAmmo();
     }
 
     private void StopMove()
@@ -283,25 +358,39 @@ public class PlayerController : BaseCharacter
 
     private void Reload()
     {
-        anim.SetTrigger("Reload");
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_reload");
-        _currentReloadCD = _reloadCD;
-    }
-
-    private void PlayerState()
-    {
         switch (_status)
         {
+            case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
+                GameManager.Instance.m_AmmoManager.ReloadPistolAmmo();
+                GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_reload");
                 break;
             case E_PlayerStatus.ShotGun:
-                break;
-            case E_PlayerStatus.NPC:
+                GameManager.Instance.m_AmmoManager.ReloadShotGunAmmo();
+                GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "shotgun_reload");
                 break;
         }
+
+        anim.SetTrigger("Reload");
+        _currentReloadCD = _reloadCD;
+
+    }
+
+    private void Hurt()
+    {
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
+        anim.SetTrigger("Hurt");
+        _currentHurtCD = _hurtCD;
     }
 
 
+    private void PutDownNPC()
+    {
+        _status = E_PlayerStatus.Pistol;
+
+        GameObject sleepWomen = GameManager.Instance.m_ObjectPool.GetPoolObject("SleepWomen");
+        sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
+    }
 
     public void OnGetNPC()
     {
@@ -309,13 +398,7 @@ public class PlayerController : BaseCharacter
         moveSpeed = _getNPCSpeed;
     }
 
-    private void OnPutDownNPC()
-    {
-        _status = E_PlayerStatus.Pistol;
 
-        GameObject sleepWomen = GameManager.Instance.m_ObjectPool.GetPoolObject("SleepWomen");
-        sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
-    }
 
     private void OnDrawGizmos()
     {
