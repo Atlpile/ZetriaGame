@@ -16,6 +16,7 @@ public class AmmoManager
     private int _currentShotGunAmmoCount;
     private int _maxShotGunAmmoCount;
 
+    //是否获得霰弹枪
     private bool _hasShotGun;
 
     private GamePanel _GamePanel => GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>();
@@ -32,8 +33,8 @@ public class AmmoManager
         _currentShotGunAmmoCount = 0;
         _maxShotGunAmmoCount = 0;
 
-
     }
+
 
     public void PickUpPistolAmmoPackage()
     {
@@ -83,10 +84,12 @@ public class AmmoManager
         return false;
     }
 
+
     public void ReloadPistolAmmo()
     {
         for (int i = _currentPistolAmmoCount; i < _currentPistolAmmoLimit; i++)
         {
+            if (_maxPistolAmmoCount == 0) break;
             _maxPistolAmmoCount--;
             _currentPistolAmmoCount++;
         }
@@ -97,6 +100,7 @@ public class AmmoManager
     {
         for (int i = _currentShotGunAmmoCount; i < _currentShotGunAmmoLimit; i++)
         {
+            if (_maxShotGunAmmoCount == 0) break;
             _maxShotGunAmmoCount--;
             _currentShotGunAmmoCount++;
         }
@@ -111,7 +115,6 @@ public class AmmoManager
         _GamePanel.UpdatePistolAmmoText(_currentPistolAmmoCount, _maxPistolAmmoCount);
         _GamePanel.UpdateShortGunAmmoText(_currentShotGunAmmoCount, _maxShotGunAmmoCount);
     }
-
 
 
     public void UsePistolAmmo()

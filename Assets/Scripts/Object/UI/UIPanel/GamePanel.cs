@@ -23,6 +23,8 @@ public class GamePanel : BasePanel
         PistolAmmoPointer = GetUIComponent<Image>("PistolAmmoPointer");
         ShoutGunAmmoPointer = GetUIComponent<Image>("ShoutGunAmmoPointer");
 
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
+
     }
 
 
@@ -50,14 +52,21 @@ public class GamePanel : BasePanel
         ShoutGunAmmoCount.text = currentCount + "/" + maxCount;
     }
 
+    public void UpdateLifeBar(int life)
+    {
+        HealthSlider.fillAmount = life;
+    }
+
     public void UpdateAmmoPointer(bool isAcitve)
     {
         PistolAmmoPointer.gameObject.SetActive(isAcitve);
         ShoutGunAmmoPointer.gameObject.SetActive(!isAcitve);
     }
 
-    public void UpdateLifeBar(int life)
+    private void UpdateAmmoPointer()
     {
-        HealthSlider.fillAmount = life;
+        PistolAmmoPointer.gameObject.SetActive(true);
+        ShoutGunAmmoPointer.gameObject.SetActive(false);
     }
+
 }

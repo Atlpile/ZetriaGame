@@ -6,7 +6,7 @@ public abstract class BaseCharacter : BaseEntity
 {
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
-    protected float moveSpeed;
+    [SerializeField] protected float moveSpeed;
     protected bool isRight;
     protected bool isGround;
 

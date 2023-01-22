@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerController : BaseCharacter
 {
-    [SerializeField] private E_PlayerStatus _status;
+    private E_PlayerStatus _status;
 
     [Header("Move")]
     private int _horizontalMove;
@@ -36,6 +35,8 @@ public class PlayerController : BaseCharacter
     [Header("Attack")]
     private Vector2 _bulletOffsetLeft;
     private Vector2 _bulletOffsetRight;
+    private Vector2 _bulletOffsetWithCrouch;
+
     private float _meleeAttackCD = 0.4f;
     private float _currentMeleeAttackCD;
     private float _pistolAttackCD = 0.45f;
@@ -48,7 +49,7 @@ public class PlayerController : BaseCharacter
     private bool _canStand;
 
     [Header("Reload")]
-    private float _reloadCD = 0.8f;
+    [SerializeField] private float _reloadCD = 0.8f;
     [SerializeField] private float _currentReloadCD;
 
     [Header("Hurt")]
@@ -95,6 +96,7 @@ public class PlayerController : BaseCharacter
 
         _bulletOffsetLeft = new Vector2(-1f, 1.15f);
         _bulletOffsetRight = new Vector2(1f, 1.15f);
+        _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
 
@@ -138,6 +140,7 @@ public class PlayerController : BaseCharacter
         anim.SetInteger("PlayerStatus", (int)_status);
     }
 
+
     private void UpdatePlayerState()
     {
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
@@ -170,7 +173,6 @@ public class PlayerController : BaseCharacter
             }
             else if (Input.GetKeyDown(KeyCode.R) && _currentReloadCD <= 0 && _currentpistolAttackCD <= 0 && _currentShotGunAttackCD <= 0 && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status))
             {
-                //BUG:装载子弹会出现负数情况，但不了解什么原因
                 Reload();
                 StopMove();
             }
@@ -183,17 +185,16 @@ public class PlayerController : BaseCharacter
                 Hurt();
             }
 
-            //TODO:优化代码
-            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && _status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC)
+            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            //TODO:优化代码
             if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
             {
+                //TODO:优化ShotGun的攻击动画（攻击切移动还是播放攻击动画）
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     ShotGunAttack();
                 else
@@ -210,11 +211,11 @@ public class PlayerController : BaseCharacter
             else if (Input.GetKeyDown(KeyCode.Tab) && _status != E_PlayerStatus.NPC)
             {
                 AlterWeapon();
-                //FIXME:在空中时改变动画状态
+                //FIXME:在空中时改变切枪动画状态
             }
 
             //TODO:优化代码
-            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && _status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC)
+            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     PistolAttack();
@@ -266,6 +267,7 @@ public class PlayerController : BaseCharacter
         moveSpeed = _crouchSpeed;
         col2D.size = _crouchSize;
         col2D.offset = _crouchOffset;
+        _status = E_PlayerStatus.Pistol;
     }
 
     private void Stand()
@@ -337,9 +339,19 @@ public class PlayerController : BaseCharacter
 
         GameObject pistolBullet = GameManager.Instance.m_ObjectPool.GetOrLoadObject("Bullet", E_ResourcesPath.Entity);
         if (isRight)
-            pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetRight;
+        {
+            if (!_isCrouch)
+                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetRight;
+            else
+                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetRight + (Vector3)_bulletOffsetWithCrouch;
+        }
         else
-            pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetLeft;
+        {
+            if (!_isCrouch)
+                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetLeft;
+            else
+                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetLeft + (Vector3)_bulletOffsetWithCrouch;
+        }
         pistolBullet.transform.localRotation = this.transform.localRotation;
     }
 
@@ -351,7 +363,6 @@ public class PlayerController : BaseCharacter
 
     private void StopMove()
     {
-        moveSpeed = 0;
         _horizontalMove = 0;
         rb2D.velocity = new Vector2(0, 0);
     }
@@ -383,7 +394,6 @@ public class PlayerController : BaseCharacter
         _currentHurtCD = _hurtCD;
     }
 
-
     private void PutDownNPC()
     {
         _status = E_PlayerStatus.Pistol;
@@ -404,7 +414,6 @@ public class PlayerController : BaseCharacter
     {
         Gizmos.DrawWireSphere(GroundCheckPos, _groundCheckRadius);
     }
-
 
     private bool CanStand()
     {
