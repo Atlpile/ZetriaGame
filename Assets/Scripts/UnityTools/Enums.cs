@@ -17,3 +17,4 @@ public enum E_EventType
 
 }
 public enum E_AmmoType { Pistol, ShotGun }
+public enum E_BulletMoveType { Upward, Straight, Downward }

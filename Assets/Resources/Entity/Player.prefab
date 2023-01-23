@@ -254,4 +254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc824a2daa12c44d92ed1d517324ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _status: 0
+  moveSpeed: 0
+  _bulletShotGunOffsetLeft: {x: 0.5, y: -0.4, z: 0}
+  _bulletShotGunOffsetRight: {x: -0.5, y: -0.4, z: 0}
+  _reloadCD: 0.8
+  _currentReloadCD: 0

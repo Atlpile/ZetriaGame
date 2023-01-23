@@ -53,7 +53,6 @@ public class AmmoManager
     {
         switch (status)
         {
-            case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
                 if (_maxPistolAmmoCount > 0 && _currentPistolAmmoCount != _currentPistolAmmoLimit)
                     return true;

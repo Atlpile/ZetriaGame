@@ -33,9 +33,11 @@ public class PlayerController : BaseCharacter
     private RaycastHit2D _headCheck;
 
     [Header("Attack")]
-    private Vector2 _bulletOffsetLeft;
-    private Vector2 _bulletOffsetRight;
-    private Vector2 _bulletOffsetWithCrouch;
+    private Vector3 _pistolBulletLeftOffset;
+    private Vector3 _pistolBulletRightOffset;
+    private Vector3 _bulletOffsetWithCrouch;
+    private Vector3 _shotGunBulletLeftOffset;
+    private Vector3 _shotGunBulletRightOffset;
 
     private float _meleeAttackCD = 0.4f;
     private float _currentMeleeAttackCD;
@@ -94,8 +96,10 @@ public class PlayerController : BaseCharacter
         _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
         _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
 
-        _bulletOffsetLeft = new Vector2(-1f, 1.15f);
-        _bulletOffsetRight = new Vector2(1f, 1.15f);
+        _pistolBulletLeftOffset = new Vector2(-1f, 1.15f);
+        _pistolBulletRightOffset = new Vector2(1f, 1.15f);
+        _shotGunBulletLeftOffset = new Vector2(-0.5f, 0.75f);
+        _shotGunBulletRightOffset = new Vector2(0.5f, 0.75f);
         _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
@@ -164,6 +168,7 @@ public class PlayerController : BaseCharacter
             }
             else if (Input.GetKeyDown(KeyCode.F) && _currentMeleeAttackCD <= 0 && !_isCrouch && _status != E_PlayerStatus.NPC)
             {
+                //OPTIMIZE:换子弹过程中，若攻击只能选择近战攻击或者枪械攻击的其中之一
                 MeleeAttack();
                 StopMove();
             }
@@ -171,12 +176,12 @@ public class PlayerController : BaseCharacter
             {
                 AlterWeapon();
             }
-            else if (Input.GetKeyDown(KeyCode.R) && _currentReloadCD <= 0 && _currentpistolAttackCD <= 0 && _currentShotGunAttackCD <= 0 && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status))
+            else if (Input.GetKeyDown(KeyCode.R) && _currentReloadCD <= 0 && _currentpistolAttackCD <= 0 && _currentShotGunAttackCD <= 0 && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status) && _status != E_PlayerStatus.NPC)
             {
                 Reload();
                 StopMove();
             }
-            else if (Input.GetKeyDown(KeyCode.E) && _status == E_PlayerStatus.NPC)
+            else if (Input.GetKeyDown(KeyCode.Q) && _status == E_PlayerStatus.NPC)
             {
                 PutDownNPC();
             }
@@ -194,7 +199,6 @@ public class PlayerController : BaseCharacter
             }
             if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
             {
-                //TODO:优化ShotGun的攻击动画（攻击切移动还是播放攻击动画）
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     ShotGunAttack();
                 else
@@ -203,7 +207,7 @@ public class PlayerController : BaseCharacter
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Space) && _currentJumpCount > 0)
+            if (Input.GetKeyDown(KeyCode.Space) && _currentJumpCount > 0 && _status != E_PlayerStatus.NPC)
             {
                 Jump();
                 _currentJumpCount--;
@@ -211,10 +215,9 @@ public class PlayerController : BaseCharacter
             else if (Input.GetKeyDown(KeyCode.Tab) && _status != E_PlayerStatus.NPC)
             {
                 AlterWeapon();
-                //FIXME:在空中时改变切枪动画状态
+                //OPTIMIZE:在空中时改变切枪动画状态
             }
 
-            //TODO:优化代码
             if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
@@ -222,7 +225,6 @@ public class PlayerController : BaseCharacter
                 else
                     EmptyAttack();
             }
-            //TODO:优化代码
             if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
@@ -268,6 +270,7 @@ public class PlayerController : BaseCharacter
         col2D.size = _crouchSize;
         col2D.offset = _crouchOffset;
         _status = E_PlayerStatus.Pistol;
+        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
     }
 
     private void Stand()
@@ -337,28 +340,44 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_fire");
         GameManager.Instance.m_AmmoManager.UsePistolAmmo();
 
-        GameObject pistolBullet = GameManager.Instance.m_ObjectPool.GetOrLoadObject("Bullet", E_ResourcesPath.Entity);
-        if (isRight)
-        {
-            if (!_isCrouch)
-                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetRight;
-            else
-                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetRight + (Vector3)_bulletOffsetWithCrouch;
-        }
-        else
-        {
-            if (!_isCrouch)
-                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetLeft;
-            else
-                pistolBullet.transform.position = this.transform.position + (Vector3)_bulletOffsetLeft + (Vector3)_bulletOffsetWithCrouch;
-        }
-        pistolBullet.transform.localRotation = this.transform.localRotation;
+        GameObject pistolBullet = GameManager.Instance.m_ObjectPool.GetOrLoadObject("PistolBullet", E_ResourcesPath.Entity);
+        AlterBulletPos(pistolBullet, _pistolBulletLeftOffset, _pistolBulletRightOffset, _bulletOffsetWithCrouch);
     }
 
     private void ShotGunFire()
     {
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "shotgun_fire");
         GameManager.Instance.m_AmmoManager.UseShotGunAmmo();
+
+        GameObject shotGunBullet0 = GameManager.Instance.m_ObjectPool.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
+        GameObject shotGunBullet1 = GameManager.Instance.m_ObjectPool.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
+        GameObject shotGunBullet2 = GameManager.Instance.m_ObjectPool.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
+
+        shotGunBullet0.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
+        shotGunBullet2.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
+
+        AlterBulletPos(shotGunBullet0, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+        AlterBulletPos(shotGunBullet1, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+        AlterBulletPos(shotGunBullet2, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+    }
+
+    private void AlterBulletPos(GameObject bullet, Vector3 leftOffset, Vector3 rightOffset, Vector3 crouchOffset)
+    {
+        if (isRight)
+        {
+            if (!_isCrouch)
+                bullet.transform.position = this.transform.position + rightOffset;
+            else
+                bullet.transform.position = this.transform.position + rightOffset + crouchOffset;
+        }
+        else
+        {
+            if (!_isCrouch)
+                bullet.transform.position = this.transform.position + leftOffset;
+            else
+                bullet.transform.position = this.transform.position + leftOffset + crouchOffset;
+        }
+        bullet.transform.localRotation = this.transform.localRotation;
     }
 
     private void StopMove()
@@ -389,8 +408,8 @@ public class PlayerController : BaseCharacter
 
     private void Hurt()
     {
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
         anim.SetTrigger("Hurt");
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
         _currentHurtCD = _hurtCD;
     }
 
