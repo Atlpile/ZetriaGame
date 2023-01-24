@@ -10,7 +10,7 @@ public enum E_InputType
 }
 public enum E_EventType
 {
-    PickUpNPC,
+    PickUpNPC, PickUpShotGun,
     InitGamePanelUI,
     UpdatePistolAmmo, UpdateShotGunAmmo,
     PlayerFire, PlayerReload

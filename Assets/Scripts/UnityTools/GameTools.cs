@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public static class GameTools
@@ -11,5 +13,17 @@ public static class GameTools
         Debug.DrawRay(rayPos + offset, rayDirection * length, rayColor);
 
         return hitInfo;
+    }
+
+    [MenuItem("GameTool/打开数据存储路径")]
+    public static void OpenPersistentDataPath()
+    {
+        EditorUtility.RevealInFinder(Application.persistentDataPath);
+    }
+
+    [MenuItem("GameTool/清空所有数据")]
+    public static void ClearAllData()
+    {
+
     }
 }

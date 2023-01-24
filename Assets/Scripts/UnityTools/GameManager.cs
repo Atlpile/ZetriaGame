@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     public AmmoManager m_AmmoManager { get; set; }
 
+    public GameData gameData;
+
     private void Awake()
     {
         if (s_instance != null)
@@ -44,11 +46,22 @@ public class GameManager : MonoBehaviour
 
         m_AmmoManager = new AmmoManager();
 
+
+        m_EventManager.AddEventListener(E_EventType.PickUpShotGun, GetShotGun);
+
+        gameData = m_DataManager.LoadData<GameData>("GameData");
     }
 
     private void Start()
     {
         m_UIManager.ShowPanel<GamePanel>();
+    }
+
+
+    private void GetShotGun()
+    {
+        gameData.hasShotGun = true;
+        m_DataManager.SaveData(typeof(GameData).Name, gameData);
     }
 
 

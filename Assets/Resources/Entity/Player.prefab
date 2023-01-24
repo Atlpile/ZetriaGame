@@ -139,7 +139,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 8269594407595764193}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 403f5d7beb2ed7d4b921d2438236fdd4, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -255,7 +255,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 0
-  _bulletShotGunOffsetLeft: {x: 0.5, y: -0.4, z: 0}
-  _bulletShotGunOffsetRight: {x: -0.5, y: -0.4, z: 0}
-  _reloadCD: 0.8
-  _currentReloadCD: 0
+  isRight: 0

@@ -9,7 +9,7 @@ public class PlayerController : BaseCharacter
     [Header("Move")]
     private int _horizontalMove;
     private float _standSpeed = 4f;
-    private float _getNPCSpeed = 4f;
+    private float _getNPCSpeed = 3.5f;
     private float _crouchSpeed = 2f;
     private AudioSource _moveSource;
 
@@ -52,8 +52,8 @@ public class PlayerController : BaseCharacter
     private bool _canStand;
 
     [Header("Reload")]
-    [SerializeField] private float _reloadCD = 0.8f;
-    [SerializeField] private float _currentReloadCD;
+    private float _reloadCD = 0.8f;
+    private float _currentReloadCD;
 
     [Header("Hurt")]
     private float _hurtCD = 0.4f;
@@ -97,6 +97,7 @@ public class PlayerController : BaseCharacter
         _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
 
     }
 
