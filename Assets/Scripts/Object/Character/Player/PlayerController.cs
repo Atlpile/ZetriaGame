@@ -8,9 +8,9 @@ public class PlayerController : BaseCharacter
 
     [Header("Move")]
     private int _horizontalMove;
-    private float _standSpeed = 4;
+    private float _standSpeed = 4f;
     private float _getNPCSpeed = 4f;
-    private float _crouchSpeed = 2;
+    private float _crouchSpeed = 2f;
     private AudioSource _moveSource;
 
     [Header("Jump")]
@@ -32,13 +32,14 @@ public class PlayerController : BaseCharacter
     private float _rayLength = 1f;
     private RaycastHit2D _headCheck;
 
-    [Header("Attack")]
-    private Vector3 _pistolBulletLeftOffset;
-    private Vector3 _pistolBulletRightOffset;
-    private Vector3 _bulletOffsetWithCrouch;
-    private Vector3 _shotGunBulletLeftOffset;
-    private Vector3 _shotGunBulletRightOffset;
+    [Header("BulletOffset")]
+    private Vector3 _pistolBulletLeftOffset = new Vector2(-1f, 1.15f);
+    private Vector3 _pistolBulletRightOffset = new Vector2(1f, 1.15f);
+    private Vector3 _shotGunBulletLeftOffset = new Vector2(-0.5f, 0.75f);
+    private Vector3 _shotGunBulletRightOffset = new Vector2(0.5f, 0.75f);
+    private Vector3 _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
 
+    [Header("Attack")]
     private float _meleeAttackCD = 0.4f;
     private float _currentMeleeAttackCD;
     private float _pistolAttackCD = 0.45f;
@@ -89,18 +90,11 @@ public class PlayerController : BaseCharacter
         rb2D.gravityScale = 5f;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
-        rb2D.freezeRotation = true;
 
         _standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
         _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
         _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
         _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
-
-        _pistolBulletLeftOffset = new Vector2(-1f, 1.15f);
-        _pistolBulletRightOffset = new Vector2(1f, 1.15f);
-        _shotGunBulletLeftOffset = new Vector2(-0.5f, 0.75f);
-        _shotGunBulletRightOffset = new Vector2(0.5f, 0.75f);
-        _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
 
@@ -333,6 +327,7 @@ public class PlayerController : BaseCharacter
     {
         _status = (int)_status >= 1 ? _status = 0 : ++_status;
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_swapWeapon");
     }
 
     private void PistolFire()
@@ -416,6 +411,7 @@ public class PlayerController : BaseCharacter
     private void PutDownNPC()
     {
         _status = E_PlayerStatus.Pistol;
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "npc_putdown");
 
         GameObject sleepWomen = GameManager.Instance.m_ObjectPool.GetPoolObject("SleepWomen");
         sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);

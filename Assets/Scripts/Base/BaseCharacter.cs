@@ -7,7 +7,7 @@ public abstract class BaseCharacter : BaseEntity
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
     [SerializeField] protected float moveSpeed;
-    protected bool isRight;
+    [SerializeField] protected bool isRight;
     protected bool isGround;
 
 
@@ -35,6 +35,8 @@ public abstract class BaseCharacter : BaseEntity
     protected override void OnStart()
     {
         base.OnStart();
+
+        rb2D.freezeRotation = true;
     }
 
     protected virtual void OnUpdate()

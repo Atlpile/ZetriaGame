@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class BaseBullet : MonoBehaviour
 {
+    private void Start()
+    {
+
+    }
+
+    private void Update()
+    {
+
+    }
+
+    protected virtual void Init()
+    {
+
+    }
+
+
     protected virtual void Create()
     {
 

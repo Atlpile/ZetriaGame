@@ -7,11 +7,16 @@ public class PlayerCamera : MonoBehaviour
     private Camera mainCamera;
 
     [Header("平滑设置")]
-    public Transform playerPos;
+
     public float offsetX;
     public float offsetY = 1f;
     public float smoothTime = 0.15f;
 
+    [Header("边界设置")]
+    public float boundsX;
+    public float boundsY;
+
+    private Transform playerPos;
     private Vector3 _maxSpeed = Vector3.zero;
     private Vector3 targetPosition;
 
@@ -23,16 +28,26 @@ public class PlayerCamera : MonoBehaviour
 
     private void FixedUpdate()
     {
-        SmoothCamera();
+        SmoothFollow(playerPos);
     }
 
-    private void SmoothCamera()
+    private void SmoothFollow(Transform target)
     {
-        if (playerPos)
+        if (target)
         {
-            targetPosition = new Vector3(playerPos.position.x + offsetX, playerPos.position.y + offsetY, playerPos.position.z - 10f);
+            targetPosition = new Vector3(target.position.x + offsetX, target.position.y + offsetY, target.position.z - 10f);
             this.transform.position = Vector3.SmoothDamp(this.transform.position, targetPosition, ref _maxSpeed, smoothTime);
         }
+    }
+
+    private void MouseMoveCamera()
+    {
+
+    }
+
+    private bool CanMouseMove()
+    {
+        return false;
     }
 
 }

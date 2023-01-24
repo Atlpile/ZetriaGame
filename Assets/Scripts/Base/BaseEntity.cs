@@ -5,8 +5,6 @@ using UnityEngine;
 public abstract class BaseEntity : MonoBehaviour
 {
     protected Animator anim;
-    // protected bool bulletCanDestroyed;
-    // public bool BulletCanDestroyed => bulletCanDestroyed;
 
     private void Awake()
     {
