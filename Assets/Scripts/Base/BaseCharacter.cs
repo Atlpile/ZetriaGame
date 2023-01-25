@@ -62,7 +62,7 @@ public abstract class BaseCharacter : BaseEntity
             Debug.LogWarning("当前地面检测范围为0");
 
         if (rb2D.velocity.y <= 0.1f)
-            return Physics2D.OverlapCircle(groundCheckPos, checkRadius, (1 << LayerMask.NameToLayer("Ground")));
+            return Physics2D.OverlapCircle(groundCheckPos, checkRadius, 1 << LayerMask.NameToLayer("Ground"));
 
         return Physics2D.OverlapCircle(groundCheckPos, checkRadius, 0);
     }

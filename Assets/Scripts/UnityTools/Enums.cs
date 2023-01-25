@@ -10,7 +10,7 @@ public enum E_InputType
 }
 public enum E_EventType
 {
-    PickUpNPC, PickUpShotGun,
+    PickUpNPC, PickUpShotGun, PickUpToken, PickUpCard,
     InitGamePanelUI,
     UpdatePistolAmmo, UpdateShotGunAmmo,
     PlayerFire, PlayerReload
@@ -22,3 +22,4 @@ public enum E_AIState
 {
     Null, Patrol, Chase
 }
+public enum E_DoorType { Once, Condition, Smart }

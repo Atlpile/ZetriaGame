@@ -13,11 +13,12 @@ public class GameManager : MonoBehaviour
     public ObjectPool m_ObjectPool { get; set; }
     public AudioManager m_AudioManager { get; set; }
     public UIManager m_UIManager { get; set; }
-    public BinaryDataManager m_DataManager { get; set; }
+    public BinaryDataManager m_BinaryDataManager { get; set; }
     public InputManager m_InputManager { get; set; }
     public EventManager m_EventManager { get; set; }
 
     public AmmoManager m_AmmoManager { get; set; }
+    public ItemManager m_ItemManager { get; set; }
 
     public GameData gameData;
 
@@ -40,16 +41,18 @@ public class GameManager : MonoBehaviour
         m_ObjectPool = new ObjectPool();
         m_AudioManager = new AudioManager();
         m_UIManager = new UIManager();
-        m_DataManager = new BinaryDataManager();
+        m_BinaryDataManager = new BinaryDataManager();
         m_InputManager = new InputManager();
         m_EventManager = new EventManager();
 
         m_AmmoManager = new AmmoManager();
+        m_ItemManager = new ItemManager();
 
 
-        m_EventManager.AddEventListener(E_EventType.PickUpShotGun, GetShotGun);
 
-        gameData = m_DataManager.LoadData<GameData>("GameData");
+
+
+        gameData = m_BinaryDataManager.LoadData<GameData>("GameData");
     }
 
     private void Start()
@@ -58,11 +61,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void GetShotGun()
-    {
-        gameData.hasShotGun = true;
-        m_DataManager.SaveData(typeof(GameData).Name, gameData);
-    }
+
 
 
     // private void Update()
