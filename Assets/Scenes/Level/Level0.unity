@@ -728,7 +728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5119610838552215737, guid: b7aaee54a3e923243ba27da2a5a918d3, type: 3}
       propertyPath: type
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5119610838552215738, guid: b7aaee54a3e923243ba27da2a5a918d3, type: 3}
       propertyPath: m_RootOrder
@@ -1066,8 +1066,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e35ba32bb3b7814db20560a00417653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canOpen: 0
-  _isOpen: 0
   door: {fileID: 1799797242}
 --- !u!61 &8068230826980507681
 BoxCollider2D:

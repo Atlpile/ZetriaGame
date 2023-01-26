@@ -6,8 +6,8 @@ public class DoorSwitch : MonoBehaviour
 {
     private Transform _highLight;
     private Transform _signLight;
-    [SerializeField] private bool _canOpen;
-    [SerializeField] private bool _isOpen;
+    private bool _canOpen;
+    private bool _isOpen;
     public Door door;
 
     private void Awake()
@@ -18,14 +18,24 @@ public class DoorSwitch : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _canOpen == true && door.type == E_DoorType.Condition)
+        if (Input.GetKeyDown(KeyCode.E) && _canOpen == true)
         {
-            _isOpen = !_isOpen;
-            _signLight.gameObject.SetActive(_isOpen);
-            door.ChangeDoor(_isOpen);
-            GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "door_confirm");
+            if (door != null && door.type == E_DoorType.Condition)
+            {
+                _isOpen = !_isOpen;
+                _signLight.gameObject.SetActive(_isOpen);
+                door.ChangeDoor(_isOpen);
+                GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "door_confirm");
+            }
+            else if (door != null && door.type != E_DoorType.Condition)
+            {
+                Debug.Log("Door状态不为Condition,按钮无效");
+            }
+            else
+            {
+                Debug.LogWarning("没有关联指定的Door脚本,请检查按钮是否关联对应的Door脚本");
+            }
         }
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
