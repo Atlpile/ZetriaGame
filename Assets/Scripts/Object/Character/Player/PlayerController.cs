@@ -41,11 +41,13 @@ public class PlayerController : BaseCharacter
 
     [Header("Attack")]
     private float _meleeAttackCD = 0.4f;
-    private float _currentMeleeAttackCD;
     private float _pistolAttackCD = 0.45f;
-    private float _currentpistolAttackCD;
     private float _shotGunAttackCD = 0.9f;
-    private float _currentShotGunAttackCD;
+    private float _emptyAttckCD = 0.45f;
+    private bool _isMeleeAttack;
+    private bool _isPistolAttack;
+    private bool _isShotGunAttack;
+    private bool _isEmptyAttack;
 
     [Header("State")]
     private bool _isCrouch;
@@ -53,11 +55,11 @@ public class PlayerController : BaseCharacter
 
     [Header("Reload")]
     private float _reloadCD = 0.8f;
-    private float _currentReloadCD;
+    private bool _isReload;
 
     [Header("Hurt")]
-    private float _hurtCD = 0.4f;
-    private float _currentHurtCD;
+    private float _hurtCD = 1f;
+    private bool _isHurt;
 
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
@@ -107,23 +109,12 @@ public class PlayerController : BaseCharacter
 
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
 
-        if (_currentMeleeAttackCD > 0)
-            _currentMeleeAttackCD -= Time.deltaTime;
-        if (_currentReloadCD > 0)
-            _currentReloadCD -= Time.deltaTime;
-        if (_currentpistolAttackCD > 0)
-            _currentpistolAttackCD -= Time.deltaTime;
-        if (_currentHurtCD > 0)
-            _currentHurtCD -= Time.deltaTime;
-        if (_currentShotGunAttackCD > 0)
-            _currentShotGunAttackCD -= Time.deltaTime;
-
         UpdatePlayerState();
     }
 
     protected override void OnFixedUpdate()
     {
-        if (_currentMeleeAttackCD <= 0 && _currentReloadCD <= 0)
+        if (!_isMeleeAttack && !_isReload)
         {
             Move();
             Flip();
@@ -148,7 +139,7 @@ public class PlayerController : BaseCharacter
             _currentJumpCount = _extraJumpCount;
             _canStand = CanStand();
 
-            if (Input.GetKey(KeyCode.S) && _currentReloadCD <= 0 && _status != E_PlayerStatus.NPC)
+            if (Input.GetKey(KeyCode.S) && !_isReload && _status != E_PlayerStatus.NPC)
             {
                 Crouch();
             }
@@ -157,11 +148,11 @@ public class PlayerController : BaseCharacter
                 Stand();
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && _canStand && _currentReloadCD <= 0 && _currentMeleeAttackCD <= 0 && _status != E_PlayerStatus.NPC)
+            if (Input.GetKeyDown(KeyCode.Space) && _canStand && !_isReload && !_isMeleeAttack && _status != E_PlayerStatus.NPC)
             {
                 Jump();
             }
-            else if (Input.GetKeyDown(KeyCode.F) && _currentMeleeAttackCD <= 0 && !_isCrouch && _status != E_PlayerStatus.NPC)
+            else if (Input.GetKeyDown(KeyCode.F) && !_isMeleeAttack && !_isCrouch && _status != E_PlayerStatus.NPC)
             {
                 //OPTIMIZE:换子弹过程中，若攻击只能选择近战攻击或者枪械攻击的其中之一
                 MeleeAttack();
@@ -171,7 +162,7 @@ public class PlayerController : BaseCharacter
             {
                 AlterWeapon();
             }
-            else if (Input.GetKeyDown(KeyCode.R) && _currentReloadCD <= 0 && _currentpistolAttackCD <= 0 && _currentShotGunAttackCD <= 0 && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status) && _status != E_PlayerStatus.NPC)
+            else if (Input.GetKeyDown(KeyCode.R) && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status) && _status != E_PlayerStatus.NPC)
             {
                 Reload();
                 StopMove();
@@ -180,19 +171,19 @@ public class PlayerController : BaseCharacter
             {
                 PutDownNPC();
             }
-            else if (Input.GetKeyDown(KeyCode.H) && _currentHurtCD <= 0)
+            else if (Input.GetKeyDown(KeyCode.H))
             {
                 Hurt();
             }
 
-            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+            if (Input.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
+            if (Input.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     ShotGunAttack();
@@ -213,14 +204,14 @@ public class PlayerController : BaseCharacter
                 //OPTIMIZE:在空中时改变切枪动画状态
             }
 
-            if (Input.GetMouseButton(0) && _currentpistolAttackCD <= 0 && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+            if (Input.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (Input.GetMouseButton(0) && _currentShotGunAttackCD <= 0 && _status == E_PlayerStatus.ShotGun)
+            if (Input.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     ShotGunAttack();
@@ -280,48 +271,85 @@ public class PlayerController : BaseCharacter
 
     private void MeleeAttack()
     {
+        if (!_isMeleeAttack)
+            StartCoroutine(IE_MeleeAttack());
+    }
+
+    private IEnumerator IE_MeleeAttack()
+    {
+        _isMeleeAttack = true;
+
         //TODO:设置攻击范围
         anim.SetTrigger("MeleeAttack");
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_meleeAttack");
-        _currentMeleeAttackCD = _meleeAttackCD;
+
+        yield return new WaitForSeconds(_meleeAttackCD);
+        _isMeleeAttack = false;
     }
 
     private void PistolAttack()
     {
+        // if (_horizontalMove == 0)
+        //     anim.SetTrigger("GunAttack");
+        // else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
+        //     anim.SetTrigger("GunAttack");
+
+        // PistolFire();
+        // _currentpistolAttackCD = _pistolAttackCD;
+
+        if (!_isPistolAttack)
+            StartCoroutine(IE_PistolAttack());
+    }
+
+    private IEnumerator IE_PistolAttack()
+    {
+        _isPistolAttack = true;
+
         if (_horizontalMove == 0)
             anim.SetTrigger("GunAttack");
         else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
             anim.SetTrigger("GunAttack");
 
         PistolFire();
-        _currentpistolAttackCD = _pistolAttackCD;
+
+        yield return new WaitForSeconds(_pistolAttackCD);
+        _isPistolAttack = false;
     }
 
     private void ShotGunAttack()
     {
+        if (!_isShotGunAttack)
+            StartCoroutine(IE_ShotGunAttack());
+    }
+
+    private IEnumerator IE_ShotGunAttack()
+    {
+        _isShotGunAttack = true;
+
         if (_horizontalMove == 0)
             anim.SetTrigger("GunAttack");
         else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
             anim.SetTrigger("GunAttack");
 
         ShotGunFire();
-        _currentShotGunAttackCD = _shotGunAttackCD;
+
+        yield return new WaitForSeconds(_shotGunAttackCD);
+        _isShotGunAttack = false;
     }
 
     private void EmptyAttack()
     {
+        if (!_isEmptyAttack)
+            StartCoroutine(IE_EmptyAttack());
+    }
+
+    private IEnumerator IE_EmptyAttack()
+    {
+        _isEmptyAttack = true;
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "gun_empty");
 
-        switch (_status)
-        {
-            case E_PlayerStatus.NPC:
-            case E_PlayerStatus.Pistol:
-                _currentpistolAttackCD = _pistolAttackCD;
-                break;
-            case E_PlayerStatus.ShotGun:
-                _currentShotGunAttackCD = _shotGunAttackCD;
-                break;
-        }
+        yield return new WaitForSeconds(_emptyAttckCD);
+        _isEmptyAttack = false;
     }
 
     private void AlterWeapon()
@@ -384,6 +412,15 @@ public class PlayerController : BaseCharacter
 
     private void Reload()
     {
+        if (!_isReload)
+            StartCoroutine(IE_Reload());
+    }
+
+    private IEnumerator IE_Reload()
+    {
+        _isReload = true;
+        anim.SetTrigger("Reload");
+
         switch (_status)
         {
             case E_PlayerStatus.NPC:
@@ -397,16 +434,24 @@ public class PlayerController : BaseCharacter
                 break;
         }
 
-        anim.SetTrigger("Reload");
-        _currentReloadCD = _reloadCD;
-
+        yield return new WaitForSeconds(_reloadCD);
+        _isReload = false;
     }
 
-    private void Hurt()
+    public void Hurt()
     {
+        if (!_isHurt)
+            StartCoroutine(IE_Hurt());
+    }
+
+    private IEnumerator IE_Hurt()
+    {
+        _isHurt = true;
         anim.SetTrigger("Hurt");
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
-        _currentHurtCD = _hurtCD;
+
+        yield return new WaitForSeconds(_hurtCD);
+        _isHurt = false;
     }
 
     private void PutDownNPC()

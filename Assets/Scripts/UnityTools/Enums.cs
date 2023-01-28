@@ -13,7 +13,8 @@ public enum E_EventType
     PickUpNPC, PickUpShotGun, PickUpToken, PickUpCard,
     InitGamePanelUI,
     UpdatePistolAmmo, UpdateShotGunAmmo,
-    PlayerFire, PlayerReload
+    PlayerFire, PlayerReload,
+    MovePlatform,
 
 }
 public enum E_AmmoType { Pistol, ShotGun }
@@ -23,3 +24,4 @@ public enum E_AIState
     Null, Patrol, Chase
 }
 public enum E_DoorType { Once, Condition, Smart }
+public enum E_PlatformButtonType { Null, Up, Down, Left, Right }
