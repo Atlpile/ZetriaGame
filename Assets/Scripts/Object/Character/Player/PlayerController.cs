@@ -78,6 +78,7 @@ public class PlayerController : BaseCharacter
     protected override void OnAwake()
     {
         base.OnAwake();
+
         _moveSource = GetComponent<AudioSource>();
     }
 
@@ -108,7 +109,6 @@ public class PlayerController : BaseCharacter
         base.OnUpdate();
 
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
-
         UpdatePlayerState();
     }
 
@@ -269,89 +269,6 @@ public class PlayerController : BaseCharacter
             moveSpeed = _standSpeed;
     }
 
-    private void MeleeAttack()
-    {
-        if (!_isMeleeAttack)
-            StartCoroutine(IE_MeleeAttack());
-    }
-
-    private IEnumerator IE_MeleeAttack()
-    {
-        _isMeleeAttack = true;
-
-        //TODO:设置攻击范围
-        anim.SetTrigger("MeleeAttack");
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_meleeAttack");
-
-        yield return new WaitForSeconds(_meleeAttackCD);
-        _isMeleeAttack = false;
-    }
-
-    private void PistolAttack()
-    {
-        // if (_horizontalMove == 0)
-        //     anim.SetTrigger("GunAttack");
-        // else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
-        //     anim.SetTrigger("GunAttack");
-
-        // PistolFire();
-        // _currentpistolAttackCD = _pistolAttackCD;
-
-        if (!_isPistolAttack)
-            StartCoroutine(IE_PistolAttack());
-    }
-
-    private IEnumerator IE_PistolAttack()
-    {
-        _isPistolAttack = true;
-
-        if (_horizontalMove == 0)
-            anim.SetTrigger("GunAttack");
-        else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
-            anim.SetTrigger("GunAttack");
-
-        PistolFire();
-
-        yield return new WaitForSeconds(_pistolAttackCD);
-        _isPistolAttack = false;
-    }
-
-    private void ShotGunAttack()
-    {
-        if (!_isShotGunAttack)
-            StartCoroutine(IE_ShotGunAttack());
-    }
-
-    private IEnumerator IE_ShotGunAttack()
-    {
-        _isShotGunAttack = true;
-
-        if (_horizontalMove == 0)
-            anim.SetTrigger("GunAttack");
-        else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
-            anim.SetTrigger("GunAttack");
-
-        ShotGunFire();
-
-        yield return new WaitForSeconds(_shotGunAttackCD);
-        _isShotGunAttack = false;
-    }
-
-    private void EmptyAttack()
-    {
-        if (!_isEmptyAttack)
-            StartCoroutine(IE_EmptyAttack());
-    }
-
-    private IEnumerator IE_EmptyAttack()
-    {
-        _isEmptyAttack = true;
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "gun_empty");
-
-        yield return new WaitForSeconds(_emptyAttckCD);
-        _isEmptyAttack = false;
-    }
-
     private void AlterWeapon()
     {
         _status = (int)_status >= 1 ? _status = 0 : ++_status;
@@ -410,6 +327,82 @@ public class PlayerController : BaseCharacter
         rb2D.velocity = new Vector2(0, 0);
     }
 
+
+    private void MeleeAttack()
+    {
+        if (!_isMeleeAttack)
+            StartCoroutine(IE_MeleeAttack());
+    }
+
+    private IEnumerator IE_MeleeAttack()
+    {
+        _isMeleeAttack = true;
+
+        //TODO:设置攻击范围
+        anim.SetTrigger("MeleeAttack");
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_meleeAttack");
+
+        yield return new WaitForSeconds(_meleeAttackCD);
+        _isMeleeAttack = false;
+    }
+
+    private void PistolAttack()
+    {
+        if (!_isPistolAttack)
+            StartCoroutine(IE_PistolAttack());
+    }
+
+    private IEnumerator IE_PistolAttack()
+    {
+        _isPistolAttack = true;
+
+        if (_horizontalMove == 0)
+            anim.SetTrigger("GunAttack");
+        else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
+            anim.SetTrigger("GunAttack");
+
+        PistolFire();
+
+        yield return new WaitForSeconds(_pistolAttackCD);
+        _isPistolAttack = false;
+    }
+
+    private void ShotGunAttack()
+    {
+        if (!_isShotGunAttack)
+            StartCoroutine(IE_ShotGunAttack());
+    }
+
+    private IEnumerator IE_ShotGunAttack()
+    {
+        _isShotGunAttack = true;
+
+        if (_horizontalMove == 0)
+            anim.SetTrigger("GunAttack");
+        else if (Mathf.Abs(rb2D.velocity.y) >= 0.1f)
+            anim.SetTrigger("GunAttack");
+
+        ShotGunFire();
+
+        yield return new WaitForSeconds(_shotGunAttackCD);
+        _isShotGunAttack = false;
+    }
+
+    private void EmptyAttack()
+    {
+        if (!_isEmptyAttack)
+            StartCoroutine(IE_EmptyAttack());
+    }
+
+    private IEnumerator IE_EmptyAttack()
+    {
+        _isEmptyAttack = true;
+        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "gun_empty");
+
+        yield return new WaitForSeconds(_emptyAttckCD);
+        _isEmptyAttack = false;
+    }
+
     private void Reload()
     {
         if (!_isReload)
@@ -453,6 +446,8 @@ public class PlayerController : BaseCharacter
         yield return new WaitForSeconds(_hurtCD);
         _isHurt = false;
     }
+
+
 
     private void PutDownNPC()
     {
