@@ -467,6 +467,7 @@ public class PlayerController : BaseCharacter
     {
         //TODO:死亡后，重新加载当前场景，初始化人物变量，更新UI
         print("死亡时做的事情");
+        _moveSource.enabled = false;
         StopMove();
     }
 
