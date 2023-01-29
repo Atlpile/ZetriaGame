@@ -24,7 +24,7 @@ public class Door : BaseEntity
             boxColl2D.enabled = false;
     }
 
-
+    //FIXME:Once时重新设置碰撞体范围
 
     private void OnTriggerEnter2D(Collider2D other)
     {

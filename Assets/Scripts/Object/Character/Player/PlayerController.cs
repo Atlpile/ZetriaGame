@@ -58,8 +58,11 @@ public class PlayerController : BaseCharacter
     private bool _isReload;
 
     [Header("Hurt")]
+    public int _currentHP = 10;
+    public int _maxHP = 10;
     private float _hurtCD = 1f;
     private bool _isHurt;
+    public bool _isDead;
 
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
@@ -108,12 +111,16 @@ public class PlayerController : BaseCharacter
     {
         base.OnUpdate();
 
+        if (_isDead) return;
+
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
         UpdatePlayerState();
     }
 
     protected override void OnFixedUpdate()
     {
+        if (_isDead) return;
+
         if (!_isMeleeAttack && !_isReload)
         {
             Move();
@@ -128,6 +135,7 @@ public class PlayerController : BaseCharacter
         anim.SetBool("IsGround", isGround);
         anim.SetBool("IsCrouch", _isCrouch);
         anim.SetInteger("PlayerStatus", (int)_status);
+        anim.SetBool("IsDead", _isDead);
     }
 
 
@@ -433,21 +441,34 @@ public class PlayerController : BaseCharacter
 
     public void Hurt()
     {
-        if (!_isHurt)
+        if (!_isHurt && !_isDead)
             StartCoroutine(IE_Hurt());
     }
 
     private IEnumerator IE_Hurt()
     {
         _isHurt = true;
+
+        _currentHP = _currentHP > 0 ? --_currentHP : 0;
+        _isDead = _currentHP == 0 ? true : false;
+
         anim.SetTrigger("Hurt");
+
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
+        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_currentHP, _maxHP);
+
+        if (_isDead) Dead();
 
         yield return new WaitForSeconds(_hurtCD);
         _isHurt = false;
     }
 
-
+    private void Dead()
+    {
+        //TODO:死亡后，重新加载当前场景，初始化人物变量，更新UI
+        print("死亡时做的事情");
+        StopMove();
+    }
 
     private void PutDownNPC()
     {

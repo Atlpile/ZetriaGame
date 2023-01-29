@@ -41,6 +41,10 @@ public class GamePanel : BasePanel
 
     }
 
+    public void UpdateLifeBar(float currentHP, float maxHP)
+    {
+        HealthSlider.fillAmount = currentHP / maxHP;
+    }
 
     public void UpdatePistolAmmoText(int currentCount, int maxCount)
     {
@@ -52,10 +56,6 @@ public class GamePanel : BasePanel
         ShoutGunAmmoCount.text = currentCount + "/" + maxCount;
     }
 
-    public void UpdateLifeBar(int life)
-    {
-        HealthSlider.fillAmount = life;
-    }
 
     public void UpdateAmmoPointer(bool isAcitve)
     {

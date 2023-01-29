@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlatformController : MonoBehaviour
 {
-    public GameObject platform;
-    public float platformMoveSpeed = 5;
+    [HideInInspector] public GameObject platform;
+    public float moveSpeed = 5;
 
 
     private void Awake()
@@ -13,9 +13,9 @@ public class PlatformController : MonoBehaviour
         platform = this.transform.GetChild(0).gameObject;
     }
 
-    public void MovePlatformToward(Transform targetPoint)
+    public void PlatformMove(Transform targetPoint)
     {
-        platform.transform.position = Vector2.MoveTowards(platform.transform.position, targetPoint.position, platformMoveSpeed * Time.deltaTime);
+        platform.transform.position = Vector2.MoveTowards(platform.transform.position, targetPoint.position, moveSpeed * Time.deltaTime);
     }
 
 

@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class PlatformButton : MonoBehaviour
 {
-    public bool canUse;
-    public bool isMax;
     public Transform targetPoint;
 
+    private bool _canUse;
+    private bool _isMax;
     private GameObject _buttonLight;
     private GameObject _highLight;
-    private PlatformController controller2;
+    private PlatformController _controller;
+
 
     private void Awake()
     {
         _buttonLight = this.transform.GetChild(0).gameObject;
         _highLight = this.transform.GetChild(1).gameObject;
 
-        controller2 = this.transform.GetComponentInParent<PlatformController>();
+        _controller = this.transform.GetComponentInParent<PlatformController>();
     }
 
     private void Start()
@@ -30,21 +31,21 @@ public class PlatformButton : MonoBehaviour
     {
         if (targetPoint != null)
         {
-            isMax = Vector2.Distance(controller2.platform.transform.position, targetPoint.position) < 0.1f;
+            _isMax = Vector2.Distance(_controller.platform.transform.position, targetPoint.position) < 0.1f;
             UpdateButtonLight();
 
-            if (Input.GetKey(KeyCode.E) && canUse)
-            {
-                controller2.MovePlatformToward(targetPoint);
-            }
+            if (Input.GetKey(KeyCode.E) && _canUse)
+                _controller.PlatformMove(targetPoint);
+
         }
     }
 
+
     private void UpdateButtonLight()
     {
-        if (isMax && !_buttonLight.activeInHierarchy)
+        if (_isMax && !_buttonLight.activeInHierarchy)
             _buttonLight.gameObject.SetActive(true);
-        else if (!isMax && _buttonLight.activeInHierarchy)
+        else if (!_isMax && _buttonLight.activeInHierarchy)
             _buttonLight.gameObject.SetActive(false);
     }
 
@@ -53,7 +54,7 @@ public class PlatformButton : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             _highLight.SetActive(true);
-            canUse = true;
+            _canUse = true;
         }
     }
 
@@ -62,7 +63,7 @@ public class PlatformButton : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             _highLight.SetActive(false);
-            canUse = false;
+            _canUse = false;
         }
     }
 
