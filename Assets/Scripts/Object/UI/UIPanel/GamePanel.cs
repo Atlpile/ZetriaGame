@@ -10,6 +10,7 @@ public class GamePanel : BasePanel
     [SerializeField] private Image HealthSlider;
     [SerializeField] private Image PistolAmmoPointer;
     [SerializeField] private Image ShoutGunAmmoPointer;
+    [SerializeField] private Image DoorCard;
 
 
     protected override void Awake()
@@ -22,8 +23,10 @@ public class GamePanel : BasePanel
         HealthSlider = GetUIComponent<Image>("HealthSlider");
         PistolAmmoPointer = GetUIComponent<Image>("PistolAmmoPointer");
         ShoutGunAmmoPointer = GetUIComponent<Image>("ShoutGunAmmoPointer");
+        DoorCard = GetUIComponent<Image>("DoorCard");
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
 
     }
 
@@ -41,6 +44,11 @@ public class GamePanel : BasePanel
 
     }
 
+    public void UpdateDoorCard()
+    {
+        DoorCard.gameObject.SetActive(true);
+    }
+
     public void UpdateLifeBar(float currentHP, float maxHP)
     {
         HealthSlider.fillAmount = currentHP / maxHP;
@@ -55,7 +63,6 @@ public class GamePanel : BasePanel
     {
         ShoutGunAmmoCount.text = currentCount + "/" + maxCount;
     }
-
 
     public void UpdateAmmoPointer(bool isAcitve)
     {

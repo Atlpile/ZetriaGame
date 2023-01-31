@@ -1,5 +1,5 @@
 public enum E_PlayerStatus { Pistol, ShotGun, NPC }
-public enum E_ResourcesPath { Audio, Entity, UI }
+public enum E_ResourcesPath { Audio, Entity, UI, FX }
 public enum E_AudioType { BGM, Effect }
 public enum E_InputType
 {
@@ -10,7 +10,7 @@ public enum E_InputType
 }
 public enum E_EventType
 {
-    PickUpNPC, PickUpShotGun, PickUpToken, PickUpCard,
+    PickUpNPC, PickUpShotGun, PickUpToken, PickUpDoorCard,
     InitGamePanelUI,
     UpdatePistolAmmo, UpdateShotGunAmmo,
     PlayerFire, PlayerReload,

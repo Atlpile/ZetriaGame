@@ -56,7 +56,7 @@ public class BasePanel : MonoBehaviour
 
     protected void GetChildrenAllUIComponent<T>() where T : UIBehaviour
     {
-        T[] components = this.GetComponentsInChildren<T>();
+        T[] components = this.GetComponentsInChildren<T>(true);
         for (int i = 0; i < components.Length; i++)
         {
             string objName = components[i].gameObject.name;

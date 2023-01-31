@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : BaseCharacter
 {
+
     private E_PlayerStatus _status;
 
     [Header("Move")]
@@ -17,6 +18,7 @@ public class PlayerController : BaseCharacter
     private float _jumpForce = 12f;
     private int _extraJumpCount = 1;
     private int _currentJumpCount;
+    private Vector3 _jumpFXOffset;
 
     [Header("Crouch & Stand")]
     private Vector2 _crouchSize;
@@ -58,11 +60,14 @@ public class PlayerController : BaseCharacter
     private bool _isReload;
 
     [Header("Hurt")]
-    public int _currentHP = 10;
-    public int _maxHP = 10;
+    [SerializeField] private int _currentHP = 10;
+    [SerializeField] private int _maxHP = 10;
     private float _hurtCD = 1f;
     private bool _isHurt;
-    public bool _isDead;
+    private bool _isDead;
+
+    [Header("Misc")]
+    [SerializeField] private bool _hasDoorCard;
 
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
@@ -85,6 +90,19 @@ public class PlayerController : BaseCharacter
         _moveSource = GetComponent<AudioSource>();
     }
 
+    private void OnEnable()
+    {
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
+    }
+
     protected override void OnStart()
     {
         base.OnStart();
@@ -101,9 +119,6 @@ public class PlayerController : BaseCharacter
         _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
         _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
         _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
-
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
 
     }
 
@@ -255,6 +270,16 @@ public class PlayerController : BaseCharacter
     {
         rb2D.velocity = new Vector2(0f, _jumpForce);
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_jump");
+
+        // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
+        // jumpFX.transform.position = this.transform.position + _jumpFXOffset;
+
+        //TODO:创建的FX，通过协程延时调用返回至对象池
+    }
+
+    private IEnumerator IE_Jump()
+    {
+        yield return new WaitForSeconds(0.5f);
     }
 
     private void Crouch()
@@ -486,7 +511,10 @@ public class PlayerController : BaseCharacter
         moveSpeed = _getNPCSpeed;
     }
 
-
+    public void OnGetDoorCard()
+    {
+        _hasDoorCard = true;
+    }
 
     private void OnDrawGizmos()
     {

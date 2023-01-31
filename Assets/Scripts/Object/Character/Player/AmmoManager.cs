@@ -21,6 +21,7 @@ public class AmmoManager
 
     private GamePanel _GamePanel => GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>();
 
+
     public AmmoManager()
     {
         _packagePistolAmmo = 16;

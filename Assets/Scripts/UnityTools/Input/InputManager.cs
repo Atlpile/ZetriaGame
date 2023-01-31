@@ -19,11 +19,11 @@ public class InputManager
 
     public void UpdateInput()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-            GameManager.Instance.m_EventManager.EventTrigger("T键按下");
+        // if (Input.GetKeyDown(KeyCode.T))
+        //     GameManager.Instance.m_EventManager.EventTrigger("T键按下");
 
-        if (Input.GetKey(KeyCode.Y))
-            GameManager.Instance.m_EventManager.EventTrigger("Y键长按");
+        // if (Input.GetKey(KeyCode.Y))
+        //     GameManager.Instance.m_EventManager.EventTrigger("Y键长按");
     }
 
 

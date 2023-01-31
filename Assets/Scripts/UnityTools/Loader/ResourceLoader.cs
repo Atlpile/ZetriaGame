@@ -13,7 +13,8 @@ public class ResourceLoader
         {
             {E_ResourcesPath.Audio,"Audio/"},
             {E_ResourcesPath.Entity,"Entity/"},
-            {E_ResourcesPath.UI,"UI/"}
+            {E_ResourcesPath.UI,"UI/"},
+            {E_ResourcesPath.FX,"FX/"}
         };
     }
 
