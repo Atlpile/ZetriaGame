@@ -21,9 +21,9 @@ public class SleepWomen : BaseCharacter
 
         if (Input.GetKeyDown(KeyCode.Q) && _canPickUp)
         {
+            Hide();
             GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpNPC);
             GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "npc_pickup");
-            Hide();
         }
     }
 

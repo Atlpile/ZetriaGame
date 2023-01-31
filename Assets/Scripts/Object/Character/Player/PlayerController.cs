@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : BaseCharacter
 {
 
-    private E_PlayerStatus _status;
+    [SerializeField] private E_PlayerStatus _status;
 
     [Header("Move")]
     private int _horizontalMove;

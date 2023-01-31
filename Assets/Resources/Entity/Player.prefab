@@ -256,3 +256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0
   isRight: 0
+  _status: 0
+  _currentHP: 10
+  _maxHP: 10
+  _hasDoorCard: 0
