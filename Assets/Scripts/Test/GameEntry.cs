@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class GameEntry : MonoBehaviour
 {
-
+    private void Awake()
+    {
+        Resources.Load("Misc/GameManager");
+    }
 }

@@ -31,6 +31,7 @@ public class PlayerCamera : MonoBehaviour
         SmoothFollow(playerPos);
     }
 
+
     private void SmoothFollow(Transform target)
     {
         if (target)

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class GamePanel : BasePanel
 {
-    [SerializeField] private Text PistolAmmoCount;
-    [SerializeField] private Text ShoutGunAmmoCount;
-    [SerializeField] private Image HealthSlider;
-    [SerializeField] private Image PistolAmmoPointer;
-    [SerializeField] private Image ShoutGunAmmoPointer;
-    [SerializeField] private Image DoorCard;
+    private Text PistolAmmoCount;
+    private Text ShoutGunAmmoCount;
+    private Image HealthSlider;
+    private Image PistolAmmoPointer;
+    private Image ShoutGunAmmoPointer;
+    private Image DoorCard;
 
 
     protected override void Awake()
@@ -25,9 +25,18 @@ public class GamePanel : BasePanel
         ShoutGunAmmoPointer = GetUIComponent<Image>("ShoutGunAmmoPointer");
         DoorCard = GetUIComponent<Image>("DoorCard");
 
+    }
+
+    private void OnEnable()
+    {
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
+    }
 
+    private void OnDisable()
+    {
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
     }
 
 

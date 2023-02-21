@@ -5,20 +5,18 @@ using UnityEngine;
 public class PlatformButton : MonoBehaviour
 {
     public Transform targetPoint;
-
-    private bool _canUse;
-    private bool _isMax;
-    private GameObject _buttonLight;
+    private GameObject _closeLight;
     private GameObject _highLight;
+    public bool isMax;
+
     private PlatformController _controller;
+    private bool _canUse;
 
 
     private void Awake()
     {
-        _buttonLight = this.transform.GetChild(0).gameObject;
+        _closeLight = this.transform.GetChild(0).gameObject;
         _highLight = this.transform.GetChild(1).gameObject;
-
-        _controller = this.transform.GetComponentInParent<PlatformController>();
     }
 
     private void Start()
@@ -27,26 +25,67 @@ public class PlatformButton : MonoBehaviour
             Debug.LogWarning(this.gameObject.name + "没有挂载目标点,请检查该物体目标点是否挂载");
     }
 
-    private void Update()
-    {
-        if (targetPoint != null)
-        {
-            _isMax = Vector2.Distance(_controller.platform.transform.position, targetPoint.position) < 0.1f;
-            UpdateButtonLight();
+    // private void Update()
+    // {
+    //     // if (Input.GetKeyDown(KeyCode.E) && !isMax)
+    //     // {
+    //     //     _controller.platformAudioSource.enabled = true;
+    //     // }
+    //     // else if (Input.GetKeyUp(KeyCode.E))
+    //     // {
+    //     //     _controller.platformAudioSource.enabled = false;
+    //     // }
+    //     // else if (isMax)
+    //     // {
+    //     //     _controller.platformAudioSource.enabled = false;
+    //     // }
 
-            if (Input.GetKey(KeyCode.E) && _canUse)
-                _controller.PlatformMove(targetPoint);
+    // }
+
+    private void FixedUpdate()
+    {
+        if (targetPoint != null && _controller != null)
+        {
+            // isMax = Vector2.Distance(_controller.platform.transform.position, targetPoint.position) < 0.1f;
+            // UpdateButtonLight();
+
+            // if (Input.GetKey(KeyCode.E) && _canUse && !isMax)
+            // {
+            //     _controller.PlatformMove(targetPoint);
+            // }
+
+
+            if (Input.GetKeyDown(KeyCode.E) && _canUse && isMax)
+            {
+                _controller.InitAllButtons(this);
+                isMax = false;
+            }
+            if (Input.GetKey(KeyCode.E) && _canUse && !isMax)
+            {
+                //移动平台
+                _controller.PlatformMove(this);
+
+                //开启音效
+                if (_controller.platformAudioSource.enabled == false)
+                    _controller.platformAudioSource.enabled = true;
+            }
+            if (Input.GetKeyUp(KeyCode.E) && _canUse && !isMax)
+            {
+                //关闭音效
+                _controller.platformAudioSource.enabled = false;
+            }
 
         }
     }
 
 
-    private void UpdateButtonLight()
+
+    public void UpdateButtonLight()
     {
-        if (_isMax && !_buttonLight.activeInHierarchy)
-            _buttonLight.gameObject.SetActive(true);
-        else if (!_isMax && _buttonLight.activeInHierarchy)
-            _buttonLight.gameObject.SetActive(false);
+        if (isMax && !_closeLight.activeInHierarchy)
+            _closeLight.gameObject.SetActive(true);
+        else if (!isMax && _closeLight.activeInHierarchy)
+            _closeLight.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -67,5 +106,22 @@ public class PlatformButton : MonoBehaviour
         }
     }
 
+    public void OpenButtonLight()
+    {
+        _closeLight.SetActive(true);
+    }
 
+    public void ButtonMax()
+    {
+        isMax = true;
+    }
+
+
+
+
+
+    public void RegisterPlatformController(PlatformController controller)
+    {
+        this._controller = controller;
+    }
 }

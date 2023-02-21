@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ObjectPoolInfo
 {
@@ -47,8 +48,10 @@ public class ObjectPoolInfo
 
     public void FillObjectPool()
     {
-        GameObject fillObj = GameObject.Instantiate(childrenObj, parentObj.transform);
+        GameObject fillObj = GameObject.Instantiate(childrenObj);
         fillObj.name = childrenObj.name;
+
+        ReturnToObjectPool(fillObj);
     }
 
     public void FillObjectPool(int count)
@@ -70,7 +73,8 @@ public class ObjectPoolManager
 
     public ObjectPoolManager()
     {
-
+        if (poolRoot == null)
+            poolRoot = new GameObject("PoolRoot");
     }
 
     public GameObject GetObject(string name, Transform parent = null)
@@ -82,32 +86,41 @@ public class ObjectPoolManager
         }
         else if (ObjectPoolsDic[name].poolStack.Count > 0)
         {
+            Debug.Log("从对象池中获取对象");
             return ObjectPoolsDic[name].GetObjectInPool(parent);
         }
         else
         {
             //递归填充
             ObjectPoolsDic[name].FillObjectPool();
+            Debug.Log("从对象池中填充对象");
             return GetObject(name, parent);
         }
     }
 
     public GameObject GetOrLoadObject(string name, E_ResourcesPath path, Transform parent = null)
     {
+        if (poolRoot == null)
+            poolRoot = new GameObject("PoolRoot");
+
         if (!ObjectPoolsDic.ContainsKey(name))
         {
             GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name);
             resObj.name = name;
+            ObjectPoolsDic.Add(resObj.name, new ObjectPoolInfo(resObj, poolRoot));
+            Debug.Log("从Resources中获取对象");
             return resObj;
         }
         else if (ObjectPoolsDic[name].poolStack.Count > 0)
         {
+            Debug.Log("从对象池中获取对象");
             return ObjectPoolsDic[name].GetObjectInPool(parent);
         }
         else
         {
             //递归填充
             ObjectPoolsDic[name].FillObjectPool();
+            Debug.Log("从对象池中填充对象");
             return GetOrLoadObject(name, path, parent);
         }
     }
@@ -119,26 +132,46 @@ public class ObjectPoolManager
 
         if (ObjectPoolsDic.ContainsKey(obj.name))
         {
+            Debug.Log("返回对象池");
             ObjectPoolsDic[obj.name].ReturnToObjectPool(obj);
         }
         else
         {
+            Debug.Log("创建新对象池并添加对象");
             ObjectPoolsDic.Add(obj.name, new ObjectPoolInfo(obj, poolRoot));
             ObjectPoolsDic[obj.name].ReturnToObjectPool(obj);
         }
     }
 
+    public void AddObject(GameObject obj, string name)
+    {
+        if (obj == null)
+        {
+            Debug.Log("");
+            return;
+        }
+        else
+        {
+            if (poolRoot == null)
+                poolRoot = new GameObject("PoolRoot");
+
+            obj.name = name;
+            ObjectPoolsDic.Add(name, new ObjectPoolInfo(obj, poolRoot));
+            ObjectPoolsDic[name].ReturnToObjectPool(obj);
+        }
+    }
+
     public void AddObjectFromResources(string name, E_ResourcesPath path)
     {
-        if (poolRoot == null)
-            poolRoot = new GameObject("PoolRoot");
-
         if (ObjectPoolsDic.ContainsKey(name))
         {
             Debug.LogWarning("对象池中存在该名称的对象");
         }
         else
         {
+            if (poolRoot == null)
+                poolRoot = new GameObject("PoolRoot");
+
             GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name);
             resObj.name = name;
             ObjectPoolsDic.Add(name, new ObjectPoolInfo(resObj, poolRoot));

@@ -8,16 +8,26 @@ public class UIManager
     public Dictionary<string, BasePanel> PanelDic = new Dictionary<string, BasePanel>();
     public RectTransform rectCanvas;
 
+    private GameObject canvas;
+    private GameObject eventSystem;
+
     public UIManager()
     {
         //创建Canvas
-        GameObject canvas = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
-        rectCanvas = canvas.transform as RectTransform;
-        GameObject.DontDestroyOnLoad(canvas);
+        if (!GameObject.FindGameObjectWithTag("Canvas"))
+        {
+            canvas = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
+            rectCanvas = canvas.transform as RectTransform;
+            GameObject.DontDestroyOnLoad(canvas);
+        }
 
         //创建EventSystem
-        GameObject eventSystem = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
-        GameObject.DontDestroyOnLoad(eventSystem);
+        if (!GameObject.FindGameObjectWithTag("EventSystem"))
+        {
+            eventSystem = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
+            GameObject.DontDestroyOnLoad(eventSystem);
+        }
+
     }
 
     public T ShowPanel<T>() where T : BasePanel

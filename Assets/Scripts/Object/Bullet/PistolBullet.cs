@@ -9,8 +9,12 @@ public class PistolBullet : BaseEntity
 
     private void OnEnable()
     {
+        if (IsInvoking())
+            CancelInvoke();
+
         Create();
     }
+
 
     private void Update()
     {
@@ -25,7 +29,9 @@ public class PistolBullet : BaseEntity
 
     public void Hide()
     {
-        GameManager.Instance.m_ObjectPool.ReturnObject(this.gameObject.name, this.gameObject, Release);
+        // GameManager.Instance.m_ObjectPool.ReturnObject(this.gameObject.name, this.gameObject, Release);
+        GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
+
     }
 
     public void Release()

@@ -39,18 +39,18 @@ public class BasePanel : MonoBehaviour
 
     }
 
-    protected T GetUIComponent<T>(string componentName) where T : UIBehaviour
+    protected T GetUIComponent<T>(string uiObjName) where T : UIBehaviour
     {
-        if (UIComponentDic.ContainsKey(componentName))
+        if (UIComponentDic.ContainsKey(uiObjName))
         {
-            for (int i = 0; i < UIComponentDic[componentName].Count; ++i)
+            for (int i = 0; i < UIComponentDic[uiObjName].Count; ++i)
             {
-                if (UIComponentDic[componentName][i] is T)
-                    return UIComponentDic[componentName][i] as T;
+                if (UIComponentDic[uiObjName][i] is T)
+                    return UIComponentDic[uiObjName][i] as T;
             }
         }
 
-        Debug.LogError("该面板中没有名为" + componentName + "的组件,请检查UI组件名称是否正确");
+        Debug.LogError("该面板中没有名为" + uiObjName + "的组件,请检查UI组件名称是否正确");
         return null;
     }
 

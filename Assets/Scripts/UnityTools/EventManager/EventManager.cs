@@ -40,6 +40,8 @@ public class EventInfo<T, K> : IEventInfo
 }
 
 
+//FIXME：Event需要在Start时才能添加
+
 public class EventManager
 {
     private Dictionary<string, IEventInfo> eventDic;

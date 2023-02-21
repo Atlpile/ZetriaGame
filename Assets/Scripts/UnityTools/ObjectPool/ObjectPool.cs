@@ -136,6 +136,15 @@ public class ObjectPool
 
     public GameObject GetPoolObject(string name)
     {
+        if (!GameObjectPools.ContainsKey(name))
+        {
+            Debug.LogError("对象池中没有找到该名称的对象，请检查输入的名称是否正确");
+            return null;
+        }
+
+
+
+
         if (GameObjectPools.ContainsKey(name) && GameObjectPools[name].poolStack.Count > 0)
             return GameObjectPools[name].GetObjectInPool();
         else

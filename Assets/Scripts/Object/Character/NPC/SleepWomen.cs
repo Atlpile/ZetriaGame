@@ -19,11 +19,12 @@ public class SleepWomen : BaseCharacter
     {
         base.OnUpdate();
 
-        if (Input.GetKeyDown(KeyCode.Q) && _canPickUp)
+        if (Input.GetKeyDown(KeyCode.E) && _canPickUp)
         {
-            Hide();
+            //FIXME：拾取与放下NPC，当按键重复时，会重叠导致第一次拾取后立即放下，存在先后逻辑
             GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpNPC);
             GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "npc_pickup");
+            Hide();
         }
     }
 

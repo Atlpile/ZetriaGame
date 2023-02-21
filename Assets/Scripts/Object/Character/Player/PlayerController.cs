@@ -2,31 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerController : BaseCharacter
 {
+    private Zetria zetriaData;
+    private E_PlayerStatus _status;
 
-    [SerializeField] private E_PlayerStatus _status;
-
-    [Header("Move")]
+    //移动相关
     private int _horizontalMove;
-    private float _standSpeed = 4f;
-    private float _getNPCSpeed = 3.5f;
-    private float _crouchSpeed = 2f;
     private AudioSource _moveSource;
 
-    [Header("Jump")]
-    private float _jumpForce = 12f;
-    private int _extraJumpCount = 1;
+    //跳跃相关
     private int _currentJumpCount;
     private Vector3 _jumpFXOffset;
 
-    [Header("Crouch & Stand")]
+    [Header("Player Size & Offset")]
     private Vector2 _crouchSize;
     private Vector2 _crouchOffset;
     private Vector2 _standSize;
     private Vector2 _standOffset;
 
-    [Header("GroundCheck")]
+    [Header("Ground Check")]
     private Vector2 _groundCheckPos;
     private float _groundCheckRadius = 0.15f;
 
@@ -41,33 +37,17 @@ public class PlayerController : BaseCharacter
     private Vector3 _shotGunBulletRightOffset = new Vector2(0.5f, 0.75f);
     private Vector3 _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
 
-    [Header("Attack")]
-    private float _meleeAttackCD = 0.4f;
-    private float _pistolAttackCD = 0.45f;
-    private float _shotGunAttackCD = 0.9f;
-    private float _emptyAttckCD = 0.45f;
+    [Header("Status")]
     private bool _isMeleeAttack;
     private bool _isPistolAttack;
     private bool _isShotGunAttack;
     private bool _isEmptyAttack;
-
-    [Header("State")]
     private bool _isCrouch;
     private bool _canStand;
-
-    [Header("Reload")]
-    private float _reloadCD = 0.8f;
     private bool _isReload;
-
-    [Header("Hurt")]
-    [SerializeField] private int _currentHP = 10;
-    [SerializeField] private int _maxHP = 10;
-    private float _hurtCD = 1f;
     private bool _isHurt;
     private bool _isDead;
 
-    [Header("Misc")]
-    [SerializeField] private bool _hasDoorCard;
 
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
@@ -87,13 +67,14 @@ public class PlayerController : BaseCharacter
     {
         base.OnAwake();
 
+        zetriaData = new Zetria();
         _moveSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
     {
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
     }
 
@@ -107,11 +88,13 @@ public class PlayerController : BaseCharacter
     {
         base.OnStart();
 
+        // Application.targetFrameRate = 144;
+
         isRight = true;
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
 
-        moveSpeed = _standSpeed;
-        rb2D.gravityScale = 5f;
+        moveSpeed = zetriaData.standSpeed;
+        rb2D.gravityScale = zetriaData.jumpGravity;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
 
@@ -128,6 +111,7 @@ public class PlayerController : BaseCharacter
 
         if (_isDead) return;
 
+        //OPTIMIZE:优化enabled
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
         UpdatePlayerState();
     }
@@ -159,7 +143,7 @@ public class PlayerController : BaseCharacter
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
         if (isGround)
         {
-            _currentJumpCount = _extraJumpCount;
+            _currentJumpCount = zetriaData.maxJumpCount;
             _canStand = CanStand();
 
             if (Input.GetKey(KeyCode.S) && !_isReload && _status != E_PlayerStatus.NPC)
@@ -250,6 +234,8 @@ public class PlayerController : BaseCharacter
     {
         _horizontalMove = (int)Input.GetAxisRaw("Horizontal");
         rb2D.velocity = new Vector2(moveSpeed * _horizontalMove, rb2D.velocity.y);
+        //TODO:尝试使用以下API
+        // rb2D.MovePosition();
     }
 
     private void Flip()
@@ -268,7 +254,7 @@ public class PlayerController : BaseCharacter
 
     private void Jump()
     {
-        rb2D.velocity = new Vector2(0f, _jumpForce);
+        rb2D.velocity = new Vector2(0f, zetriaData.jumpForce);
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_jump");
 
         // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
@@ -285,7 +271,7 @@ public class PlayerController : BaseCharacter
     private void Crouch()
     {
         _isCrouch = true;
-        moveSpeed = _crouchSpeed;
+        moveSpeed = zetriaData.crouchSpeed;
         col2D.size = _crouchSize;
         col2D.offset = _crouchOffset;
         _status = E_PlayerStatus.Pistol;
@@ -299,7 +285,7 @@ public class PlayerController : BaseCharacter
         col2D.offset = _standOffset;
 
         if (_status != E_PlayerStatus.NPC)
-            moveSpeed = _standSpeed;
+            moveSpeed = zetriaData.standSpeed;
     }
 
     private void AlterWeapon()
@@ -315,7 +301,7 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_AmmoManager.UsePistolAmmo();
 
         GameObject pistolBullet = GameManager.Instance.m_ObjectPool.GetOrLoadObject("PistolBullet", E_ResourcesPath.Entity);
-        AlterBulletPos(pistolBullet, _pistolBulletLeftOffset, _pistolBulletRightOffset, _bulletOffsetWithCrouch);
+        SetBulletPos(pistolBullet, _pistolBulletLeftOffset, _pistolBulletRightOffset, _bulletOffsetWithCrouch);
     }
 
     private void ShotGunFire()
@@ -330,12 +316,12 @@ public class PlayerController : BaseCharacter
         shotGunBullet0.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
         shotGunBullet2.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
 
-        AlterBulletPos(shotGunBullet0, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
-        AlterBulletPos(shotGunBullet1, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
-        AlterBulletPos(shotGunBullet2, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+        SetBulletPos(shotGunBullet0, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+        SetBulletPos(shotGunBullet1, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+        SetBulletPos(shotGunBullet2, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
     }
 
-    private void AlterBulletPos(GameObject bullet, Vector3 leftOffset, Vector3 rightOffset, Vector3 crouchOffset)
+    private void SetBulletPos(GameObject bullet, Vector3 leftOffset, Vector3 rightOffset, Vector3 crouchOffset)
     {
         if (isRight)
         {
@@ -375,7 +361,7 @@ public class PlayerController : BaseCharacter
         anim.SetTrigger("MeleeAttack");
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_meleeAttack");
 
-        yield return new WaitForSeconds(_meleeAttackCD);
+        yield return new WaitForSeconds(zetriaData.meleeAttackCD);
         _isMeleeAttack = false;
     }
 
@@ -396,7 +382,7 @@ public class PlayerController : BaseCharacter
 
         PistolFire();
 
-        yield return new WaitForSeconds(_pistolAttackCD);
+        yield return new WaitForSeconds(zetriaData.pistolAttackCD);
         _isPistolAttack = false;
     }
 
@@ -417,7 +403,7 @@ public class PlayerController : BaseCharacter
 
         ShotGunFire();
 
-        yield return new WaitForSeconds(_shotGunAttackCD);
+        yield return new WaitForSeconds(zetriaData.shotGunAttackCD);
         _isShotGunAttack = false;
     }
 
@@ -432,7 +418,7 @@ public class PlayerController : BaseCharacter
         _isEmptyAttack = true;
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "gun_empty");
 
-        yield return new WaitForSeconds(_emptyAttckCD);
+        yield return new WaitForSeconds(zetriaData.emptyAttackCD);
         _isEmptyAttack = false;
     }
 
@@ -460,7 +446,7 @@ public class PlayerController : BaseCharacter
                 break;
         }
 
-        yield return new WaitForSeconds(_reloadCD);
+        yield return new WaitForSeconds(zetriaData.reloadCD);
         _isReload = false;
     }
 
@@ -474,17 +460,17 @@ public class PlayerController : BaseCharacter
     {
         _isHurt = true;
 
-        _currentHP = _currentHP > 0 ? --_currentHP : 0;
-        _isDead = _currentHP == 0 ? true : false;
+        zetriaData.currentHealth = zetriaData.currentHealth > 0 ? --zetriaData.currentHealth : 0;
+        _isDead = zetriaData.currentHealth == 0 ? true : false;
 
         anim.SetTrigger("Hurt");
 
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
-        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_currentHP, _maxHP);
+        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaData.currentHealth, zetriaData.maxHealth);
 
         if (_isDead) Dead();
 
-        yield return new WaitForSeconds(_hurtCD);
+        yield return new WaitForSeconds(zetriaData.hurtCD);
         _isHurt = false;
     }
 
@@ -502,18 +488,19 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "npc_putdown");
 
         GameObject sleepWomen = GameManager.Instance.m_ObjectPool.GetPoolObject("SleepWomen");
-        sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
+        if (sleepWomen != null)
+            sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
     }
 
     public void OnGetNPC()
     {
         _status = E_PlayerStatus.NPC;
-        moveSpeed = _getNPCSpeed;
+        moveSpeed = zetriaData.getNPCSpeed;
     }
 
     public void OnGetDoorCard()
     {
-        _hasDoorCard = true;
+        zetriaData.hasDoorCard = true;
     }
 
     private void OnDrawGizmos()

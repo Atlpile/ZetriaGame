@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 4660638370078926980}
   - component: {fileID: 4660638370078926981}
   m_Layer: 5
-  m_Name: Continue
+  m_Name: btnContinue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 4660638370356247162}
   - component: {fileID: 4660638370356247163}
   m_Layer: 5
-  m_Name: Options
+  m_Name: btnOptions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 4660638370805294193}
   - component: {fileID: 4660638370805294194}
   m_Layer: 5
-  m_Name: Title
+  m_Name: imgTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -669,7 +669,7 @@ GameObject:
   - component: {fileID: 4660638371324711532}
   - component: {fileID: 4660638371324711533}
   m_Layer: 5
-  m_Name: BackGround
+  m_Name: imgBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -822,7 +822,7 @@ GameObject:
   - component: {fileID: 4660638371583474533}
   - component: {fileID: 4660638371583474534}
   m_Layer: 5
-  m_Name: Exit
+  m_Name: btnExit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -944,7 +944,7 @@ GameObject:
   - component: {fileID: 4660638371703632190}
   - component: {fileID: 4660638371703632191}
   m_Layer: 5
-  m_Name: New Game
+  m_Name: btnNewGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1065,7 +1065,7 @@ GameObject:
   - component: {fileID: 4660638371715237021}
   - component: {fileID: 4660638371715237022}
   m_Layer: 5
-  m_Name: Zetria
+  m_Name: imgZetria
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
