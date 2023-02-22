@@ -59,7 +59,7 @@ public class InputController
     }
 
     //获取任意按键
-    public KeyCode GetKeyDownCode()
+    private KeyCode GetKeyDownCode()
     {
         if (Input.anyKeyDown)
         {
@@ -74,13 +74,11 @@ public class InputController
         return KeyCode.None;
     }
 
-    public void ChangeInput(E_InputType inputType, KeyCode keyCode)
+    public void ChangeKey(E_InputType inputType)
     {
         if (CustomInputDic2.ContainsKey(inputType))
         {
-            //更改按键字符串
-            CustomInputDic2[inputType] = keyCode;
-            Debug.Log(CustomInputDic2[inputType]);
+            CustomInputDic2[inputType] = GetKeyDownCode();
         }
     }
 

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class InputPanel : BasePanel
 {
+    private GameObject changeKeyTip;
     private Button btnSwitchWeaponKey;
     private Button btnCrouchKey;
     private Button btnGunAttackKey;
@@ -16,10 +17,14 @@ public class InputPanel : BasePanel
     private Text txtInteractiveKey;
     private Text txtJumpKey;
 
+    private bool canChangeKey;
+
     protected override void Awake()
     {
         GetChildrenAllUIComponent<Button>();
         GetChildrenAllUIComponent<Text>();
+
+        changeKeyTip = this.transform.GetChild(0).gameObject;
 
         btnSwitchWeaponKey = GetUIComponent<Button>("btnSwitchWeaponKey");
         btnCrouchKey = GetUIComponent<Button>("btnCrouchKey");
@@ -32,6 +37,7 @@ public class InputPanel : BasePanel
         txtGunAttackKey = GetUIComponent<Text>("txtGunAttackKey");
         txtInteractiveKey = GetUIComponent<Text>("txtInteractiveKey");
         txtJumpKey = GetUIComponent<Text>("txtJumpKey");
+
     }
 
     public override void ShowSelf()
@@ -54,26 +60,45 @@ public class InputPanel : BasePanel
         switch (buttonName)
         {
             case "btnSwitchWeaponKey":
-                // GameManager.Instance.m_InputController.ChangeInput(E_InputType.SwitchWeapon);
+                ChangeKey(E_InputType.SwitchWeapon);
                 break;
             case "btnCrouchKey":
+                ChangeKey(E_InputType.Crouch);
                 break;
             case "btnGunAttackKey":
+                ChangeKey(E_InputType.GunAttack);
                 break;
             case "btnInteractiveKey":
+                ChangeKey(E_InputType.Interacitve);
                 break;
             case "btnJumpKey":
+                ChangeKey(E_InputType.Jump);
                 break;
         }
     }
 
-    public void ChangeKey()
+    public void ChangeKey(E_InputType inputType)
     {
-        //先调出“请按下任意键”提示面板，再将当前按钮的文本，切换为按下按键的文本
+        //先调出提示面板，再更新按钮文本
+        changeKeyTip.gameObject.SetActive(true);
+        GameManager.Instance.StartCoroutine(IE_ChangeKey(inputType));
     }
 
-    private void UpdateKeyText()
+    private IEnumerator IE_ChangeKey(E_InputType inputType)
     {
-
+        while (true)
+        {
+            if (Input.anyKeyDown)
+            {
+                GameManager.Instance.m_InputController.ChangeKey(inputType);
+                changeKeyTip.SetActive(false);
+                LoadInputKey();
+                break;
+            }
+            else
+            {
+                yield return null;
+            }
+        }
     }
 }
