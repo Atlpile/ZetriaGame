@@ -32,26 +32,31 @@ public class SceneLoader
         GameManager.Instance.StartCoroutine(IE_LoadAsync(sceneName, loadAction));
     }
 
-    public IEnumerator IE_LoadAsync(string sceneName, UnityAction loadAction)
+    public void LoadCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private IEnumerator IE_LoadAsync(string sceneName, UnityAction loadAction)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);
 
         while (!ao.isDone)
         {
-            Debug.Log(ao.progress);
+            // Debug.Log(ao.progress);
             yield return ao.progress;
         }
 
         loadAction();
     }
 
-    public IEnumerator IE_LoadAsync(E_SceneName sceneName, UnityAction loadAction)
+    private IEnumerator IE_LoadAsync(E_SceneName sceneName, UnityAction loadAction)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(Enum.GetName(typeof(E_SceneName), sceneName));
 
         while (!ao.isDone)
         {
-            Debug.Log(ao.progress);
+            // Debug.Log(ao.progress);
             yield return ao.progress;
         }
 

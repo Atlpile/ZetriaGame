@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,12 +11,11 @@ public class GameManager : MonoBehaviour
 
     public SceneLoader m_SceneLoader { get; set; }
     public ResourceLoader m_ResourcesLoader { get; set; }
-    public ObjectPool m_ObjectPool { get; set; }
     public ObjectPoolManager m_ObjectPoolManager { get; set; }
-    public AudioManager m_AudioManager { get; set; }
     public AudioController m_AudioController { get; set; }
     public UIManager m_UIManager { get; set; }
     public BinaryDataManager m_BinaryDataManager { get; set; }
+    public SaveDataManager m_SaveDataManager { get; set; }
     public InputController m_InputController { get; set; }
     public EventManager m_EventManager { get; set; }
 
@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public ItemManager m_ItemManager { get; set; }
 
     public GameData gameData;
+
+    public bool IsPause { get; set; }
 
     private void Awake()
     {
@@ -40,12 +42,11 @@ public class GameManager : MonoBehaviour
     {
         m_SceneLoader = new SceneLoader();
         m_ResourcesLoader = new ResourceLoader();
-        m_ObjectPool = new ObjectPool();
         m_ObjectPoolManager = new ObjectPoolManager();
-        m_AudioManager = new AudioManager();
         m_AudioController = new AudioController();
         m_UIManager = new UIManager();
         m_BinaryDataManager = new BinaryDataManager();
+        m_SaveDataManager = new SaveDataManager();
         m_InputController = new InputController();
         m_EventManager = new EventManager();
 
@@ -57,25 +58,45 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // m_UIManager.ShowPanel<GamePanel>();
-        // m_UIManager.ShowPanel<MainPanel>();
-        m_UIManager.ShowPanel<InputPanel>();
+        InitUI();
     }
 
 
 
-    // private void Update()
-    // {
-    //     // GameManager.Instance.m_InputManager.UpdateInput();
+    private void Update()
+    {
+        UpdateInput();
+    }
 
-    //     if (Input.GetMouseButtonDown(0))
-    //     {
-    //         GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
-    //     }
-    //     else if (Input.GetMouseButtonDown(1))
-    //     {
-    //         GameManager.Instance.m_UIManager.ShowPanel<GamePanel>();
-    //         // GameManager.Instance.UIManager.ShowPanelAsync<MainPanel>((MainPanel) => { });
-    //     }
-    // }
+    private void InitUI()
+    {
+        // m_UIManager.ShowPanel<GamePanel>();
+        m_UIManager.ShowPanel<MainPanel>();
+        // m_UIManager.ShowPanel<InputPanel>();
+    }
+
+    private void UpdateInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && GameObject.FindGameObjectWithTag("Player"))
+        {
+            UpdateGameStatus();
+        }
+    }
+
+    public void UpdateGameStatus()
+    {
+        IsPause = !IsPause;
+        if (IsPause)
+        {
+            m_UIManager.ShowPanel<PausePanel>();
+            Time.timeScale = 0;
+            m_InputController.SetInputStatus(false);
+        }
+        else
+        {
+            m_UIManager.HidePanel<PausePanel>();
+            Time.timeScale = 1;
+            m_InputController.SetInputStatus(true);
+        }
+    }
 }

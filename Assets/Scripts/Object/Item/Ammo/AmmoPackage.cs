@@ -20,7 +20,7 @@ public class AmmoPackage : MonoBehaviour
                     break;
             }
 
-            GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_ammo_collect");
+            GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "pistol_ammo_collect");
             Destroy(this.gameObject);
         }
     }

@@ -43,6 +43,9 @@ public class MainPanel : BasePanel
     {
         GameManager.Instance.m_UIManager.HidePanel<MainPanel>();
 
+        GameManager.Instance.m_ObjectPoolManager.ClearPool();
+        GameManager.Instance.m_AudioController.ClearAudio();
+
         GameManager.Instance.m_SceneLoader.LoadSceneAsync("Level0", () =>
         {
             GameManager.Instance.m_UIManager.ShowPanel<GamePanel>();

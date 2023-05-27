@@ -4,7 +4,7 @@ public enum E_AudioType { BGM, Effect }
 public enum E_InputType
 {
     Crouch, Jump, MeleeAttack, GunAttack, SwitchWeapon, Reload,
-    Interacitve,
+    Interacitve, PutDownNPC,
     Pause
 }
 

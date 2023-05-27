@@ -6,8 +6,8 @@ public abstract class BaseCharacter : BaseEntity
 {
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
-    [SerializeField] protected float moveSpeed;
-    [SerializeField] protected bool isRight;
+    protected float moveSpeed;
+    protected bool isRight;
     protected bool isGround;
 
 

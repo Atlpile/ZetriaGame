@@ -111,4 +111,9 @@ public class AudioController
         yield return new WaitForSeconds(clip.length);
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(audioObj);
     }
+
+    public void ClearAudio()
+    {
+        AudioDict.Clear();
+    }
 }

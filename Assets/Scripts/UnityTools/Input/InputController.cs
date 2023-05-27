@@ -13,38 +13,17 @@ using UnityEngine;
 
 public class InputController
 {
-    public bool canInput;
+    private bool canInput;
 
-    // //默认输入
-    // public Dictionary<E_InputType, string> DefaultInputDic;
-    // //自定义输入
-    // public Dictionary<E_InputType, string> CustomInputDic;
-
-    public Dictionary<E_InputType, KeyCode> DefaultInputDic2;
-    public Dictionary<E_InputType, KeyCode> CustomInputDic2;
-
-    public Dictionary<string, bool> AxisKeyDic;
-
+    public Dictionary<E_InputType, KeyCode> DefaultInputDic;
+    public Dictionary<E_InputType, KeyCode> CustomInputDic;
 
     public InputController()
     {
         canInput = true;
 
-        // //默认输入配置
-        // DefaultInputDic = new Dictionary<E_InputType, string>
-        // {
-        //     {E_InputType.AlterWeapon,   "Tab"   },
-        //     {E_InputType.Crouch,        "S"     },
-        //     {E_InputType.GunAttack,     "K"     },
-        //     {E_InputType.Interacitve,   "E"     },
-        //     {E_InputType.Jump,          "Space" },
-        //     {E_InputType.MeleeAttack,   "J"     },
-        //     {E_InputType.Pause,         "Escape"},
-        //     {E_InputType.Reload,        "R"     },
-        // };
-        // CustomInputDic = DefaultInputDic;
-
-        DefaultInputDic2 = new Dictionary<E_InputType, KeyCode>
+        //默认按键配置
+        DefaultInputDic = new Dictionary<E_InputType, KeyCode>
         {
             {E_InputType.SwitchWeapon,  KeyCode.Tab},
             {E_InputType.Crouch,        KeyCode.S},
@@ -54,8 +33,9 @@ public class InputController
             {E_InputType.MeleeAttack,   KeyCode.J},
             {E_InputType.Pause,         KeyCode.Escape},
             {E_InputType.Reload,        KeyCode.R},
+            {E_InputType.PutDownNPC,    KeyCode.F},
         };
-        CustomInputDic2 = DefaultInputDic2;
+        CustomInputDic = DefaultInputDic;
     }
 
     //获取任意按键
@@ -76,10 +56,11 @@ public class InputController
 
     public void ChangeKey(E_InputType inputType)
     {
-        if (CustomInputDic2.ContainsKey(inputType))
-        {
-            CustomInputDic2[inputType] = GetKeyDownCode();
-        }
+        KeyCode key = GetKeyDownCode();
+        if (key != KeyCode.None)
+            CustomInputDic[inputType] = key;
+        else
+            Debug.Log("Key为空,没有该按键");
     }
 
 
@@ -87,8 +68,8 @@ public class InputController
     {
         if (canInput)
         {
-            if (CustomInputDic2.ContainsKey(type) && Input.GetKey(CustomInputDic2[type]))
-                return Input.GetKey(CustomInputDic2[type]);
+            if (CustomInputDic.ContainsKey(type) && Input.GetKey(CustomInputDic[type]))
+                return Input.GetKey(CustomInputDic[type]);
         }
         return false;
 
@@ -98,8 +79,8 @@ public class InputController
     {
         if (canInput)
         {
-            if (CustomInputDic2.ContainsKey(type) && Input.GetKeyDown(CustomInputDic2[type]))
-                return Input.GetKeyDown(CustomInputDic2[type]);
+            if (CustomInputDic.ContainsKey(type) && Input.GetKeyDown(CustomInputDic[type]))
+                return Input.GetKeyDown(CustomInputDic[type]);
         }
         return false;
     }
@@ -108,13 +89,64 @@ public class InputController
     {
         if (canInput)
         {
-            if (CustomInputDic2.ContainsKey(type) && Input.GetKeyUp(CustomInputDic2[type]))
-                return Input.GetKeyUp(CustomInputDic2[type]);
-
+            if (CustomInputDic.ContainsKey(type) && Input.GetKeyUp(CustomInputDic[type]))
+                return Input.GetKeyUp(CustomInputDic[type]);
         }
         return false;
     }
 
+    public bool GetMouseButton(int button)
+    {
+        if (canInput)
+        {
+            return Input.GetMouseButton(button);
+        }
+
+        return false;
+    }
+
+    public bool GetMouseButtonDown(int button)
+    {
+        if (canInput)
+        {
+            return Input.GetMouseButtonDown(button);
+        }
+
+        return false;
+    }
+
+    public bool GetMouseButtonUp(int button)
+    {
+        if (canInput)
+        {
+            return Input.GetMouseButtonUp(button);
+        }
+
+        return false;
+    }
+
+    public float GetAxis(string axisName)
+    {
+        if (canInput)
+        {
+            return Input.GetAxis(axisName);
+        }
+        return 0;
+    }
+
+    public float GetAxisRaw(string axisName)
+    {
+        if (canInput)
+        {
+            return Input.GetAxisRaw(axisName);
+        }
+        return 0;
+    }
+
+    public void SetInputStatus(bool canInput)
+    {
+        this.canInput = canInput;
+    }
 
 }
 

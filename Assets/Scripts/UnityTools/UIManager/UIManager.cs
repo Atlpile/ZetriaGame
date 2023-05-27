@@ -125,4 +125,17 @@ public class UIManager
             return null;
         }
     }
+
+    public bool GetExistPanel(string panelName)
+    {
+        if (PanelDic.ContainsKey(panelName))
+            return true;
+        else
+            return false;
+    }
+
+    public void ClearUI()
+    {
+        PanelDic.Clear();
+    }
 }

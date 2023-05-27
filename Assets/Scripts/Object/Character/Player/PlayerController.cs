@@ -12,6 +12,7 @@ public class PlayerController : BaseCharacter
     private int _horizontalMove;
     private AudioSource _moveSource;
 
+
     //跳跃相关
     private int _currentJumpCount;
     private Vector3 _jumpFXOffset;
@@ -49,7 +50,6 @@ public class PlayerController : BaseCharacter
     private bool _isDead;
 
 
-
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
     public Vector2 RayOffset
     {
@@ -61,6 +61,7 @@ public class PlayerController : BaseCharacter
                 return new Vector2(-this.col2D.offset.x, this.col2D.size.y / 2);
         }
     }
+    private InputController InputController => GameManager.Instance.m_InputController;
 
 
     protected override void OnAwake()
@@ -92,6 +93,7 @@ public class PlayerController : BaseCharacter
 
         isRight = true;
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
+        GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
 
         moveSpeed = zetriaData.standSpeed;
         rb2D.gravityScale = zetriaData.jumpGravity;
@@ -146,7 +148,7 @@ public class PlayerController : BaseCharacter
             _currentJumpCount = zetriaData.maxJumpCount;
             _canStand = CanStand();
 
-            if (Input.GetKey(KeyCode.S) && !_isReload && _status != E_PlayerStatus.NPC)
+            if (InputController.GetKey(E_InputType.Crouch) && !_isReload && _status != E_PlayerStatus.NPC)
             {
                 Crouch();
             }
@@ -155,26 +157,26 @@ public class PlayerController : BaseCharacter
                 Stand();
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && _canStand && !_isReload && !_isMeleeAttack && _status != E_PlayerStatus.NPC)
+            if (InputController.GetKeyDown(E_InputType.Jump) && _canStand && !_isReload && !_isMeleeAttack && _status != E_PlayerStatus.NPC)
             {
                 Jump();
             }
-            else if (Input.GetKeyDown(KeyCode.F) && !_isMeleeAttack && !_isCrouch && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.MeleeAttack) && !_isMeleeAttack && !_isCrouch && _status != E_PlayerStatus.NPC)
             {
                 //OPTIMIZE:换子弹过程中，若攻击只能选择近战攻击或者枪械攻击的其中之一
                 MeleeAttack();
                 StopMove();
             }
-            else if (Input.GetKeyDown(KeyCode.Tab) && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC)
             {
                 AlterWeapon();
             }
-            else if (Input.GetKeyDown(KeyCode.R) && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status) && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.Reload) && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status) && _status != E_PlayerStatus.NPC)
             {
                 Reload();
                 StopMove();
             }
-            else if (Input.GetKeyDown(KeyCode.Q) && _status == E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.PutDownNPC) && _status == E_PlayerStatus.NPC)
             {
                 PutDownNPC();
             }
@@ -183,14 +185,14 @@ public class PlayerController : BaseCharacter
                 Hurt();
             }
 
-            if (Input.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+            if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (Input.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
+            if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     ShotGunAttack();
@@ -232,7 +234,7 @@ public class PlayerController : BaseCharacter
 
     private void Move()
     {
-        _horizontalMove = (int)Input.GetAxisRaw("Horizontal");
+        _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
         rb2D.velocity = new Vector2(moveSpeed * _horizontalMove, rb2D.velocity.y);
         //TODO:尝试使用以下API
         // rb2D.MovePosition();
@@ -255,7 +257,7 @@ public class PlayerController : BaseCharacter
     private void Jump()
     {
         rb2D.velocity = new Vector2(0f, zetriaData.jumpForce);
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_jump");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_jump");
 
         // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
         // jumpFX.transform.position = this.transform.position + _jumpFXOffset;
@@ -292,28 +294,29 @@ public class PlayerController : BaseCharacter
     {
         _status = (int)_status >= 1 ? _status = 0 : ++_status;
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_swapWeapon");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
     }
 
     private void PistolFire()
     {
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_fire");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "pistol_fire");
         GameManager.Instance.m_AmmoManager.UsePistolAmmo();
 
-        GameObject pistolBullet = GameManager.Instance.m_ObjectPool.GetOrLoadObject("PistolBullet", E_ResourcesPath.Entity);
+        GameObject pistolBullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("PistolBullet", E_ResourcesPath.Entity);
         SetBulletPos(pistolBullet, _pistolBulletLeftOffset, _pistolBulletRightOffset, _bulletOffsetWithCrouch);
     }
 
     private void ShotGunFire()
     {
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "shotgun_fire");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "shotgun_fire");
         GameManager.Instance.m_AmmoManager.UseShotGunAmmo();
 
-        GameObject shotGunBullet0 = GameManager.Instance.m_ObjectPool.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
-        GameObject shotGunBullet1 = GameManager.Instance.m_ObjectPool.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
-        GameObject shotGunBullet2 = GameManager.Instance.m_ObjectPool.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
+        GameObject shotGunBullet0 = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
+        GameObject shotGunBullet1 = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
+        GameObject shotGunBullet2 = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
 
         shotGunBullet0.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
+        shotGunBullet1.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
         shotGunBullet2.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
 
         SetBulletPos(shotGunBullet0, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
@@ -359,7 +362,7 @@ public class PlayerController : BaseCharacter
 
         //TODO:设置攻击范围
         anim.SetTrigger("MeleeAttack");
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_meleeAttack");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
 
         yield return new WaitForSeconds(zetriaData.meleeAttackCD);
         _isMeleeAttack = false;
@@ -416,7 +419,7 @@ public class PlayerController : BaseCharacter
     private IEnumerator IE_EmptyAttack()
     {
         _isEmptyAttack = true;
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "gun_empty");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "gun_empty");
 
         yield return new WaitForSeconds(zetriaData.emptyAttackCD);
         _isEmptyAttack = false;
@@ -438,11 +441,11 @@ public class PlayerController : BaseCharacter
             case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
                 GameManager.Instance.m_AmmoManager.ReloadPistolAmmo();
-                GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "pistol_reload");
+                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "pistol_reload");
                 break;
             case E_PlayerStatus.ShotGun:
                 GameManager.Instance.m_AmmoManager.ReloadShotGunAmmo();
-                GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "shotgun_reload");
+                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "shotgun_reload");
                 break;
         }
 
@@ -465,7 +468,7 @@ public class PlayerController : BaseCharacter
 
         anim.SetTrigger("Hurt");
 
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "player_hurt_1");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_hurt_1");
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaData.currentHealth, zetriaData.maxHealth);
 
         if (_isDead) Dead();
@@ -485,9 +488,9 @@ public class PlayerController : BaseCharacter
     private void PutDownNPC()
     {
         _status = E_PlayerStatus.Pistol;
-        GameManager.Instance.m_AudioManager.PlayAudio(E_AudioType.Effect, "npc_putdown");
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "npc_putdown");
 
-        GameObject sleepWomen = GameManager.Instance.m_ObjectPool.GetPoolObject("SleepWomen");
+        GameObject sleepWomen = GameManager.Instance.m_ObjectPoolManager.GetObject("SleepWomen");
         if (sleepWomen != null)
             sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
     }
@@ -513,5 +516,6 @@ public class PlayerController : BaseCharacter
         _headCheck = GameTools.ShowRay(this.transform.position, RayOffset, Vector2.up, _rayLength, 1 << LayerMask.NameToLayer("Ground"));
         return _headCheck ? false : true;
     }
+
 
 }
