@@ -4,7 +4,7 @@ using System.IO;
 
 public enum JsonType { JsonUtlity, LitJson, }
 
-public class SaveDataManager
+public class SaveLoadManager
 {
     public void SaveData_Json(object data, string fileName, JsonType type = JsonType.LitJson)
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : BaseCharacter
 {
-    private Zetria zetriaData;
+    private ZetriaInfo zetriaInfo;
     private E_PlayerStatus _status;
 
     //移动相关
@@ -68,7 +68,7 @@ public class PlayerController : BaseCharacter
     {
         base.OnAwake();
 
-        zetriaData = new Zetria();
+        zetriaInfo = new ZetriaInfo();
         _moveSource = GetComponent<AudioSource>();
     }
 
@@ -95,8 +95,8 @@ public class PlayerController : BaseCharacter
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
 
-        moveSpeed = zetriaData.standSpeed;
-        rb2D.gravityScale = zetriaData.jumpGravity;
+        moveSpeed = zetriaInfo.standSpeed;
+        rb2D.gravityScale = zetriaInfo.jumpGravity;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
 
@@ -145,7 +145,7 @@ public class PlayerController : BaseCharacter
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
         if (isGround)
         {
-            _currentJumpCount = zetriaData.maxJumpCount;
+            _currentJumpCount = zetriaInfo.maxJumpCount;
             _canStand = CanStand();
 
             if (InputController.GetKey(E_InputType.Crouch) && !_isReload && _status != E_PlayerStatus.NPC)
@@ -256,7 +256,7 @@ public class PlayerController : BaseCharacter
 
     private void Jump()
     {
-        rb2D.velocity = new Vector2(0f, zetriaData.jumpForce);
+        rb2D.velocity = new Vector2(0f, zetriaInfo.jumpForce);
         GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_jump");
 
         // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
@@ -273,7 +273,7 @@ public class PlayerController : BaseCharacter
     private void Crouch()
     {
         _isCrouch = true;
-        moveSpeed = zetriaData.crouchSpeed;
+        moveSpeed = zetriaInfo.crouchSpeed;
         col2D.size = _crouchSize;
         col2D.offset = _crouchOffset;
         _status = E_PlayerStatus.Pistol;
@@ -287,7 +287,7 @@ public class PlayerController : BaseCharacter
         col2D.offset = _standOffset;
 
         if (_status != E_PlayerStatus.NPC)
-            moveSpeed = zetriaData.standSpeed;
+            moveSpeed = zetriaInfo.standSpeed;
     }
 
     private void AlterWeapon()
@@ -364,7 +364,7 @@ public class PlayerController : BaseCharacter
         anim.SetTrigger("MeleeAttack");
         GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
 
-        yield return new WaitForSeconds(zetriaData.meleeAttackCD);
+        yield return new WaitForSeconds(zetriaInfo.meleeAttackCD);
         _isMeleeAttack = false;
     }
 
@@ -385,7 +385,7 @@ public class PlayerController : BaseCharacter
 
         PistolFire();
 
-        yield return new WaitForSeconds(zetriaData.pistolAttackCD);
+        yield return new WaitForSeconds(zetriaInfo.pistolAttackCD);
         _isPistolAttack = false;
     }
 
@@ -406,7 +406,7 @@ public class PlayerController : BaseCharacter
 
         ShotGunFire();
 
-        yield return new WaitForSeconds(zetriaData.shotGunAttackCD);
+        yield return new WaitForSeconds(zetriaInfo.shotGunAttackCD);
         _isShotGunAttack = false;
     }
 
@@ -421,7 +421,7 @@ public class PlayerController : BaseCharacter
         _isEmptyAttack = true;
         GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "gun_empty");
 
-        yield return new WaitForSeconds(zetriaData.emptyAttackCD);
+        yield return new WaitForSeconds(zetriaInfo.emptyAttackCD);
         _isEmptyAttack = false;
     }
 
@@ -449,7 +449,7 @@ public class PlayerController : BaseCharacter
                 break;
         }
 
-        yield return new WaitForSeconds(zetriaData.reloadCD);
+        yield return new WaitForSeconds(zetriaInfo.reloadCD);
         _isReload = false;
     }
 
@@ -463,17 +463,17 @@ public class PlayerController : BaseCharacter
     {
         _isHurt = true;
 
-        zetriaData.currentHealth = zetriaData.currentHealth > 0 ? --zetriaData.currentHealth : 0;
-        _isDead = zetriaData.currentHealth == 0 ? true : false;
+        zetriaInfo.currentHealth = zetriaInfo.currentHealth > 0 ? --zetriaInfo.currentHealth : 0;
+        _isDead = zetriaInfo.currentHealth == 0 ? true : false;
 
         anim.SetTrigger("Hurt");
 
         GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_hurt_1");
-        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaData.currentHealth, zetriaData.maxHealth);
+        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
 
         if (_isDead) Dead();
 
-        yield return new WaitForSeconds(zetriaData.hurtCD);
+        yield return new WaitForSeconds(zetriaInfo.hurtCD);
         _isHurt = false;
     }
 
@@ -498,12 +498,12 @@ public class PlayerController : BaseCharacter
     public void OnGetNPC()
     {
         _status = E_PlayerStatus.NPC;
-        moveSpeed = zetriaData.getNPCSpeed;
+        moveSpeed = zetriaInfo.getNPCSpeed;
     }
 
     public void OnGetDoorCard()
     {
-        zetriaData.hasDoorCard = true;
+        zetriaInfo.hasDoorCard = true;
     }
 
     private void OnDrawGizmos()

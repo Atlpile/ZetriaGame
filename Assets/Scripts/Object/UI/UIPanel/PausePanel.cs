@@ -57,17 +57,12 @@ public class PausePanel : BasePanel
 
     private void RestartGame()
     {
-        GameManager.Instance.m_SceneLoader.LoadCurrentScene();
-        GameManager.Instance.UpdateGameStatus();
-        GameManager.Instance.m_InputController.SetInputStatus(true);
-
-        GameManager.Instance.m_ObjectPoolManager.ClearPool();
-        GameManager.Instance.m_AudioController.ClearAudio();
+        GameManager.Instance.m_UIManager.ShowPanel<WarnRestartPanel>();
     }
 
     private void OpenOptionsPanel()
     {
-        Debug.Log("打开设置面板");
+        GameManager.Instance.m_UIManager.ShowPanel<SettingPanel>();
     }
 
     private void BackToTitle()
@@ -76,8 +71,8 @@ public class PausePanel : BasePanel
         GameManager.Instance.UpdateGameStatus();
         GameManager.Instance.m_InputController.SetInputStatus(true);
 
-        GameManager.Instance.m_ObjectPoolManager.ClearPool();
-        GameManager.Instance.m_AudioController.ClearAudio();
+        GameManager.Instance.m_ObjectPoolManager.Clear();
+        GameManager.Instance.m_AudioController.Clear();
 
         GameManager.Instance.m_SceneLoader.LoadSceneAsync("Main", () =>
         {
@@ -92,8 +87,7 @@ public class PausePanel : BasePanel
 
     private void ExitGame()
     {
-        Debug.Log("退出游戏");
-        Application.Quit();
+        GameManager.Instance.m_UIManager.ShowPanel<WarnQuitPanel>();
     }
 
 

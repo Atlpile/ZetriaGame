@@ -72,9 +72,9 @@ public class AudioController
             Debug.LogWarning("音频为空，恢复播放音频无效");
     }
 
-    public void SetBGMVolume()
+    public void SetBGMVolume(float volume)
     {
-
+        BGMSource.volume = volume;
     }
 
     public void SetEffectVolume()
@@ -90,7 +90,10 @@ public class AudioController
         switch (type)
         {
             case E_AudioType.BGM:
-                BGMStop();
+
+                if (BGMSource != null)
+                    BGMStop();
+
                 audioSource.loop = isLoop;
                 audioSource.volume = volume;
                 audioSource.Play();
@@ -112,7 +115,7 @@ public class AudioController
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(audioObj);
     }
 
-    public void ClearAudio()
+    public void Clear()
     {
         AudioDict.Clear();
     }

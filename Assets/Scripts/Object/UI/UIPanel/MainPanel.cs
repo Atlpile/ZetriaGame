@@ -28,23 +28,33 @@ public class MainPanel : BasePanel
                 NewGame();
                 break;
             case "btnContinue":
-                Debug.Log("继续游戏");
+                ContinueGame();
                 break;
             case "btnOptions":
-                Debug.Log("打开设置面板");
+                OpenOptionsPanel();
                 break;
             case "btnExit":
-                Debug.Log("退出游戏");
+                ExitGame();
                 break;
         }
+    }
+
+    public override void ShowSelf()
+    {
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.BGM, "bgm_01", true);
+    }
+
+    public override void HideSelf()
+    {
+        GameManager.Instance.m_AudioController.BGMStop();
     }
 
     private void NewGame()
     {
         GameManager.Instance.m_UIManager.HidePanel<MainPanel>();
 
-        GameManager.Instance.m_ObjectPoolManager.ClearPool();
-        GameManager.Instance.m_AudioController.ClearAudio();
+        GameManager.Instance.m_ObjectPoolManager.Clear();
+        GameManager.Instance.m_AudioController.Clear();
 
         GameManager.Instance.m_SceneLoader.LoadSceneAsync("Level0", () =>
         {
@@ -54,16 +64,16 @@ public class MainPanel : BasePanel
 
     private void ContinueGame()
     {
-
+        Debug.Log("继续游戏");
     }
 
     private void OpenOptionsPanel()
     {
-
+        GameManager.Instance.m_UIManager.ShowPanel<SettingPanel>();
     }
 
     private void ExitGame()
     {
-        Application.Quit();
+        GameManager.Instance.m_UIManager.ShowPanel<WarnQuitPanel>();
     }
 }

@@ -4,8 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
+public enum E_InitPanel
+{
+    None, Main, Game, Input
+}
+
 public class GameManager : MonoBehaviour
 {
+    public E_InitPanel panel;
+
     private static GameManager s_instance;
     public static GameManager Instance => s_instance;
 
@@ -15,7 +22,7 @@ public class GameManager : MonoBehaviour
     public AudioController m_AudioController { get; set; }
     public UIManager m_UIManager { get; set; }
     public BinaryDataManager m_BinaryDataManager { get; set; }
-    public SaveDataManager m_SaveDataManager { get; set; }
+    public SaveLoadManager m_SaveLoadManager { get; set; }
     public InputController m_InputController { get; set; }
     public EventManager m_EventManager { get; set; }
 
@@ -46,7 +53,7 @@ public class GameManager : MonoBehaviour
         m_AudioController = new AudioController();
         m_UIManager = new UIManager();
         m_BinaryDataManager = new BinaryDataManager();
-        m_SaveDataManager = new SaveDataManager();
+        m_SaveLoadManager = new SaveLoadManager();
         m_InputController = new InputController();
         m_EventManager = new EventManager();
 
@@ -61,18 +68,28 @@ public class GameManager : MonoBehaviour
         InitUI();
     }
 
-
-
     private void Update()
     {
         UpdateInput();
     }
 
+
     private void InitUI()
     {
-        // m_UIManager.ShowPanel<GamePanel>();
-        m_UIManager.ShowPanel<MainPanel>();
-        // m_UIManager.ShowPanel<InputPanel>();
+        switch (panel)
+        {
+            case E_InitPanel.None:
+                break;
+            case E_InitPanel.Main:
+                m_UIManager.ShowPanel<MainPanel>();
+                break;
+            case E_InitPanel.Input:
+                m_UIManager.ShowPanel<InputPanel>();
+                break;
+            case E_InitPanel.Game:
+                m_UIManager.ShowPanel<GamePanel>();
+                break;
+        }
     }
 
     private void UpdateInput()

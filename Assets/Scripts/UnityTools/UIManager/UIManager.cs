@@ -35,8 +35,6 @@ public class UIManager
         string panelName = typeof(T).Name;
         if (PanelDic.ContainsKey(panelName))
         {
-            // //TODO:从对象池中取出
-            // GameManager.Instance.m_ObjectPool.GetObject(panelName, rectCanvas);
             Debug.LogWarning("UIManager:场景中存在该Panel");
             return PanelDic[panelName] as T;
         }
@@ -44,6 +42,50 @@ public class UIManager
         {
             GameObject uiPrefab = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
 
+            uiPrefab.transform.SetParent(rectCanvas);
+            uiPrefab.transform.localPosition = Vector3.zero;
+            uiPrefab.transform.localScale = Vector3.one;
+            (uiPrefab.transform as RectTransform).offsetMax = Vector2.zero;
+            (uiPrefab.transform as RectTransform).offsetMin = Vector2.zero;
+
+            T panel = uiPrefab.GetComponent<T>();
+            PanelDic.Add(panelName, panel);
+            panel.ShowSelf();
+            return panel;
+        }
+    }
+
+    public void HidePanel<T>() where T : BasePanel
+    {
+        string panelName = typeof(T).Name;
+        if (!PanelDic.ContainsKey(panelName))
+        {
+            Debug.LogWarning("UIManager:场景中不存在该Panel");
+            return;
+        }
+        else
+        {
+            PanelDic[panelName].HideSelf();
+            Object.Destroy(PanelDic[panelName].gameObject);
+            PanelDic.Remove(panelName);
+        }
+    }
+
+    public T ShowPanelFromPool<T>() where T : BasePanel
+    {
+        string panelName = typeof(T).Name;
+
+        //有面板
+        if (PanelDic.ContainsKey(panelName))
+        {
+            GameManager.Instance.m_ObjectPoolManager.GetObject(panelName, rectCanvas);
+            Debug.LogWarning("UIManager:场景中存在该Panel");
+            return PanelDic[panelName] as T;
+        }
+        //没有面板
+        else
+        {
+            GameObject uiPrefab = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName, false);
 
             uiPrefab.transform.SetParent(rectCanvas);
             uiPrefab.transform.localPosition = Vector3.zero;
@@ -51,13 +93,29 @@ public class UIManager
             (uiPrefab.transform as RectTransform).offsetMax = Vector2.zero;
             (uiPrefab.transform as RectTransform).offsetMin = Vector2.zero;
 
-            // //TODO:添加至对象池
-            // GameManager.Instance.m_ObjectPool.AddObject(uiPrefab, panelName);
+            GameManager.Instance.m_ObjectPoolManager.AddObject(uiPrefab, panelName);
+            GameManager.Instance.m_ObjectPoolManager.GetObject(panelName, rectCanvas);
 
             T panel = uiPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
             panel.ShowSelf();
             return panel;
+        }
+    }
+
+    public void HidePanelFromPool<T>() where T : BasePanel
+    {
+        string panelName = typeof(T).Name;
+        if (!PanelDic.ContainsKey(panelName))
+        {
+            Debug.LogWarning("UIManager:场景中不存在该Panel");
+            return;
+        }
+        else
+        {
+            PanelDic[panelName].HideSelf();
+            GameManager.Instance.m_ObjectPoolManager.ReturnObject(PanelDic[panelName].gameObject);
+            PanelDic.Remove(panelName);
         }
     }
 
@@ -91,24 +149,6 @@ public class UIManager
 
                 panel.ShowSelf();
             });
-        }
-    }
-
-    public void HidePanel<T>() where T : BasePanel
-    {
-        string panelName = typeof(T).Name;
-        if (!PanelDic.ContainsKey(panelName))
-        {
-            Debug.LogWarning("UIManager:场景中不存在该Panel");
-            return;
-        }
-        else
-        {
-            PanelDic[panelName].HideSelf();
-            //TODO：替换为对象池
-            // GameManager.Instance.m_ObjectPool.ReturnObject(panelName, PanelDic[panelName].gameObject);
-            Object.Destroy(PanelDic[panelName].gameObject);
-            PanelDic.Remove(panelName);
         }
     }
 

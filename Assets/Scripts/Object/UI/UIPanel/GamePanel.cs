@@ -46,11 +46,13 @@ public class GamePanel : BasePanel
         UpdatePistolAmmoText(0, 0);
         UpdateShortGunAmmoText(0, 0);
         UpdateAmmoPointer(true);
+
+        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.BGM, "bgm_02", true);
     }
 
     public override void HideSelf()
     {
-
+        GameManager.Instance.m_AudioController.BGMStop();
     }
 
     public void UpdateDoorCard()
