@@ -34,7 +34,7 @@ public class WarnRestartPanel : BasePanel
         GameManager.Instance.m_UIManager.HidePanel<WarnRestartPanel>();
 
         GameManager.Instance.m_SceneLoader.LoadCurrentScene();
-        GameManager.Instance.UpdateGameStatus();
+        GameManager.Instance.m_GameController.UpdateGameStatus();
         GameManager.Instance.m_InputController.SetInputStatus(true);
 
         GameManager.Instance.m_ObjectPoolManager.Clear();

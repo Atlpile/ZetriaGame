@@ -89,7 +89,7 @@ public class PlayerController : BaseCharacter
     {
         base.OnStart();
 
-        // Application.targetFrameRate = 144;
+        Application.targetFrameRate = 144;
 
         isRight = true;
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
@@ -115,6 +115,11 @@ public class PlayerController : BaseCharacter
 
         //OPTIMIZE:优化enabled
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
+
+        //走路声音与设置声音同步
+        if (_moveSource.volume != GameManager.Instance.m_AudioController.effectVolume)
+            _moveSource.volume = GameManager.Instance.m_AudioController.effectVolume;
+
         UpdatePlayerState();
     }
 

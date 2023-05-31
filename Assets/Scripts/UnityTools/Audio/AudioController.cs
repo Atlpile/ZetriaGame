@@ -8,17 +8,21 @@ public class AudioController
     private AudioSource BGMSource;
     private AudioSource EffectSource;
 
+
+    public float effectVolume = 1;
+    public float bgmVolume;
+
     public AudioController()
     {
         AudioDict = new Dictionary<string, AudioClip>();
     }
 
-    public void AudioPlay(E_AudioType type, string name, bool isLoop = false, float volume = 1f)
+    public void AudioPlay(E_AudioType type, string name, bool isLoop = false)
     {
         if (AudioDict.ContainsKey(name))
         {
             GameObject poolObj = GameManager.Instance.m_ObjectPoolManager.GetObject(name);
-            PlayAudioClip(type, name, AudioDict[name], poolObj, isLoop, volume);
+            PlayAudioClip(type, name, AudioDict[name], poolObj, isLoop);
         }
         else
         {
@@ -38,7 +42,7 @@ public class AudioController
             GameManager.Instance.m_ObjectPoolManager.AddObject(resAudioObj, name);
             GameObject poolObj = GameManager.Instance.m_ObjectPoolManager.GetObject(name);
 
-            PlayAudioClip(type, name, audioClip, poolObj, isLoop, volume);
+            PlayAudioClip(type, name, audioClip, poolObj, isLoop);
         }
     }
 
@@ -77,12 +81,12 @@ public class AudioController
         BGMSource.volume = volume;
     }
 
-    public void SetEffectVolume()
+    public void SetEffectVolume(float volume)
     {
-
+        effectVolume = volume;
     }
 
-    private void PlayAudioClip(E_AudioType type, string name, AudioClip audioClip, GameObject audioObj, bool isLoop, float volume = 1f)
+    private void PlayAudioClip(E_AudioType type, string name, AudioClip audioClip, GameObject audioObj, bool isLoop)
     {
         audioObj.transform.SetParent(GameManager.Instance.transform);
 
@@ -95,14 +99,13 @@ public class AudioController
                     BGMStop();
 
                 audioSource.loop = isLoop;
-                audioSource.volume = volume;
                 audioSource.Play();
                 BGMSource = audioSource;
                 break;
             case E_AudioType.Effect:
                 GameManager.Instance.StartCoroutine(IE_PlayOnceAudio(name, audioClip, audioObj));
                 audioSource.loop = isLoop;
-                audioSource.volume = volume;
+                audioSource.volume = effectVolume;
                 audioSource.Play();
                 EffectSource = audioSource;
                 break;

@@ -52,7 +52,7 @@ public class PausePanel : BasePanel
 
     private void ResumeGame()
     {
-        GameManager.Instance.UpdateGameStatus();
+        GameManager.Instance.m_GameController.UpdateGameStatus();
     }
 
     private void RestartGame()
@@ -68,7 +68,7 @@ public class PausePanel : BasePanel
     private void BackToTitle()
     {
         GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
-        GameManager.Instance.UpdateGameStatus();
+        GameManager.Instance.m_GameController.UpdateGameStatus();
         GameManager.Instance.m_InputController.SetInputStatus(true);
 
         GameManager.Instance.m_ObjectPoolManager.Clear();

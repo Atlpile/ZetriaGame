@@ -39,6 +39,11 @@ public class BasePanel : MonoBehaviour
 
     }
 
+    protected virtual void OnValueChanged(string sliderName, float value)
+    {
+
+    }
+
     protected T GetUIComponent<T>(string uiObjName) where T : UIBehaviour
     {
         if (UIComponentDic.ContainsKey(uiObjName))
@@ -79,6 +84,13 @@ public class BasePanel : MonoBehaviour
             else if (components[i] is Toggle)
             {
                 (components[i] as Toggle).onValueChanged.AddListener((value) =>
+                {
+                    OnValueChanged(objName, value);
+                });
+            }
+            else if (components[i] is Slider)
+            {
+                (components[i] as Slider).onValueChanged.AddListener((value) =>
                 {
                     OnValueChanged(objName, value);
                 });
