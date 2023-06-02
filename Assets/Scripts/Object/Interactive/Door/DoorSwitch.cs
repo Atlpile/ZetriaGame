@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class DoorSwitch : MonoBehaviour
 {
+    public Door door;
     private Transform _highLight;
-    private Transform _signLight;
+    public Transform[] signLights;
     private bool _canOpen;
     private bool _isOpen;
-    public Door door;
 
     private void Awake()
     {
         _highLight = this.transform.GetChild(0);
-        _signLight = this.transform.GetChild(1).GetChild(0);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _canOpen == true)
+        if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.Interacitve) && _canOpen == true)
         {
             if (door != null && door.type == E_DoorType.Condition)
             {
                 _isOpen = !_isOpen;
-                _signLight.gameObject.SetActive(_isOpen);
-                door.ChangeDoor(_isOpen);
+                UpdateSignLights();
+                door.UpdateDoor(_isOpen);
                 GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_confirm");
             }
             else if (door != null && door.type != E_DoorType.Condition)
@@ -51,5 +50,26 @@ public class DoorSwitch : MonoBehaviour
     {
         _canOpen = false;
         _highLight.gameObject.SetActive(false);
+    }
+
+    private void UpdateSignLights()
+    {
+        if (signLights.Length == 0)
+            Debug.LogWarning("未关联任何警示灯，请检查是否关联开门相关的警示灯");
+
+        if (_isOpen)
+        {
+            foreach (var item in signLights)
+            {
+                item.transform.GetChild(1).gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            foreach (var item in signLights)
+            {
+                item.transform.GetChild(1).gameObject.SetActive(false);
+            }
+        }
     }
 }

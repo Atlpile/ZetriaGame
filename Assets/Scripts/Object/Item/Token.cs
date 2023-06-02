@@ -11,7 +11,8 @@ public class Token : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             GameManager.Instance.m_EventManager.EventTrigger<Token>(E_EventType.PickUpToken, this);
-            //TODO:拾取音效
+            GameManager.Instance.m_ItemManager.GetToken(this);
+            GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "collect");
             Destroy(this.gameObject);
         }
     }

@@ -24,10 +24,10 @@ public class Door : BaseEntity
             boxColl2D.offset = new Vector2(-1, 0);
             boxColl2D.size = new Vector2(1, 2);
         }
-
-
         else if (type == E_DoorType.Condition)
+        {
             boxColl2D.enabled = false;
+        }
     }
 
     //FIXME:Once时重新设置碰撞体范围
@@ -36,11 +36,11 @@ public class Door : BaseEntity
     {
         if (other.gameObject.name == "Player" && type == E_DoorType.Smart)
         {
-            ChangeDoor(true);
+            UpdateDoor(true);
         }
         else if (other.gameObject.name == "Player" && type == E_DoorType.Once)
         {
-            ChangeDoor(false);
+            UpdateDoor(false);
             boxColl2D.enabled = false;
         }
     }
@@ -49,13 +49,13 @@ public class Door : BaseEntity
     {
         if (other.gameObject.name == "Player" && type == E_DoorType.Smart)
         {
-            ChangeDoor(false);
+            UpdateDoor(false);
         }
     }
 
 
 
-    public void ChangeDoor(bool isOpen)
+    public void UpdateDoor(bool isOpen)
     {
         anim.SetBool("IsOpen", isOpen);
         GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_shut");

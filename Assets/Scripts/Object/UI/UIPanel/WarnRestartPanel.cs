@@ -39,6 +39,7 @@ public class WarnRestartPanel : BasePanel
 
         GameManager.Instance.m_ObjectPoolManager.Clear();
         GameManager.Instance.m_AudioController.Clear();
+        GameManager.Instance.m_EventManager.Clear();
     }
 
     private void NotRestart()

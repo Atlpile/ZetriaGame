@@ -198,7 +198,7 @@ public class EventManager
     }
 
 
-    public void ClearEvent()
+    public void Clear()
     {
         eventDic.Clear();
     }

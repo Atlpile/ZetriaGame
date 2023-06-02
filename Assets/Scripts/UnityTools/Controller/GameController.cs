@@ -19,14 +19,14 @@ public class GameController
         IsPause = !IsPause;
         if (IsPause)
         {
-            GameManager.Instance.m_UIManager.ShowPanel<PausePanel>();
             Time.timeScale = 0;
+            GameManager.Instance.m_UIManager.ShowPanel<PausePanel>();
             GameManager.Instance.m_InputController.SetInputStatus(false);
         }
         else
         {
-            GameManager.Instance.m_UIManager.HidePanel<PausePanel>();
             Time.timeScale = 1;
+            GameManager.Instance.m_UIManager.HidePanel<PausePanel>();
             GameManager.Instance.m_InputController.SetInputStatus(true);
         }
     }

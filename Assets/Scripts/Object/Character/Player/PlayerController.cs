@@ -62,7 +62,7 @@ public class PlayerController : BaseCharacter
         }
     }
     private InputController InputController => GameManager.Instance.m_InputController;
-
+    public bool HasDoorCard => zetriaInfo.hasDoorCard;
 
     protected override void OnAwake()
     {
@@ -207,25 +207,25 @@ public class PlayerController : BaseCharacter
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Space) && _currentJumpCount > 0 && _status != E_PlayerStatus.NPC)
+            if (InputController.GetKeyDown(E_InputType.Jump) && _currentJumpCount > 0 && _status != E_PlayerStatus.NPC)
             {
                 Jump();
                 _currentJumpCount--;
             }
-            else if (Input.GetKeyDown(KeyCode.Tab) && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC)
             {
                 AlterWeapon();
                 //OPTIMIZE:在空中时改变切枪动画状态
             }
 
-            if (Input.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+            if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (Input.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
+            if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
                 if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
                     ShotGunAttack();
@@ -509,6 +509,7 @@ public class PlayerController : BaseCharacter
     public void OnGetDoorCard()
     {
         zetriaInfo.hasDoorCard = true;
+        Debug.Log("拾取门卡");
     }
 
     private void OnDrawGizmos()

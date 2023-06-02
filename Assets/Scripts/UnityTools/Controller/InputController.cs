@@ -33,6 +33,7 @@ public class InputController
             {E_InputType.MeleeAttack,   KeyCode.J},
             {E_InputType.Pause,         KeyCode.Escape},
             {E_InputType.Reload,        KeyCode.R},
+            {E_InputType.PickUpNPC,     KeyCode.Q},
             {E_InputType.PutDownNPC,    KeyCode.F},
         };
         CustomInputDic = DefaultInputDic;

@@ -25,13 +25,12 @@ public class GameManager : MonoBehaviour
     public SaveLoadManager m_SaveLoadManager { get; set; }
     public InputController m_InputController { get; set; }
     public EventManager m_EventManager { get; set; }
-    public GameController m_GameController { get; set; }
 
+    public GameController m_GameController { get; set; }
     public AmmoManager m_AmmoManager { get; set; }
     public ItemManager m_ItemManager { get; set; }
 
     public GameData gameData;
-
 
 
     private void Awake()

@@ -16,7 +16,6 @@ public class Platform : MonoBehaviour
     {
         if (other.gameObject.name == "Player" || other.gameObject.name == "SleepWomen")
         {
-            //BUG:SleepWomen返回对象池时出现报错
             other.transform.SetParent(null);
         }
     }

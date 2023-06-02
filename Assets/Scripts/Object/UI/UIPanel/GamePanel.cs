@@ -11,6 +11,7 @@ public class GamePanel : BasePanel
     private Image PistolAmmoPointer;
     private Image ShoutGunAmmoPointer;
     private Image DoorCard;
+    private Image Token_Obtain;
 
 
     protected override void Awake()
@@ -24,6 +25,7 @@ public class GamePanel : BasePanel
         PistolAmmoPointer = GetUIComponent<Image>("PistolAmmoPointer");
         ShoutGunAmmoPointer = GetUIComponent<Image>("ShoutGunAmmoPointer");
         DoorCard = GetUIComponent<Image>("DoorCard");
+        Token_Obtain = GetUIComponent<Image>("Token_Obtain");
 
     }
 
@@ -31,12 +33,14 @@ public class GamePanel : BasePanel
     {
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
+        GameManager.Instance.m_EventManager.AddEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
     }
 
     private void OnDisable()
     {
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
+        GameManager.Instance.m_EventManager.RemoveEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
     }
 
 
@@ -87,4 +91,8 @@ public class GamePanel : BasePanel
         ShoutGunAmmoPointer.gameObject.SetActive(false);
     }
 
+    private void UpdateToken(Token token)
+    {
+        Token_Obtain.gameObject.SetActive(true);
+    }
 }

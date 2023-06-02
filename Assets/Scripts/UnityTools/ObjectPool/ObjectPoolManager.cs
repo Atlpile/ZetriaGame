@@ -171,12 +171,12 @@ public class ObjectPoolManager
         }
     }
 
-    public void AddObjectFromResources(string name, E_ResourcesPath path, int fillCount)
+    public void AddObjectFromResources(string name, E_ResourcesPath path, int fillCount, bool canCreate = false)
     {
         if (poolRoot == null)
             poolRoot = new GameObject("PoolRoot");
 
-        GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name);
+        GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
         resObj.name = name;
         ObjectPoolsDic.Add(name, new ObjectPoolInfo(resObj, poolRoot));
         ObjectPoolsDic[name].FillObjectPool(fillCount - 1);
