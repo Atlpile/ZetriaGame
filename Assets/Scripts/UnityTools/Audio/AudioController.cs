@@ -86,6 +86,19 @@ public class AudioController
         effectVolume = volume;
     }
 
+    public void LoadAudioData()
+    {
+        //OPTIMIZE：初始时没有AudioSource，需要先有AudioSource才能修改BGM
+        SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
+        SetBGMVolume(settingData.volume_BGM);
+        SetEffectVolume(settingData.volume_Effect);
+    }
+
+    public void Clear()
+    {
+        AudioDict.Clear();
+    }
+
     private void PlayAudioClip(E_AudioType type, string name, AudioClip audioClip, GameObject audioObj, bool isLoop)
     {
         audioObj.transform.SetParent(GameManager.Instance.transform);
@@ -118,8 +131,6 @@ public class AudioController
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(audioObj);
     }
 
-    public void Clear()
-    {
-        AudioDict.Clear();
-    }
+
+
 }

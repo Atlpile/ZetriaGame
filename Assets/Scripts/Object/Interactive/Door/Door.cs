@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : BaseEntity
+public class Door : BaseObject
 {
     //Smart：自动开，自动关
     //Condition：条件开，条件关

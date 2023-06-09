@@ -4,28 +4,30 @@ using UnityEngine;
 
 public class ItemManager
 {
-    public GameData GameData
-    {
-        get => GameManager.Instance.gameData;
-        set { GameManager.Instance.gameData = value; }
-    }
-
-    public ItemManager()
-    {
-        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, GetShotGun);
-        // GameManager.Instance.m_EventManager.AddEventListener<Token>(E_EventType.PickUpToken, GetToken);
-    }
+    private GameData gameData;
 
     public void GetShotGun()
     {
-        GameData.hasShotGun = true;
-        GameManager.Instance.m_BinaryDataManager.SaveData(typeof(GameData).Name, GameData);
+        gameData = GameManager.Instance.m_SaveLoadManager.LoadData<GameData>("GameData");
+
+        if (!gameData.hasShotGun)
+        {
+            Debug.Log("拾取霰弹枪");
+            gameData.hasShotGun = true;
+            GameManager.Instance.m_SaveLoadManager.SaveData(gameData, "GameData");
+        }
     }
 
-    public void GetToken(Token token)
+    public void GetToken(int id)
     {
-        GameData.TokenDic.Add(token.id, token);
+        gameData = GameManager.Instance.m_SaveLoadManager.LoadData<GameData>("GameData");
+
+        if (!gameData.TokenDic.ContainsKey(id.ToString()))
+        {
+            Debug.Log("拾取令牌");
+            gameData.TokenDic.Add(id.ToString(), id);
+            GameManager.Instance.m_SaveLoadManager.SaveData(gameData, "GameData");
+        }
+
     }
-
-
 }

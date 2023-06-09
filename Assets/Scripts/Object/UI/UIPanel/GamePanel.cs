@@ -27,16 +27,13 @@ public class GamePanel : BasePanel
         DoorCard = GetUIComponent<Image>("DoorCard");
         Token_Obtain = GetUIComponent<Image>("Token_Obtain");
 
-    }
-
-    private void OnEnable()
-    {
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
         GameManager.Instance.m_EventManager.AddEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
+
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);

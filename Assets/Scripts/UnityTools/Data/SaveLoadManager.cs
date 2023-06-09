@@ -6,7 +6,7 @@ public enum JsonType { JsonUtlity, LitJson, }
 
 public class SaveLoadManager
 {
-    public void SaveData_Json(object data, string fileName, JsonType type = JsonType.LitJson)
+    public void SaveData(object data, string fileName, JsonType type = JsonType.LitJson)
     {
         //设置文件的存储路径
         string path = Application.persistentDataPath + "/" + fileName + ".json";
@@ -25,16 +25,25 @@ public class SaveLoadManager
         File.WriteAllText(path, jsonStr);
     }
 
-    public T LoadData_Json<T>(string fileName, JsonType type = JsonType.LitJson) where T : new()
+    public T LoadData<T>(string fileName, JsonType type = JsonType.LitJson) where T : new()
     {
         //获取数据文件的存储路径
         string path = Application.streamingAssetsPath + "/" + fileName + ".json";
+
         //判断StreamingAssets文件夹是否存在该数据文件，若没有则在persistentDataPath下查找
         if (!File.Exists(path))
+        {
             path = Application.persistentDataPath + "/" + fileName + ".json";
+            // Debug.Log("StreamingAssets未找到" + fileName + "数据文件");
+        }
+
         //如果读写文件夹中都还没有 那就返回一个默认值的对象
         if (!File.Exists(path))
+        {
+            // Debug.LogWarning("persistentDataPath未找到" + fileName + "数据文件，则创建新数据对象");
             return new T();
+        }
+
 
         //反序列化
         string jsonStr = File.ReadAllText(path);

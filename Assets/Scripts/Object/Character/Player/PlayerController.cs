@@ -62,7 +62,7 @@ public class PlayerController : BaseCharacter
         }
     }
     private InputController InputController => GameManager.Instance.m_InputController;
-    public bool HasDoorCard => zetriaInfo.hasDoorCard;
+    public ZetriaInfo ZetriaInfo => zetriaInfo;
 
     protected override void OnAwake()
     {
@@ -72,14 +72,7 @@ public class PlayerController : BaseCharacter
         _moveSource = GetComponent<AudioSource>();
     }
 
-    private void OnEnable()
-    {
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
-        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
@@ -88,6 +81,10 @@ public class PlayerController : BaseCharacter
     protected override void OnStart()
     {
         base.OnStart();
+
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
 
         Application.targetFrameRate = 144;
 
@@ -241,7 +238,7 @@ public class PlayerController : BaseCharacter
     {
         _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
         rb2D.velocity = new Vector2(moveSpeed * _horizontalMove, rb2D.velocity.y);
-        //TODO:尝试使用以下API
+        //OPTIMIZE:尝试使用以下API
         // rb2D.MovePosition();
     }
 
@@ -509,7 +506,6 @@ public class PlayerController : BaseCharacter
     public void OnGetDoorCard()
     {
         zetriaInfo.hasDoorCard = true;
-        Debug.Log("拾取门卡");
     }
 
     private void OnDrawGizmos()

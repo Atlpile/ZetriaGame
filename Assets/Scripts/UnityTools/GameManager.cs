@@ -18,19 +18,19 @@ public class GameManager : MonoBehaviour
 
     public SceneLoader m_SceneLoader { get; set; }
     public ResourceLoader m_ResourcesLoader { get; set; }
+
+    public EventManager m_EventManager { get; set; }
     public ObjectPoolManager m_ObjectPoolManager { get; set; }
+    public SaveLoadManager m_SaveLoadManager { get; set; }
     public AudioController m_AudioController { get; set; }
     public UIManager m_UIManager { get; set; }
-    public BinaryDataManager m_BinaryDataManager { get; set; }
-    public SaveLoadManager m_SaveLoadManager { get; set; }
+
     public InputController m_InputController { get; set; }
-    public EventManager m_EventManager { get; set; }
-
     public GameController m_GameController { get; set; }
-    public AmmoManager m_AmmoManager { get; set; }
+    // public GameDataManager m_GameDataManager { get; set; }
     public ItemManager m_ItemManager { get; set; }
+    public AmmoManager m_AmmoManager { get; set; }
 
-    public GameData gameData;
 
 
     private void Awake()
@@ -49,24 +49,27 @@ public class GameManager : MonoBehaviour
     {
         m_SceneLoader = new SceneLoader();
         m_ResourcesLoader = new ResourceLoader();
+
+        m_EventManager = new EventManager();
         m_ObjectPoolManager = new ObjectPoolManager();
+        m_SaveLoadManager = new SaveLoadManager();
         m_AudioController = new AudioController();
         m_UIManager = new UIManager();
-        m_BinaryDataManager = new BinaryDataManager();
-        m_SaveLoadManager = new SaveLoadManager();
+
+
         m_InputController = new InputController();
-        m_EventManager = new EventManager();
         m_GameController = new GameController();
+        // m_GameDataManager = new GameDataManager();
 
-        m_AmmoManager = new AmmoManager();
         m_ItemManager = new ItemManager();
+        m_AmmoManager = new AmmoManager();
 
-        gameData = m_BinaryDataManager.LoadData<GameData>("GameData");
     }
 
     private void Start()
     {
         InitUI();
+
     }
 
     private void Update()

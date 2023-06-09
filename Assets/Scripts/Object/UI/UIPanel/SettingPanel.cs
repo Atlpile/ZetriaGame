@@ -61,16 +61,34 @@ public class SettingPanel : BasePanel
 
     public override void ShowSelf()
     {
-        //TODO：加载设置中的数据
+        LoadSettingData();
     }
 
     public override void HideSelf()
     {
-        //TODO：保存设置的数据
+        SaveSettingData();
     }
 
     private void CloseSettingPanel()
     {
         GameManager.Instance.m_UIManager.HidePanel<SettingPanel>();
+    }
+
+    public void LoadSettingData()
+    {
+        SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
+
+        slider_BGM.value = settingData.volume_BGM;
+        slider_Effect.value = settingData.volume_Effect;
+    }
+
+    private void SaveSettingData()
+    {
+        SettingData settingData = new SettingData();
+
+        settingData.volume_BGM = slider_BGM.value;
+        settingData.volume_Effect = slider_Effect.value;
+
+        GameManager.Instance.m_SaveLoadManager.SaveData(settingData, "SettingData");
     }
 }

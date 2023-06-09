@@ -42,6 +42,7 @@ public class MainPanel : BasePanel
     public override void ShowSelf()
     {
         GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.BGM, "bgm_01", true);
+        GameManager.Instance.m_AudioController.LoadAudioData();
     }
 
     public override void HideSelf()
@@ -60,6 +61,7 @@ public class MainPanel : BasePanel
         GameManager.Instance.m_SceneLoader.LoadSceneAsync("Level0", () =>
         {
             GameManager.Instance.m_UIManager.ShowPanel<GamePanel>();
+            GameManager.Instance.m_AudioController.LoadAudioData();
         });
     }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseCharacter : BaseEntity
+public abstract class BaseCharacter : BaseObject
 {
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
