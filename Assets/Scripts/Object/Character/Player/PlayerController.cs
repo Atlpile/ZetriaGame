@@ -64,6 +64,7 @@ public class PlayerController : BaseCharacter
     private InputController InputController => GameManager.Instance.m_InputController;
     public ZetriaInfo ZetriaInfo => zetriaInfo;
 
+
     protected override void OnAwake()
     {
         base.OnAwake();
@@ -75,6 +76,7 @@ public class PlayerController : BaseCharacter
     private void OnDestroy()
     {
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
     }
 
@@ -83,24 +85,15 @@ public class PlayerController : BaseCharacter
         base.OnStart();
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
-        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShotGun, () => { });
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
 
         Application.targetFrameRate = 144;
 
-        isRight = true;
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
 
-        moveSpeed = zetriaInfo.standSpeed;
-        rb2D.gravityScale = zetriaInfo.jumpGravity;
-        rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
-
-        _standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
-        _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
-        _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
-        _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
+        InitPlayer();
 
     }
 
@@ -141,6 +134,20 @@ public class PlayerController : BaseCharacter
         anim.SetBool("IsDead", _isDead);
     }
 
+
+    private void InitPlayer()
+    {
+        isRight = true;
+        moveSpeed = zetriaInfo.standSpeed;
+        rb2D.gravityScale = zetriaInfo.jumpGravity;
+        rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
+
+        _standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
+        _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
+        _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
+        _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
+    }
 
     private void UpdatePlayerState()
     {
@@ -506,6 +513,11 @@ public class PlayerController : BaseCharacter
     public void OnGetDoorCard()
     {
         zetriaInfo.hasDoorCard = true;
+    }
+
+    public void OnPickUpShortGun()
+    {
+        //TODO：拾取到霰弹枪时，才可以使用霰弹枪
     }
 
     private void OnDrawGizmos()

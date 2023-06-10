@@ -50,6 +50,7 @@ public class MainPanel : BasePanel
         GameManager.Instance.m_AudioController.BGMStop();
     }
 
+
     private void NewGame()
     {
         GameManager.Instance.m_UIManager.HidePanel<MainPanel>();

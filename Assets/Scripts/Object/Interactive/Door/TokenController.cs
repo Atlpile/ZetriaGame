@@ -29,6 +29,9 @@ public class TokenController : MonoBehaviour
                 if (door != null && door.type == E_DoorType.Condition)
                 {
                     Debug.Log("令牌数量足够");
+                    _canUse = false;
+                    door.UpdateDoor(true);
+                    GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_confirm");
                 }
             }
             else

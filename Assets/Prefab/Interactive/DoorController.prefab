@@ -990,12 +990,12 @@ GameObject:
   - component: {fileID: 7542024348928528718}
   - component: {fileID: 7542024348928528719}
   m_Layer: 11
-  m_Name: DoorController_V2
+  m_Name: DoorController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7542024348928528752
 Transform:
   m_ObjectHideFlags: 0
@@ -1107,7 +1107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   door: {fileID: 527688749005555989}
-  _signLights:
+  signLights:
   - {fileID: 7246004818841999683}
   - {fileID: 7246004817233995077}
   - {fileID: 7246004819078525787}
