@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class PatrolState : BaseAIState
+public class AttackState : BaseAIState
 {
-
-    public PatrolState(AILogic logic) : base(logic)
+    public AttackState(AILogic logic) : base(logic)
     {
-
     }
 
     public override void EnterState()
@@ -18,14 +15,11 @@ public class PatrolState : BaseAIState
 
     public override void ExitState()
     {
-        //发现Player，退出状态
+
     }
 
     public override void UpdateState()
     {
 
     }
-
-
-
 }

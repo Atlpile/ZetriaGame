@@ -16,9 +16,6 @@ public class AmmoManager
     private int _currentShotGunAmmoCount;
     private int _maxShotGunAmmoCount;
 
-    //是否获得霰弹枪
-    private bool _hasShotGun;
-
     private GamePanel _GamePanel => GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>();
 
 

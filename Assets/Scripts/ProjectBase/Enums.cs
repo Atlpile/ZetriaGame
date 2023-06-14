@@ -13,7 +13,7 @@ public enum E_EventType
 {
     PickUpNPC, PickUpShortGun, PickUpToken, PickUpDoorCard,
     InitGamePanelUI,
-    PlayerFire, PlayerReload,
+    PlayerFire, PlayerReload, PlayerAddHP, PlayerTeleport,
     MovePlatform,
     PressKey, PressKeyDown, PressKeyUp
 

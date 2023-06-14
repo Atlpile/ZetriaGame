@@ -35,8 +35,5 @@ public class AILogic
 
         StateDic[currentState].EnterState();
         nowState = StateDic[currentState];
-
-
-
     }
 }

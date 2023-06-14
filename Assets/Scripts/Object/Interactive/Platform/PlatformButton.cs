@@ -9,7 +9,6 @@ using UnityEngine;
         3.未到达目标点，按钮亮起
 */
 
-
 public class PlatformButton : MonoBehaviour
 {
     public Transform targetPoint;
@@ -52,8 +51,10 @@ public class PlatformButton : MonoBehaviour
         {
             UpdateButtonLight();
 
-            if (_isInteractive && _canUse)
+            //PLayer在触发范围内，且按下交互
+            if (_canUse && _isInteractive)
             {
+                //若到达目标点
                 if (IsArriveTarget())
                 {
                     _platformController.PlatformStop();
@@ -63,10 +64,12 @@ public class PlatformButton : MonoBehaviour
                     _platformController.PlatformMove(targetPoint);
                 }
             }
-            else if (!_isInteractive && _canUse)
+            //Player在触发范围内，但未按交互
+            else if (_canUse && !_isInteractive)
             {
                 _platformController.PlatformStop();
             }
+
         }
     }
 
@@ -85,6 +88,8 @@ public class PlatformButton : MonoBehaviour
         {
             _highLight.SetActive(false);
             _canUse = false;
+            //Player离开时仍进行输入，则平台直接停止
+            _platformController.PlatformStop();
         }
     }
 
@@ -104,9 +109,5 @@ public class PlatformButton : MonoBehaviour
         else
             return false;
     }
-
-
-
-
 
 }

@@ -6,9 +6,9 @@ public class WolfMan : BaseMonster
 {
     public override void Init()
     {
-        aiLogic = new AILogic(this);
-        aiLogic.ChangeState(E_AIState.Patrol);
+        // aiLogic = new AILogic(this);
+        // aiLogic.ChangeState(E_AIState.Patrol);
 
-        rb2D.freezeRotation = true;
+        // rb2D.freezeRotation = true;
     }
 }

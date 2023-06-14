@@ -73,12 +73,6 @@ public class PlayerController : BaseCharacter
         _moveSource = GetComponent<AudioSource>();
     }
 
-    private void OnDestroy()
-    {
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-    }
 
     protected override void OnStart()
     {
@@ -87,6 +81,7 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
+        GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
 
         Application.targetFrameRate = 144;
 
@@ -134,6 +129,13 @@ public class PlayerController : BaseCharacter
         anim.SetBool("IsDead", _isDead);
     }
 
+    private void OnDestroy()
+    {
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
+        GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+    }
 
     private void InitPlayer()
     {
@@ -518,6 +520,16 @@ public class PlayerController : BaseCharacter
     public void OnPickUpShortGun()
     {
         //TODO：拾取到霰弹枪时，才可以使用霰弹枪
+    }
+
+    public void OnAddHP()
+    {
+        zetriaInfo.currentHealth = zetriaInfo.maxHealth;
+    }
+
+    public void OnTeleportToTarget(Vector3 target)
+    {
+        this.transform.position = target;
     }
 
     private void OnDrawGizmos()
