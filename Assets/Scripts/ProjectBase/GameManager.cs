@@ -22,14 +22,13 @@ public class GameManager : MonoBehaviour
     public EventManager m_EventManager { get; set; }
     public ObjectPoolManager m_ObjectPoolManager { get; set; }
     public SaveLoadManager m_SaveLoadManager { get; set; }
-    public AudioController m_AudioController { get; set; }
+    public AudioManager m_AudioManager { get; set; }
     public UIManager m_UIManager { get; set; }
 
     public InputController m_InputController { get; set; }
     public GameController m_GameController { get; set; }
     // public GameDataManager m_GameDataManager { get; set; }
     public ItemManager m_ItemManager { get; set; }
-    public AmmoManager m_AmmoManager { get; set; }
 
 
 
@@ -53,7 +52,7 @@ public class GameManager : MonoBehaviour
         m_EventManager = new EventManager();
         m_ObjectPoolManager = new ObjectPoolManager();
         m_SaveLoadManager = new SaveLoadManager();
-        m_AudioController = new AudioController();
+        m_AudioManager = new AudioManager();
         m_UIManager = new UIManager();
 
 
@@ -62,7 +61,6 @@ public class GameManager : MonoBehaviour
         // m_GameDataManager = new GameDataManager();
 
         m_ItemManager = new ItemManager();
-        m_AmmoManager = new AmmoManager();
 
     }
 

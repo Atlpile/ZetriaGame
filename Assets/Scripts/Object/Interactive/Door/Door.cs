@@ -58,6 +58,6 @@ public class Door : BaseObject
     public void UpdateDoor(bool isOpen)
     {
         anim.SetBool("IsOpen", isOpen);
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_shut");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_shut");
     }
 }

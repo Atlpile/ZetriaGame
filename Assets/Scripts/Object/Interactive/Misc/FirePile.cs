@@ -21,8 +21,8 @@ public class FirePile : MonoBehaviour
 
     private void Update()
     {
-        if (_fireSource.volume != GameManager.Instance.m_AudioController.effectVolume)
-            _fireSource.volume = GameManager.Instance.m_AudioController.effectVolume;
+        if (_fireSource.volume != GameManager.Instance.m_AudioManager.effectVolume)
+            _fireSource.volume = GameManager.Instance.m_AudioManager.effectVolume;
     }
 
 

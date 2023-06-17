@@ -51,10 +51,10 @@ public class SettingPanel : BasePanel
         switch (sliderName)
         {
             case "slider_BGM":
-                GameManager.Instance.m_AudioController.SetBGMVolume(value);
+                GameManager.Instance.m_AudioManager.SetBGMVolume(value);
                 break;
             case "slider_Effect":
-                GameManager.Instance.m_AudioController.SetEffectVolume(value);
+                GameManager.Instance.m_AudioManager.SetEffectVolume(value);
                 break;
         }
     }

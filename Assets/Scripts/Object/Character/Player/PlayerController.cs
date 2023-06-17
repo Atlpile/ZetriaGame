@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : BaseCharacter
 {
     private ZetriaInfo zetriaInfo;
+    private AmmoController ammoController;
     private E_PlayerStatus _status;
 
     //移动相关
@@ -70,6 +71,7 @@ public class PlayerController : BaseCharacter
         base.OnAwake();
 
         zetriaInfo = new ZetriaInfo();
+        ammoController = new AmmoController();
         _moveSource = GetComponent<AudioSource>();
     }
 
@@ -82,6 +84,8 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
 
         Application.targetFrameRate = 144;
 
@@ -102,8 +106,8 @@ public class PlayerController : BaseCharacter
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
 
         //走路声音与设置声音同步
-        if (_moveSource.volume != GameManager.Instance.m_AudioController.effectVolume)
-            _moveSource.volume = GameManager.Instance.m_AudioController.effectVolume;
+        if (_moveSource.volume != GameManager.Instance.m_AudioManager.effectVolume)
+            _moveSource.volume = GameManager.Instance.m_AudioManager.effectVolume;
 
         UpdatePlayerState();
     }
@@ -135,12 +139,14 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
     }
 
     private void InitPlayer()
     {
         isRight = true;
-        moveSpeed = zetriaInfo.standSpeed;
+        currentMoveSpeed = zetriaInfo.standSpeed;
         rb2D.gravityScale = zetriaInfo.jumpGravity;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
@@ -182,7 +188,7 @@ public class PlayerController : BaseCharacter
             {
                 AlterWeapon();
             }
-            else if (InputController.GetKeyDown(E_InputType.Reload) && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && GameManager.Instance.m_AmmoManager.CanReload(_status) && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.Reload) && CanReload(_status) && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && _status != E_PlayerStatus.NPC)
             {
                 Reload();
                 StopMove();
@@ -198,14 +204,14 @@ public class PlayerController : BaseCharacter
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
-                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                if (CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
             if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
-                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                if (CanAttack(_status))
                     ShotGunAttack();
                 else
                     EmptyAttack();
@@ -226,14 +232,14 @@ public class PlayerController : BaseCharacter
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
-                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                if (CanAttack(_status))
                     PistolAttack();
                 else
                     EmptyAttack();
             }
             if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
-                if (GameManager.Instance.m_AmmoManager.CanAttack(_status))
+                if (CanAttack(_status))
                     ShotGunAttack();
                 else
                     EmptyAttack();
@@ -246,7 +252,7 @@ public class PlayerController : BaseCharacter
     private void Move()
     {
         _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
-        rb2D.velocity = new Vector2(moveSpeed * _horizontalMove, rb2D.velocity.y);
+        rb2D.velocity = new Vector2(currentMoveSpeed * _horizontalMove, rb2D.velocity.y);
         //OPTIMIZE:尝试使用以下API
         // rb2D.MovePosition();
     }
@@ -268,7 +274,7 @@ public class PlayerController : BaseCharacter
     private void Jump()
     {
         rb2D.velocity = new Vector2(0f, zetriaInfo.jumpForce);
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_jump");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_jump");
 
         // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
         // jumpFX.transform.position = this.transform.position + _jumpFXOffset;
@@ -284,7 +290,7 @@ public class PlayerController : BaseCharacter
     private void Crouch()
     {
         _isCrouch = true;
-        moveSpeed = zetriaInfo.crouchSpeed;
+        currentMoveSpeed = zetriaInfo.crouchSpeed;
         col2D.size = _crouchSize;
         col2D.offset = _crouchOffset;
         _status = E_PlayerStatus.Pistol;
@@ -298,20 +304,20 @@ public class PlayerController : BaseCharacter
         col2D.offset = _standOffset;
 
         if (_status != E_PlayerStatus.NPC)
-            moveSpeed = zetriaInfo.standSpeed;
+            currentMoveSpeed = zetriaInfo.standSpeed;
     }
 
     private void AlterWeapon()
     {
         _status = (int)_status >= 1 ? _status = 0 : ++_status;
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
     }
 
     private void PistolFire()
     {
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "pistol_fire");
-        GameManager.Instance.m_AmmoManager.UsePistolAmmo();
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "pistol_fire");
+        ammoController.UsePistolAmmo();
 
         GameObject pistolBullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("PistolBullet", E_ResourcesPath.Entity);
         SetBulletPos(pistolBullet, _pistolBulletLeftOffset, _pistolBulletRightOffset, _bulletOffsetWithCrouch);
@@ -319,8 +325,8 @@ public class PlayerController : BaseCharacter
 
     private void ShotGunFire()
     {
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "shotgun_fire");
-        GameManager.Instance.m_AmmoManager.UseShotGunAmmo();
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_fire");
+        ammoController.UseShotGunAmmo();
 
         GameObject shotGunBullet0 = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
         GameObject shotGunBullet1 = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Entity);
@@ -373,7 +379,7 @@ public class PlayerController : BaseCharacter
 
         //TODO:设置攻击范围
         anim.SetTrigger("MeleeAttack");
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
 
         yield return new WaitForSeconds(zetriaInfo.meleeAttackCD);
         _isMeleeAttack = false;
@@ -430,7 +436,7 @@ public class PlayerController : BaseCharacter
     private IEnumerator IE_EmptyAttack()
     {
         _isEmptyAttack = true;
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "gun_empty");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "gun_empty");
 
         yield return new WaitForSeconds(zetriaInfo.emptyAttackCD);
         _isEmptyAttack = false;
@@ -451,12 +457,12 @@ public class PlayerController : BaseCharacter
         {
             case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
-                GameManager.Instance.m_AmmoManager.ReloadPistolAmmo();
-                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "pistol_reload");
+                ammoController.ReloadPistolAmmo();
+                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "pistol_reload");
                 break;
             case E_PlayerStatus.ShotGun:
-                GameManager.Instance.m_AmmoManager.ReloadShotGunAmmo();
-                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "shotgun_reload");
+                ammoController.ReloadShotGunAmmo();
+                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_reload");
                 break;
         }
 
@@ -479,7 +485,7 @@ public class PlayerController : BaseCharacter
 
         anim.SetTrigger("Hurt");
 
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_hurt_1");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_hurt_1");
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
 
         if (_isDead) Dead();
@@ -499,17 +505,60 @@ public class PlayerController : BaseCharacter
     private void PutDownNPC()
     {
         _status = E_PlayerStatus.Pistol;
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "npc_putdown");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "npc_putdown");
 
         GameObject sleepWomen = GameManager.Instance.m_ObjectPoolManager.GetObject("SleepWomen");
         if (sleepWomen != null)
             sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
     }
 
+    private bool CanStand()
+    {
+        _headCheck = GameTools.ShowRay(this.transform.position, RayOffset, Vector2.up, _rayLength, 1 << LayerMask.NameToLayer("Ground"));
+        return _headCheck ? false : true;
+    }
+
+    private bool CanAttack(E_PlayerStatus status)
+    {
+        switch (status)
+        {
+            case E_PlayerStatus.NPC:
+            case E_PlayerStatus.Pistol:
+                if (ammoController.AmmoInfo._currentPistolAmmoCount != 0)
+                    return true;
+                break;
+            case E_PlayerStatus.ShotGun:
+                if (ammoController.AmmoInfo._currentShotGunAmmoCount != 0)
+                    return true;
+                break;
+        }
+
+        return false;
+    }
+
+    private bool CanReload(E_PlayerStatus status)
+    {
+        switch (status)
+        {
+            case E_PlayerStatus.Pistol:
+                if (ammoController.AmmoInfo._maxPistolAmmoCount > 0 && ammoController.AmmoInfo._currentPistolAmmoCount != ammoController.AmmoInfo._currentPistolAmmoLimit)
+                    return true;
+                break;
+            case E_PlayerStatus.ShotGun:
+                if (ammoController.AmmoInfo._maxShotGunAmmoCount > 0 && ammoController.AmmoInfo._currentShotGunAmmoCount != ammoController.AmmoInfo._currentShotGunAmmoLimit)
+                    return true;
+                break;
+        }
+        return false;
+    }
+
+
+    #region Event
+
     public void OnGetNPC()
     {
         _status = E_PlayerStatus.NPC;
-        moveSpeed = zetriaInfo.getNPCSpeed;
+        currentMoveSpeed = zetriaInfo.getNPCSpeed;
     }
 
     public void OnGetDoorCard()
@@ -537,11 +586,6 @@ public class PlayerController : BaseCharacter
         Gizmos.DrawWireSphere(GroundCheckPos, _groundCheckRadius);
     }
 
-    private bool CanStand()
-    {
-        _headCheck = GameTools.ShowRay(this.transform.position, RayOffset, Vector2.up, _rayLength, 1 << LayerMask.NameToLayer("Ground"));
-        return _headCheck ? false : true;
-    }
-
+    #endregion
 
 }

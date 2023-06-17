@@ -10,7 +10,7 @@ public class ShotGun : MonoBehaviour
         {
             GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpShortGun);
             GameManager.Instance.m_ItemManager.GetShotGun();
-            GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "player_ohYeah");
+            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_ohYeah");
             Destroy(this.gameObject);
         }
     }

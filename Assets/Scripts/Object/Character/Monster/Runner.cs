@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterData
+public class Runner : BaseMonster
 {
+    protected override void Init()
+    {
 
+    }
 }

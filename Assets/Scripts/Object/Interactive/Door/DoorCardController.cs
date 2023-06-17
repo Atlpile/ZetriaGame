@@ -31,12 +31,12 @@ public class DoorCardController : MonoBehaviour
                     _canUse = false;
                     door.UpdateDoor(true);
                     UpdateSignLights();
-                    GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_confirm");
+                    GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
                 }
             }
             else
             {
-                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_error");
+                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_error");
                 ControllerError();
             }
         }

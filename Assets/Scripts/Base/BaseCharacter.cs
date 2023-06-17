@@ -6,7 +6,7 @@ public abstract class BaseCharacter : BaseObject
 {
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
-    protected float moveSpeed;
+    protected float currentMoveSpeed;
     protected bool isRight;
     protected bool isGround;
 

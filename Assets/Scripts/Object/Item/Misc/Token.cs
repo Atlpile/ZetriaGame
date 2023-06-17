@@ -12,7 +12,7 @@ public class Token : MonoBehaviour
         {
             GameManager.Instance.m_EventManager.EventTrigger<Token>(E_EventType.PickUpToken, this);
             GameManager.Instance.m_ItemManager.GetToken(tokenID);
-            GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "collect");
+            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "collect");
             Destroy(this.gameObject);
         }
     }

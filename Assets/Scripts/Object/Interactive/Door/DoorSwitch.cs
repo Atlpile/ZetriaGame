@@ -24,7 +24,7 @@ public class DoorSwitch : MonoBehaviour
                 _isOpen = !_isOpen;
                 UpdateSignLights();
                 door.UpdateDoor(_isOpen);
-                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_confirm");
+                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
             }
             else if (door != null && door.type != E_DoorType.Condition)
             {

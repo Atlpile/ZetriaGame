@@ -13,7 +13,8 @@ public class Platform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.name == "Player" || other.gameObject.name == "SleepWomen")
+        BaseCharacter character = other.gameObject.GetComponent<BaseCharacter>();
+        if (character != null)
         {
             other.transform.SetParent(this.transform);
         }
@@ -21,7 +22,8 @@ public class Platform : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
-        if (other.gameObject.name == "Player" || other.gameObject.name == "SleepWomen")
+        BaseCharacter character = other.gameObject.GetComponent<BaseCharacter>();
+        if (character != null)
         {
             other.transform.SetParent(null);
         }

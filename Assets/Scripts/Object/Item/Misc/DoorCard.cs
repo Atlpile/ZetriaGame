@@ -9,7 +9,7 @@ public class DoorCard : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpDoorCard);
-            GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "collect");
+            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "collect");
             Destroy(this.gameObject);
         }
     }

@@ -31,13 +31,13 @@ public class TokenController : MonoBehaviour
                     Debug.Log("令牌数量足够");
                     _canUse = false;
                     door.UpdateDoor(true);
-                    GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_confirm");
+                    GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
                 }
             }
             else
             {
                 Debug.Log("令牌数量不够");
-                GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "door_error");
+                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_error");
                 ControllerError();
             }
 

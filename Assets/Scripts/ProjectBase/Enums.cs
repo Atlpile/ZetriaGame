@@ -11,7 +11,7 @@ public enum E_InputType
 
 public enum E_EventType
 {
-    PickUpNPC, PickUpShortGun, PickUpToken, PickUpDoorCard,
+    PickUpNPC, PickUpShortGun, PickUpToken, PickUpDoorCard, PickUpPistolAmmo, PickUpShortGunAmmo,
     InitGamePanelUI,
     PlayerFire, PlayerReload, PlayerAddHP, PlayerTeleport,
     MovePlatform,
@@ -20,6 +20,7 @@ public enum E_EventType
 }
 public enum E_AmmoType { Pistol, ShotGun }
 public enum E_BulletMoveType { Upward, Straight, Downward }
-public enum E_AIState { Null, Patrol, Chase }
+public enum E_AIState { Null, Patrol, Chase, Idle, Dead, Attack }
 public enum E_DoorType { Once, Condition, Smart }
 public enum E_PlatformButtonType { Null, Up, Down, Left, Right }
+public enum E_MonsterType { Ground, Fly, Static }

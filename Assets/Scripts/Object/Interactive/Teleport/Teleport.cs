@@ -55,7 +55,7 @@ public class Teleport : MonoBehaviour
     private void TeleportToTarget()
     {
         GameManager.Instance.m_EventManager.EventTrigger<Vector3>(E_EventType.PlayerTeleport, targetPoint.transform.position);
-        GameManager.Instance.m_AudioController.AudioPlay(E_AudioType.Effect, "teleport_player");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "teleport_player");
         GameObject fx = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("FX_Teleport", E_ResourcesPath.FX);
         fx.transform.position = targetPoint.transform.position;
         //TODO:生成粒子效果
