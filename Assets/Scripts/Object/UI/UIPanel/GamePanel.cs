@@ -53,7 +53,7 @@ public class GamePanel : BasePanel
 
     public override void HideSelf()
     {
-        GameManager.Instance.m_AudioManager.BGMStop();
+        GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSetttingType.Stop);
     }
 
     public void UpdateDoorCard()

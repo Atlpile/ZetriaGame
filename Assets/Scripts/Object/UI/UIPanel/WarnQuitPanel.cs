@@ -16,6 +16,16 @@ public class WarnQuitPanel : BasePanel
         button_No = GetUIComponent<Button>("button_No");
     }
 
+    public override void ShowSelf()
+    {
+
+    }
+
+    public override void HideSelf()
+    {
+
+    }
+
     protected override void OnClick(string buttonName)
     {
         switch (buttonName)
@@ -39,4 +49,6 @@ public class WarnQuitPanel : BasePanel
     {
         GameManager.Instance.m_UIManager.HidePanel<WarnQuitPanel>();
     }
+
+
 }

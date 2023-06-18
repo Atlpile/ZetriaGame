@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+    额外需求：
+        1.可以在物体上添加音源组件，并控制其中的脚本
+*/
+
 public class AudioManager
 {
     public Dictionary<string, AudioClip> AudioDict;
-    private AudioSource BGMSource;
-    private AudioSource EffectSource;
+    private AudioSource BGMChannel;
+    private AudioSource EffectChannel;
 
 
     public float effectVolume = 1;
@@ -26,6 +31,7 @@ public class AudioManager
         }
         else
         {
+            //加载音频
             AudioClip audioClip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, name);
             if (audioClip == null)
             {
@@ -33,52 +39,62 @@ public class AudioManager
                 return;
             }
 
-            //创建新的AudioObject
+            //创建音乐对象
             GameObject resAudioObj = new GameObject(name);
             AudioSource audioSource = resAudioObj.AddComponent<AudioSource>();
             audioSource.clip = audioClip;
 
+            //记录音乐对象
             AudioDict.Add(name, audioClip);
             GameManager.Instance.m_ObjectPoolManager.AddObject(resAudioObj, name);
             GameObject poolObj = GameManager.Instance.m_ObjectPoolManager.GetObject(name);
 
+            //播放音频及设置
             PlayAudioClip(type, name, audioClip, poolObj, isLoop);
         }
     }
 
-    public void BGMStop()
+    public void BGMSetting(E_AudioSetttingType type)
     {
-        if (BGMSource != null)
+        if (BGMChannel != null)
         {
-            GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMSource.gameObject);
-            BGMSource = null;
+            switch (type)
+            {
+                case E_AudioSetttingType.Stop:
+                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMChannel.gameObject);
+                    BGMChannel = null;
+                    break;
+                case E_AudioSetttingType.Pause:
+                    BGMChannel.Pause();
+                    break;
+                case E_AudioSetttingType.Resume:
+                    BGMChannel.UnPause();
+                    break;
+            }
         }
         else
         {
-            Debug.LogWarning("音频为空，停止播放音频无效");
+            Debug.Log("音频为空，操作无效");
         }
     }
 
-    public void BGMPause()
+    public void SetVolume(E_AudioType type, float volume)
     {
-        if (BGMSource != null)
-            BGMSource.Pause();
-        else
-            Debug.LogWarning("音频为空，暂停播放音频无效");
-
+        switch (type)
+        {
+            case E_AudioType.BGM:
+                BGMChannel.volume = volume;
+                break;
+            case E_AudioType.Effect:
+                effectVolume = volume;
+                break;
+        }
     }
 
-    public void BGMResume()
-    {
-        if (BGMSource != null)
-            BGMSource.UnPause();
-        else
-            Debug.LogWarning("音频为空，恢复播放音频无效");
-    }
 
     public void SetBGMVolume(float volume)
     {
-        BGMSource.volume = volume;
+        BGMChannel.volume = volume;
     }
 
     public void SetEffectVolume(float volume)
@@ -108,19 +124,19 @@ public class AudioManager
         {
             case E_AudioType.BGM:
 
-                if (BGMSource != null)
-                    BGMStop();
+                if (BGMChannel != null)
+                    BGMSetting(E_AudioSetttingType.Stop);
 
                 audioSource.loop = isLoop;
                 audioSource.Play();
-                BGMSource = audioSource;
+                BGMChannel = audioSource;
                 break;
             case E_AudioType.Effect:
                 GameManager.Instance.StartCoroutine(IE_PlayOnceAudio(name, audioClip, audioObj));
                 audioSource.loop = isLoop;
                 audioSource.volume = effectVolume;
                 audioSource.Play();
-                EffectSource = audioSource;
+                EffectChannel = audioSource;
                 break;
         }
     }

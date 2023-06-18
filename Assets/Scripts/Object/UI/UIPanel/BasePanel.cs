@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BasePanel : MonoBehaviour
+public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
 
@@ -19,15 +19,10 @@ public class BasePanel : MonoBehaviour
         // GetChildrenUIComponent<InputField>();
     }
 
-    public virtual void ShowSelf()
-    {
+    public abstract void ShowSelf();
 
-    }
+    public abstract void HideSelf();
 
-    public virtual void HideSelf()
-    {
-
-    }
 
     protected virtual void OnClick(string buttonName)
     {

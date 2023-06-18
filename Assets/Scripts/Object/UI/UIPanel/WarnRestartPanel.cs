@@ -16,6 +16,16 @@ public class WarnRestartPanel : BasePanel
         button_No = GetUIComponent<Button>("button_No");
     }
 
+    public override void ShowSelf()
+    {
+
+    }
+
+    public override void HideSelf()
+    {
+
+    }
+
     protected override void OnClick(string buttonName)
     {
         switch (buttonName)
@@ -46,4 +56,6 @@ public class WarnRestartPanel : BasePanel
     {
         GameManager.Instance.m_UIManager.HidePanel<WarnRestartPanel>();
     }
+
+
 }

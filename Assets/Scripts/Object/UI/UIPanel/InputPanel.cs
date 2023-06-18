@@ -45,6 +45,11 @@ public class InputPanel : BasePanel
         LoadInputKey();
     }
 
+    public override void HideSelf()
+    {
+
+    }
+
     private void LoadInputKey()
     {
         //OPTIMIZE：使用循环来同步按键
@@ -103,4 +108,6 @@ public class InputPanel : BasePanel
             }
         }
     }
+
+
 }

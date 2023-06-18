@@ -24,6 +24,16 @@ public class PausePanel : BasePanel
         btnExit = GetUIComponent<Button>("btnExit");
     }
 
+    public override void ShowSelf()
+    {
+
+    }
+
+    public override void HideSelf()
+    {
+
+    }
+
     protected override void OnClick(string buttonName)
     {
         switch (buttonName)

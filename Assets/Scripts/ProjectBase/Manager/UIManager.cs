@@ -85,18 +85,15 @@ public class UIManager
         //没有面板
         else
         {
-            GameObject uiPrefab = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName, false);
+            GameObject poolPrefab = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject(panelName, E_ResourcesPath.UI, rectCanvas);
 
-            uiPrefab.transform.SetParent(rectCanvas);
-            uiPrefab.transform.localPosition = Vector3.zero;
-            uiPrefab.transform.localScale = Vector3.one;
-            (uiPrefab.transform as RectTransform).offsetMax = Vector2.zero;
-            (uiPrefab.transform as RectTransform).offsetMin = Vector2.zero;
+            poolPrefab.transform.SetParent(rectCanvas);
+            poolPrefab.transform.localPosition = Vector3.zero;
+            poolPrefab.transform.localScale = Vector3.one;
+            (poolPrefab.transform as RectTransform).offsetMax = Vector2.zero;
+            (poolPrefab.transform as RectTransform).offsetMin = Vector2.zero;
 
-            GameManager.Instance.m_ObjectPoolManager.AddObject(uiPrefab, panelName);
-            GameManager.Instance.m_ObjectPoolManager.GetObject(panelName, rectCanvas);
-
-            T panel = uiPrefab.GetComponent<T>();
+            T panel = poolPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
             panel.ShowSelf();
             return panel;

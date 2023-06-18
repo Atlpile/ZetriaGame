@@ -3,65 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ObjectPoolInfo
-{
-    public GameObject parentObj;
-    public GameObject childrenObj;
-    public Stack<GameObject> poolStack = new Stack<GameObject>();
-
-    public ObjectPoolInfo(GameObject obj, GameObject poolRoot)
-    {
-        parentObj = new GameObject(obj.name + "_Pool");
-        parentObj.transform.SetParent(poolRoot.transform);
-        childrenObj = obj;
-    }
-
-    //FIXME：修复RectTransfom的取入和取出
-    //解决方案1：坐标转换
-    //解决方案2：创建UIPoolRoot
-
-    public void ReturnToObjectPool(GameObject obj)
-    {
-        obj.SetActive(false);
-        poolStack.Push(obj);
-        obj.transform.SetParent(parentObj.transform);
-    }
-
-    public GameObject GetObjectInPool(Transform parent)
-    {
-        GameObject obj = poolStack.Pop();
-
-        obj.SetActive(true);
-        obj.transform.SetParent(parent);
-        return obj;
-    }
-
-    public void FillObjectPool()
-    {
-        GameObject fillObj = GameObject.Instantiate(childrenObj);
-        fillObj.name = childrenObj.name;
-
-        ReturnToObjectPool(fillObj);
-    }
-
-    public void FillObjectPool(int count)
-    {
-        GameObject fillObj;
-        for (int i = 0; i < count; i++)
-        {
-            fillObj = GameObject.Instantiate(childrenObj, parentObj.transform);
-            fillObj.name = childrenObj.name;
-
-            ReturnToObjectPool(fillObj);
-        }
-    }
-
-}
 
 public class ObjectPoolManager
 {
     private GameObject poolRoot;
-    private Dictionary<string, ObjectPoolInfo> ObjectPoolsDic = new Dictionary<string, ObjectPoolInfo>();
+    private Dictionary<string, PoolStack> ObjectPoolsDic = new Dictionary<string, PoolStack>();
 
     public ObjectPoolManager()
     {
@@ -78,14 +24,12 @@ public class ObjectPoolManager
         }
         else if (ObjectPoolsDic[name].poolStack.Count > 0)
         {
-            // Debug.Log("从对象池中获取对象");
             return ObjectPoolsDic[name].GetObjectInPool(parent);
         }
         else
         {
             //递归填充
             ObjectPoolsDic[name].FillObjectPool();
-            // Debug.Log("从对象池中填充对象");
             return GetObject(name, parent);
         }
     }
@@ -99,20 +43,17 @@ public class ObjectPoolManager
         {
             GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
             resObj.name = name;
-            ObjectPoolsDic.Add(resObj.name, new ObjectPoolInfo(resObj, poolRoot));
-            // Debug.Log("从Resources中获取对象");
+            ObjectPoolsDic.Add(resObj.name, new PoolStack(resObj, poolRoot));
             return resObj;
         }
         else if (ObjectPoolsDic[name].poolStack.Count > 0)
         {
-            // Debug.Log("从对象池中获取对象");
             return ObjectPoolsDic[name].GetObjectInPool(parent);
         }
         else
         {
             //递归填充
             ObjectPoolsDic[name].FillObjectPool();
-            // Debug.Log("从对象池中填充对象");
             return GetOrLoadObject(name, path, parent);
         }
     }
@@ -124,13 +65,11 @@ public class ObjectPoolManager
 
         if (ObjectPoolsDic.ContainsKey(obj.name))
         {
-            // Debug.Log("返回对象池");
             ObjectPoolsDic[obj.name].ReturnToObjectPool(obj);
         }
         else
         {
-            // Debug.Log("创建新对象池并添加对象");
-            ObjectPoolsDic.Add(obj.name, new ObjectPoolInfo(obj, poolRoot));
+            ObjectPoolsDic.Add(obj.name, new PoolStack(obj, poolRoot));
             ObjectPoolsDic[obj.name].ReturnToObjectPool(obj);
         }
     }
@@ -139,7 +78,7 @@ public class ObjectPoolManager
     {
         if (obj == null)
         {
-            Debug.Log("");
+            Debug.Log("不存在该对象");
             return;
         }
         else
@@ -148,7 +87,7 @@ public class ObjectPoolManager
                 poolRoot = new GameObject("PoolRoot");
 
             obj.name = name;
-            ObjectPoolsDic.Add(name, new ObjectPoolInfo(obj, poolRoot));
+            ObjectPoolsDic.Add(name, new PoolStack(obj, poolRoot));
             ObjectPoolsDic[name].ReturnToObjectPool(obj);
         }
     }
@@ -166,7 +105,7 @@ public class ObjectPoolManager
 
             GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
             resObj.name = name;
-            ObjectPoolsDic.Add(name, new ObjectPoolInfo(resObj, poolRoot));
+            ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
             ObjectPoolsDic[name].ReturnToObjectPool(resObj);
         }
     }
@@ -178,7 +117,7 @@ public class ObjectPoolManager
 
         GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
         resObj.name = name;
-        ObjectPoolsDic.Add(name, new ObjectPoolInfo(resObj, poolRoot));
+        ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
         ObjectPoolsDic[name].FillObjectPool(fillCount - 1);
     }
 
