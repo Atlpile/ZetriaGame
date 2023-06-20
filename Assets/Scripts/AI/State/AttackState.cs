@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AttackState : BaseAIState
 {
-    public AttackState(AILogic logic) : base(logic)
+    public AttackState(FSM fsm) : base(fsm)
     {
     }
 

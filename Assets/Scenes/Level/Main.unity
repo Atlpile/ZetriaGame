@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7382151319152587696, guid: 440445e020d092d408d9c3c216a17509, type: 3}
       propertyPath: panel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7382151319152587698, guid: 440445e020d092d408d9c3c216a17509, type: 3}
       propertyPath: m_Name
@@ -224,7 +224,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

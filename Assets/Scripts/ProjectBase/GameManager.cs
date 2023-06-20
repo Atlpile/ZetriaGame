@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public enum E_InitPanel
 {
-    None, Main, Game, Input
+    None, Main, Game, Input, Loading,
 }
 
 public class GameManager : MonoBehaviour
@@ -68,11 +68,21 @@ public class GameManager : MonoBehaviour
     {
         InitUI();
 
+        Application.targetFrameRate = 144;
     }
 
     private void Update()
     {
         m_GameController.UpdateInput();
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            m_UIManager.ShowPanel<LoadingPanel>();
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            m_UIManager.HidePanel<LoadingPanel>();
+        }
     }
 
 
@@ -90,6 +100,9 @@ public class GameManager : MonoBehaviour
                 break;
             case E_InitPanel.Game:
                 m_UIManager.ShowPanel<GamePanel>();
+                break;
+            case E_InitPanel.Loading:
+                m_UIManager.ShowPanel<LoadingPanel>();
                 break;
         }
     }

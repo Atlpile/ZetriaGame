@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/*
+    TODO:写AI逻辑
+    TODO:使用里氏替换原则为不同的Monster写逻辑
+*/
+
+
 public abstract class BaseAIState
 {
-    protected AILogic logic;
+    protected FSM fsm;
+    protected BaseMonster Monster => fsm.monster;
 
-    public BaseAIState(AILogic logic)
+    public BaseAIState(FSM fsm)
     {
-        this.logic = logic;
+        this.fsm = fsm;
     }
 
     public abstract void EnterState();

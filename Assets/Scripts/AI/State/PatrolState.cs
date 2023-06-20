@@ -5,10 +5,8 @@ using UnityEngine.Events;
 
 public class PatrolState : BaseAIState
 {
-
-    public PatrolState(AILogic logic) : base(logic)
+    public PatrolState(FSM fsm) : base(fsm)
     {
-
     }
 
     public override void EnterState()
@@ -18,14 +16,11 @@ public class PatrolState : BaseAIState
 
     public override void ExitState()
     {
-        //发现Player，退出状态
+
     }
 
     public override void UpdateState()
     {
 
     }
-
-
-
 }

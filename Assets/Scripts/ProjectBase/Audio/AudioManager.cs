@@ -100,6 +100,7 @@ public class AudioManager
     public void SetEffectVolume(float volume)
     {
         effectVolume = volume;
+        GameManager.Instance.m_EventManager.EventTrigger(E_EventType.SetAudioSourceVolume, volume);
     }
 
     public void LoadAudioData()

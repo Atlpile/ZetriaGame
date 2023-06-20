@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ChaseState : BaseAIState
+public class NullState : BaseAIState
 {
-    public ChaseState(FSM fsm) : base(fsm)
+    public NullState(FSM fsm) : base(fsm)
     {
     }
 

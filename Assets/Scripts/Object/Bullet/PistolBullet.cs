@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PistolBullet : BaseObject
+public class PistolBullet : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _destroyTime = 1f;

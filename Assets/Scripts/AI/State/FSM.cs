@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AILogic
+public class FSM
 {
-    public E_AIState currentState = E_AIState.Null;
+    private E_AIState currentState = E_AIState.Null;
     public BaseMonster monster;
 
     private Dictionary<E_AIState, BaseAIState> StateDic = new Dictionary<E_AIState, BaseAIState>();
     private BaseAIState nowState;
 
 
-    public AILogic(BaseMonster monster)
+    public FSM(BaseMonster monster)
     {
         this.monster = monster;
 
+        //OPTIMIZE：自动添加状态
+        StateDic.Add(E_AIState.Null, new NullState(this));
+        StateDic.Add(E_AIState.Idle, new IdleState(this));
         StateDic.Add(E_AIState.Patrol, new PatrolState(this));
         StateDic.Add(E_AIState.Chase, new ChaseState(this));
 

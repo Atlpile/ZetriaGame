@@ -2,14 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseCharacter : BaseObject
+[RequireComponent(typeof(Animator))]
+public abstract class BaseCharacter : MonoBehaviour
 {
+    protected Animator anim;
     protected CapsuleCollider2D col2D;
     protected Rigidbody2D rb2D;
     protected float currentMoveSpeed;
     protected bool isRight;
     protected bool isGround;
 
+    private void Awake()
+    {
+        col2D = this.GetComponent<CapsuleCollider2D>();
+        rb2D = this.GetComponent<Rigidbody2D>();
+        anim = this.GetComponent<Animator>();
+
+        OnAwake();
+    }
+
+    private void Start()
+    {
+        rb2D.freezeRotation = true;
+
+        OnStart();
+    }
 
     private void Update()
     {
@@ -23,20 +40,14 @@ public abstract class BaseCharacter : BaseObject
     }
 
 
-    protected override void OnAwake()
+    protected virtual void OnAwake()
     {
-        base.OnAwake();
 
-        col2D = this.GetComponent<CapsuleCollider2D>();
-        rb2D = this.GetComponent<Rigidbody2D>();
-        anim = this.GetComponent<Animator>();
     }
 
-    protected override void OnStart()
+    protected virtual void OnStart()
     {
-        base.OnStart();
 
-        rb2D.freezeRotation = true;
     }
 
     protected virtual void OnUpdate()
@@ -48,8 +59,6 @@ public abstract class BaseCharacter : BaseObject
     {
 
     }
-
-
 
     protected virtual void SetAnimatorParameter()
     {
@@ -65,5 +74,10 @@ public abstract class BaseCharacter : BaseObject
             return Physics2D.OverlapCircle(groundCheckPos, checkRadius, 1 << LayerMask.NameToLayer("Ground"));
 
         return Physics2D.OverlapCircle(groundCheckPos, checkRadius, 0);
+    }
+
+    public void PlayAnim(string animName)
+    {
+        anim.Play(animName);
     }
 }

@@ -25,7 +25,7 @@ public class PlayerController : BaseCharacter
     private Vector2 _standOffset;
 
     [Header("Ground Check")]
-    private Vector2 _groundCheckPos;
+    private Vector2 _groundCheckOffset;
     private float _groundCheckRadius = 0.15f;
 
     [Header("Head Check")]
@@ -45,13 +45,13 @@ public class PlayerController : BaseCharacter
     private bool _isShotGunAttack;
     private bool _isEmptyAttack;
     private bool _isCrouch;
-    private bool _canStand;
     private bool _isReload;
     private bool _isHurt;
     private bool _isDead;
+    private bool _canStand;
 
 
-    public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckPos;
+    public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckOffset;
     public Vector2 RayOffset
     {
         get
@@ -62,9 +62,8 @@ public class PlayerController : BaseCharacter
                 return new Vector2(-this.col2D.offset.x, this.col2D.size.y / 2);
         }
     }
-    private InputController InputController => GameManager.Instance.m_InputController;
     public ZetriaInfo ZetriaInfo => zetriaInfo;
-
+    private InputController InputController => GameManager.Instance.m_InputController;
 
     protected override void OnAwake()
     {
@@ -75,7 +74,6 @@ public class PlayerController : BaseCharacter
         _moveSource = GetComponent<AudioSource>();
     }
 
-
     protected override void OnStart()
     {
         base.OnStart();
@@ -83,11 +81,10 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-        GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
-
-        Application.targetFrameRate = 144;
+        GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.SetAudioSourceVolume, OnUpdateAudioSourceVolume);
 
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
@@ -102,12 +99,12 @@ public class PlayerController : BaseCharacter
 
         if (_isDead) return;
 
-        //OPTIMIZE:优化enabled
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
 
+        //OPTIMIZE：Player上的AudioSource组件由AudioManager控制
         //走路声音与设置声音同步
-        if (_moveSource.volume != GameManager.Instance.m_AudioManager.effectVolume)
-            _moveSource.volume = GameManager.Instance.m_AudioManager.effectVolume;
+        // if (_moveSource.volume != GameManager.Instance.m_AudioManager.effectVolume)
+        //     _moveSource.volume = GameManager.Instance.m_AudioManager.effectVolume;
 
         UpdatePlayerState();
     }
@@ -138,9 +135,10 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-        GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
+        GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.SetAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
     private void InitPlayer()
@@ -253,8 +251,6 @@ public class PlayerController : BaseCharacter
     {
         _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
         rb2D.velocity = new Vector2(currentMoveSpeed * _horizontalMove, rb2D.velocity.y);
-        //OPTIMIZE:尝试使用以下API
-        // rb2D.MovePosition();
     }
 
     private void Flip()
@@ -579,6 +575,11 @@ public class PlayerController : BaseCharacter
     public void OnTeleportToTarget(Vector3 target)
     {
         this.transform.position = target;
+    }
+
+    public void OnUpdateAudioSourceVolume(float volume)
+    {
+        _moveSource.volume = volume;
     }
 
     private void OnDrawGizmos()

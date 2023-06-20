@@ -1,30 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class IdleState : BaseAIState
 {
-    public IdleState(AILogic logic) : base(logic)
-    {
-    }
+    public IdleState(FSM fsm) : base(fsm) { }
 
     public override void EnterState()
     {
-        logic.monster.FSM_Idle();
+        //播放Idle动画
+        Monster.PlayAnim("Idle");
+
+        //停止移动
+
+    }
+
+    public override void UpdateState()
+    {
+        //若发现Player，则切换为Chase状态
+        if (Monster.IsFindPlayer)
+        {
+            fsm.ChangeState(E_AIState.Chase);
+        }
+        else if (Monster is WolfMan)
+        {
+
+        }
     }
 
     public override void ExitState()
     {
 
     }
-
-    public override void UpdateState()
-    {
-        //检测是否发现Player
-        if (logic.monster.GetPlayer())
-            logic.ChangeState(E_AIState.Chase);
-    }
-
-    //发现Player，切换到Chase状态
 }
 

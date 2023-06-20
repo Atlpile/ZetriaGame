@@ -2,25 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : BaseObject
+//Smart：自动开，自动关
+//Condition：条件开，条件关
+//Once：只关一次
+
+public class Door : MonoBehaviour
 {
-    //Smart：自动开，自动关
-    //Condition：条件开，条件关
-    //Once：只关一次
+
     public E_DoorType type;
     private BoxCollider2D boxColl2D;
+    private Animator animator;
 
-    protected override void OnAwake()
+    private void Awake()
     {
-        anim = this.GetComponentInChildren<Animator>();
+        animator = this.GetComponentInChildren<Animator>();
         boxColl2D = this.GetComponent<BoxCollider2D>();
     }
 
-    protected override void OnStart()
+    private void Start()
     {
         if (type == E_DoorType.Once)
         {
-            anim.SetBool("IsOpen", true);
+            animator.SetBool("IsOpen", true);
             boxColl2D.offset = new Vector2(-1, 0);
             boxColl2D.size = new Vector2(1, 2);
         }
@@ -31,7 +34,6 @@ public class Door : BaseObject
     }
 
     //FIXME:Once时重新设置碰撞体范围
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Player" && type == E_DoorType.Smart)
@@ -53,11 +55,9 @@ public class Door : BaseObject
         }
     }
 
-
-
     public void UpdateDoor(bool isOpen)
     {
-        anim.SetBool("IsOpen", isOpen);
+        animator.SetBool("IsOpen", isOpen);
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_shut");
     }
 }

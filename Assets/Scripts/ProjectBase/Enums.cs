@@ -16,7 +16,8 @@ public enum E_EventType
     InitGamePanelUI,
     PlayerFire, PlayerReload, PlayerAddHP, PlayerTeleport,
     MovePlatform,
-    PressKey, PressKeyDown, PressKeyUp
+    PressKey, PressKeyDown, PressKeyUp,
+    SetAudioSourceVolume,
 
 }
 public enum E_AmmoType { Pistol, ShotGun }
@@ -24,3 +25,4 @@ public enum E_BulletMoveType { Upward, Straight, Downward }
 public enum E_AIState { Null, Patrol, Chase, Idle, Dead, Attack }
 public enum E_DoorType { Once, Condition, Smart }
 public enum E_MonsterType { Ground, Fly, Static }
+public enum E_CheckType { Rect, Sphere }

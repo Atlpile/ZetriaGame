@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DeadState : BaseAIState
 {
-    public DeadState(AILogic logic) : base(logic)
+    public DeadState(FSM fsm) : base(fsm)
     {
-
     }
 
     public override void EnterState()
     {
-        logic.monster.FSM_Dead();
+
     }
 
     public override void ExitState()
