@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class FirePile : MonoBehaviour
 {
-    private AudioSource _fireSource;
+    private AudioSource FireSource;
 
     private void Awake()
     {
-        _fireSource = this.GetComponent<AudioSource>();
+        FireSource = this.GetComponent<AudioSource>();
+        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
     private void OnTriggerStay2D(Collider2D other)
@@ -19,11 +25,8 @@ public class FirePile : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void OnUpdateAudioSourceVolume(float volume)
     {
-        if (_fireSource.volume != GameManager.Instance.m_AudioManager.effectVolume)
-            _fireSource.volume = GameManager.Instance.m_AudioManager.effectVolume;
+        FireSource.volume = volume;
     }
-
-
 }

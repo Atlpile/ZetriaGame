@@ -14,8 +14,10 @@ public class AudioManager
     public float bgmVolume = 1;
 
     private Dictionary<string, AudioClip> AudioDict;
-    private AudioSource BGMSource;
-    private AudioSource EffectSource;
+    private AudioSource BGMChannel;
+    private AudioSource EffectChannel;
+
+    public UnityAction AudioSourceVolumeChanged;
 
     public AudioManager()
     {
@@ -56,19 +58,19 @@ public class AudioManager
 
     public void BGMSetting(E_AudioSetttingType type)
     {
-        if (BGMSource != null)
+        if (BGMChannel != null)
         {
             switch (type)
             {
                 case E_AudioSetttingType.Stop:
-                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMSource.gameObject);
-                    BGMSource = null;
+                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMChannel.gameObject);
+                    BGMChannel = null;
                     break;
                 case E_AudioSetttingType.Pause:
-                    BGMSource.Pause();
+                    BGMChannel.Pause();
                     break;
                 case E_AudioSetttingType.Resume:
-                    BGMSource.UnPause();
+                    BGMChannel.UnPause();
                     break;
             }
         }
@@ -83,48 +85,27 @@ public class AudioManager
         switch (type)
         {
             case E_AudioType.BGM:
-                BGMSource.volume = volume;
+                SetBGMVolume(volume);
                 break;
             case E_AudioType.Effect:
-                effectVolume = volume;
+                SetEffectVolume(volume);
+                GameManager.Instance.m_EventManager.EventTrigger(E_EventType.UpdateAudioSourceVolume, volume);
                 break;
         }
-    }
-
-
-    public void SetBGMVolume(float volume)
-    {
-        if (BGMSource != null)
-            BGMSource.volume = volume;
-
-        bgmVolume = volume;
-    }
-
-    public void SetEffectVolume(float volume)
-    {
-        if (EffectSource != null)
-            EffectSource.volume = volume;
-
-        effectVolume = volume;
-    }
-
-    public void UpdateAudioSourceVolume(AudioSource audioSource)
-    {
-        if (audioSource.volume != effectVolume)
-            audioSource.volume = effectVolume;
     }
 
     public void LoadAudioData()
     {
         SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
-        SetBGMVolume(settingData.volume_BGM);
-        SetEffectVolume(settingData.volume_Effect);
+        SetVolume(E_AudioType.BGM, settingData.volume_BGM);
+        SetVolume(E_AudioType.Effect, settingData.volume_Effect);
     }
 
     public void Clear()
     {
         AudioDict.Clear();
     }
+
 
     private void PlayAudioClip(E_AudioType type, string name, AudioClip audioClip, GameObject audioObj, bool isLoop)
     {
@@ -135,20 +116,20 @@ public class AudioManager
         {
             case E_AudioType.BGM:
 
-                if (BGMSource != null)
+                if (BGMChannel != null)
                     BGMSetting(E_AudioSetttingType.Stop);
 
                 audioSource.loop = isLoop;
                 audioSource.volume = bgmVolume;
                 audioSource.Play();
-                BGMSource = audioSource;
+                BGMChannel = audioSource;
                 break;
             case E_AudioType.Effect:
                 GameManager.Instance.StartCoroutine(IE_PlayOnceAudio(name, audioClip, audioObj));
                 audioSource.loop = isLoop;
                 audioSource.volume = effectVolume;
                 audioSource.Play();
-                EffectSource = audioSource;
+                EffectChannel = audioSource;
                 break;
         }
     }
@@ -159,16 +140,20 @@ public class AudioManager
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(audioObj);
     }
 
-    private void PlayBGMClip()
+    private void SetBGMVolume(float volume)
     {
+        if (BGMChannel != null)
+            BGMChannel.volume = volume;
 
+        bgmVolume = volume;
     }
 
-    private void PlayEffectClip()
+    private void SetEffectVolume(float volume)
     {
+        if (EffectChannel != null)
+            EffectChannel.volume = volume;
 
+        effectVolume = volume;
     }
-
-
 
 }

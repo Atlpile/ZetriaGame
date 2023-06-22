@@ -84,6 +84,7 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
 
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
@@ -99,10 +100,6 @@ public class PlayerController : BaseCharacter
         if (_isDead) return;
 
         _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
-
-        //OPTIMIZE：Player上的AudioSource组件由AudioManager控制
-        //走路声音与设置声音同步
-        GameManager.Instance.m_AudioManager.UpdateAudioSourceVolume(_moveSource);
 
         UpdatePlayerState();
     }

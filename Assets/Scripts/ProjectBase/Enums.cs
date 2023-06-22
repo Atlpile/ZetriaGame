@@ -17,7 +17,7 @@ public enum E_EventType
     PlayerFire, PlayerReload, PlayerAddHP, PlayerTeleport,
     MovePlatform,
     PressKey, PressKeyDown, PressKeyUp,
-    UpdateBGMVolume, UpdateEffectVolume,
+    UpdateAudioSourceVolume,
 
 }
 public enum E_AmmoType { Pistol, ShotGun }

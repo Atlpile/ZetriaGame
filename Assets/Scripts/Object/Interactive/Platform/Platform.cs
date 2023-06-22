@@ -1,14 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    private AudioSource platformMoveSource;
+    private AudioSource PlatformMoveSource;
 
     private void Awake()
     {
-        platformMoveSource = this.GetComponent<AudioSource>();
+        PlatformMoveSource = this.GetComponent<AudioSource>();
+        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+    }
+
+    public void Move(Transform target, float moveSpeed)
+    {
+        this.transform.position = Vector2.MoveTowards(this.transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+    }
+
+    public void UpdateAudio(bool isActive)
+    {
+        PlatformMoveSource.enabled = isActive;
+    }
+
+
+    private void OnUpdateAudioSourceVolume(float volume)
+    {
+        PlatformMoveSource.volume = volume;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -29,13 +47,8 @@ public class Platform : MonoBehaviour
         }
     }
 
-    public void Move(Transform target, float moveSpeed)
+    private void OnDestroy()
     {
-        this.transform.position = Vector2.MoveTowards(this.transform.position, target.transform.position, moveSpeed * Time.deltaTime);
-    }
-
-    public void UpdateAudio(bool isActive)
-    {
-        platformMoveSource.enabled = isActive;
+        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 }
