@@ -28,15 +28,15 @@ public class Test : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSetttingType.Pause);
+            GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Pause);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSetttingType.Stop);
+            GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Stop);
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSetttingType.Resume);
+            GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Resume);
         }
     }
 

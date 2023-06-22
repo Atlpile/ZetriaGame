@@ -11,7 +11,8 @@ public enum E_InitPanel
 
 public class GameManager : MonoBehaviour
 {
-    public E_InitPanel panel;
+    [SerializeField] private E_InitPanel panel;
+    [SerializeField] private bool activeEventWarning;
 
     private static GameManager s_instance;
     public static GameManager Instance => s_instance;
@@ -27,7 +28,6 @@ public class GameManager : MonoBehaviour
 
     public InputController m_InputController { get; set; }
     public GameController m_GameController { get; set; }
-    // public GameDataManager m_GameDataManager { get; set; }
     public ItemManager m_ItemManager { get; set; }
 
 
@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
 
         m_InputController = new InputController();
         m_GameController = new GameController();
-        // m_GameDataManager = new GameDataManager();
 
         m_ItemManager = new ItemManager();
 
@@ -74,6 +73,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         m_GameController.UpdateInput();
+        m_EventManager.isActiveWarning = activeEventWarning;
 
         // if (Input.GetKeyDown(KeyCode.A))
         // {

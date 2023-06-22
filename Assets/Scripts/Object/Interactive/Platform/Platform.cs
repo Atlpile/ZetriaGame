@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    private AudioSource PlatformMoveSource;
+    private AudioSource platformMoveSource;
 
     private void Awake()
     {
-        PlatformMoveSource = this.GetComponent<AudioSource>();
+        platformMoveSource = this.GetComponent<AudioSource>();
         GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
@@ -20,13 +20,13 @@ public class Platform : MonoBehaviour
 
     public void UpdateAudio(bool isActive)
     {
-        PlatformMoveSource.enabled = isActive;
+        platformMoveSource.enabled = isActive;
     }
 
 
     private void OnUpdateAudioSourceVolume(float volume)
     {
-        PlatformMoveSource.volume = volume;
+        platformMoveSource.volume = volume;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

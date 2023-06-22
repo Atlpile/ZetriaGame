@@ -72,11 +72,6 @@ public class PlayerController : BaseCharacter
         zetriaInfo = new ZetriaInfo();
         ammoController = new AmmoController();
         _moveSource = GetComponent<AudioSource>();
-    }
-
-    protected override void OnStart()
-    {
-        base.OnStart();
 
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
@@ -85,6 +80,19 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+    }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
+        // GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
+        // GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        // GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
 
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
@@ -133,6 +141,8 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+
     }
 
     private void InitPlayer()

@@ -47,7 +47,7 @@ public class MainPanel : BasePanel
 
     public override void HideSelf()
     {
-        GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSetttingType.Stop);
+        GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 
 

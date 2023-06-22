@@ -14,8 +14,8 @@ public class AudioManager
     public float bgmVolume = 1;
 
     private Dictionary<string, AudioClip> AudioDict;
-    private AudioSource BGMChannel;
-    private AudioSource EffectChannel;
+    private AudioSource bgmChannel;
+    private AudioSource effectChannel;
 
     public UnityAction AudioSourceVolumeChanged;
 
@@ -56,21 +56,21 @@ public class AudioManager
         }
     }
 
-    public void BGMSetting(E_AudioSetttingType type)
+    public void BGMSetting(E_AudioSettingType type)
     {
-        if (BGMChannel != null)
+        if (bgmChannel != null)
         {
             switch (type)
             {
-                case E_AudioSetttingType.Stop:
-                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMChannel.gameObject);
-                    BGMChannel = null;
+                case E_AudioSettingType.Stop:
+                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(bgmChannel.gameObject);
+                    bgmChannel = null;
                     break;
-                case E_AudioSetttingType.Pause:
-                    BGMChannel.Pause();
+                case E_AudioSettingType.Pause:
+                    bgmChannel.Pause();
                     break;
-                case E_AudioSetttingType.Resume:
-                    BGMChannel.UnPause();
+                case E_AudioSettingType.Resume:
+                    bgmChannel.UnPause();
                     break;
             }
         }
@@ -89,7 +89,9 @@ public class AudioManager
                 break;
             case E_AudioType.Effect:
                 SetEffectVolume(volume);
-                GameManager.Instance.m_EventManager.EventTrigger(E_EventType.UpdateAudioSourceVolume, volume);
+
+                if (GameManager.Instance.m_EventManager.GetEventExist(E_EventType.UpdateAudioSourceVolume))
+                    GameManager.Instance.m_EventManager.EventTrigger(E_EventType.UpdateAudioSourceVolume, volume);
                 break;
         }
     }
@@ -97,6 +99,7 @@ public class AudioManager
     public void LoadAudioData()
     {
         SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
+
         SetVolume(E_AudioType.BGM, settingData.volume_BGM);
         SetVolume(E_AudioType.Effect, settingData.volume_Effect);
     }
@@ -116,20 +119,20 @@ public class AudioManager
         {
             case E_AudioType.BGM:
 
-                if (BGMChannel != null)
-                    BGMSetting(E_AudioSetttingType.Stop);
+                if (bgmChannel != null)
+                    BGMSetting(E_AudioSettingType.Stop);
 
                 audioSource.loop = isLoop;
                 audioSource.volume = bgmVolume;
                 audioSource.Play();
-                BGMChannel = audioSource;
+                bgmChannel = audioSource;
                 break;
             case E_AudioType.Effect:
                 GameManager.Instance.StartCoroutine(IE_PlayOnceAudio(name, audioClip, audioObj));
                 audioSource.loop = isLoop;
                 audioSource.volume = effectVolume;
                 audioSource.Play();
-                EffectChannel = audioSource;
+                effectChannel = audioSource;
                 break;
         }
     }
@@ -142,16 +145,16 @@ public class AudioManager
 
     private void SetBGMVolume(float volume)
     {
-        if (BGMChannel != null)
-            BGMChannel.volume = volume;
+        if (bgmChannel != null)
+            bgmChannel.volume = volume;
 
         bgmVolume = volume;
     }
 
     private void SetEffectVolume(float volume)
     {
-        if (EffectChannel != null)
-            EffectChannel.volume = volume;
+        if (effectChannel != null)
+            effectChannel.volume = volume;
 
         effectVolume = volume;
     }
