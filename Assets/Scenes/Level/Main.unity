@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7382151319152587696, guid: 440445e020d092d408d9c3c216a17509, type: 3}
       propertyPath: panel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7382151319152587698, guid: 440445e020d092d408d9c3c216a17509, type: 3}
       propertyPath: m_Name

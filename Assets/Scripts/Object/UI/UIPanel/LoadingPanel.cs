@@ -7,7 +7,7 @@ public class LoadingPanel : BasePanel
 {
     private Text text_Loading;
 
-    [SerializeField] private float loadingRate = 0.5f;
+    private float loadingRate = 0.5f;
 
     protected override void Awake()
     {

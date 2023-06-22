@@ -41,8 +41,8 @@ public class MainPanel : BasePanel
 
     public override void ShowSelf()
     {
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
         GameManager.Instance.m_AudioManager.LoadAudioData();
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
     }
 
     public override void HideSelf()

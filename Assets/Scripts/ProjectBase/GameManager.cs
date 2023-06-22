@@ -75,14 +75,14 @@ public class GameManager : MonoBehaviour
     {
         m_GameController.UpdateInput();
 
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            m_UIManager.ShowPanel<LoadingPanel>();
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            m_UIManager.HidePanel<LoadingPanel>();
-        }
+        // if (Input.GetKeyDown(KeyCode.A))
+        // {
+        //     m_UIManager.ShowPanel<LoadingPanel>();
+        // }
+        // else if (Input.GetKeyDown(KeyCode.D))
+        // {
+        //     m_UIManager.HidePanel<LoadingPanel>();
+        // }
     }
 
 

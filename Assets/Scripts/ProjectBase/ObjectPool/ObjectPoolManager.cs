@@ -78,7 +78,7 @@ public class ObjectPoolManager
     {
         if (obj == null)
         {
-            Debug.Log("不存在该对象");
+            Debug.LogError("Obj为空,请检查是否存在Obj");
             return;
         }
         else
@@ -118,7 +118,7 @@ public class ObjectPoolManager
         GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
         resObj.name = name;
         ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
-        ObjectPoolsDic[name].FillObjectPool(fillCount - 1);
+        ObjectPoolsDic[name].FillObjectPool(fillCount);
     }
 
     public void Clear()

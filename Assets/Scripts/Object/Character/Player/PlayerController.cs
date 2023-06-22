@@ -84,7 +84,6 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
-        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.SetAudioSourceVolume, OnUpdateAudioSourceVolume);
 
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
@@ -103,8 +102,7 @@ public class PlayerController : BaseCharacter
 
         //OPTIMIZE：Player上的AudioSource组件由AudioManager控制
         //走路声音与设置声音同步
-        // if (_moveSource.volume != GameManager.Instance.m_AudioManager.effectVolume)
-        //     _moveSource.volume = GameManager.Instance.m_AudioManager.effectVolume;
+        GameManager.Instance.m_AudioManager.UpdateAudioSourceVolume(_moveSource);
 
         UpdatePlayerState();
     }
@@ -138,7 +136,6 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
-        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.SetAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
     private void InitPlayer()

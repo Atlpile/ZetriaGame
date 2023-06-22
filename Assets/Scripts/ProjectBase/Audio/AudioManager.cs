@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /*
     额外需求：
@@ -9,13 +10,12 @@ using UnityEngine;
 
 public class AudioManager
 {
-    public Dictionary<string, AudioClip> AudioDict;
-    private AudioSource BGMChannel;
-    private AudioSource EffectChannel;
-
-
     public float effectVolume = 1;
-    public float bgmVolume;
+    public float bgmVolume = 1;
+
+    private Dictionary<string, AudioClip> AudioDict;
+    private AudioSource BGMSource;
+    private AudioSource EffectSource;
 
     public AudioManager()
     {
@@ -40,13 +40,13 @@ public class AudioManager
             }
 
             //创建音乐对象
-            GameObject resAudioObj = new GameObject(name);
-            AudioSource audioSource = resAudioObj.AddComponent<AudioSource>();
+            GameObject soundObj = new GameObject(name);
+            AudioSource audioSource = soundObj.AddComponent<AudioSource>();
             audioSource.clip = audioClip;
 
             //记录音乐对象
             AudioDict.Add(name, audioClip);
-            GameManager.Instance.m_ObjectPoolManager.AddObject(resAudioObj, name);
+            GameManager.Instance.m_ObjectPoolManager.AddObject(soundObj, name);
             GameObject poolObj = GameManager.Instance.m_ObjectPoolManager.GetObject(name);
 
             //播放音频及设置
@@ -56,19 +56,19 @@ public class AudioManager
 
     public void BGMSetting(E_AudioSetttingType type)
     {
-        if (BGMChannel != null)
+        if (BGMSource != null)
         {
             switch (type)
             {
                 case E_AudioSetttingType.Stop:
-                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMChannel.gameObject);
-                    BGMChannel = null;
+                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(BGMSource.gameObject);
+                    BGMSource = null;
                     break;
                 case E_AudioSetttingType.Pause:
-                    BGMChannel.Pause();
+                    BGMSource.Pause();
                     break;
                 case E_AudioSetttingType.Resume:
-                    BGMChannel.UnPause();
+                    BGMSource.UnPause();
                     break;
             }
         }
@@ -83,7 +83,7 @@ public class AudioManager
         switch (type)
         {
             case E_AudioType.BGM:
-                BGMChannel.volume = volume;
+                BGMSource.volume = volume;
                 break;
             case E_AudioType.Effect:
                 effectVolume = volume;
@@ -94,18 +94,28 @@ public class AudioManager
 
     public void SetBGMVolume(float volume)
     {
-        BGMChannel.volume = volume;
+        if (BGMSource != null)
+            BGMSource.volume = volume;
+
+        bgmVolume = volume;
     }
 
     public void SetEffectVolume(float volume)
     {
+        if (EffectSource != null)
+            EffectSource.volume = volume;
+
         effectVolume = volume;
-        GameManager.Instance.m_EventManager.EventTrigger(E_EventType.SetAudioSourceVolume, volume);
+    }
+
+    public void UpdateAudioSourceVolume(AudioSource audioSource)
+    {
+        if (audioSource.volume != effectVolume)
+            audioSource.volume = effectVolume;
     }
 
     public void LoadAudioData()
     {
-        //OPTIMIZE：初始时没有AudioSource，需要先有AudioSource才能修改BGM
         SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
         SetBGMVolume(settingData.volume_BGM);
         SetEffectVolume(settingData.volume_Effect);
@@ -125,19 +135,20 @@ public class AudioManager
         {
             case E_AudioType.BGM:
 
-                if (BGMChannel != null)
+                if (BGMSource != null)
                     BGMSetting(E_AudioSetttingType.Stop);
 
                 audioSource.loop = isLoop;
+                audioSource.volume = bgmVolume;
                 audioSource.Play();
-                BGMChannel = audioSource;
+                BGMSource = audioSource;
                 break;
             case E_AudioType.Effect:
                 GameManager.Instance.StartCoroutine(IE_PlayOnceAudio(name, audioClip, audioObj));
                 audioSource.loop = isLoop;
                 audioSource.volume = effectVolume;
                 audioSource.Play();
-                EffectChannel = audioSource;
+                EffectSource = audioSource;
                 break;
         }
     }
@@ -146,6 +157,16 @@ public class AudioManager
     {
         yield return new WaitForSeconds(clip.length);
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(audioObj);
+    }
+
+    private void PlayBGMClip()
+    {
+
+    }
+
+    private void PlayEffectClip()
+    {
+
     }
 
 
