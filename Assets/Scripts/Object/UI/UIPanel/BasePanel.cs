@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
+    private CanvasGroup canvasGroup;
+    private float fadeDuration = 1f;
 
     protected virtual void Awake()
     {
@@ -17,11 +20,23 @@ public abstract class BasePanel : MonoBehaviour
         // GetChildrenUIComponent<Slider>();
         // GetChildrenUIComponent<ScrollRect>();
         // GetChildrenUIComponent<InputField>();
+
+        canvasGroup = this.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+            canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
+
+        canvasGroup.alpha = 0;
     }
 
-    public abstract void ShowSelf();
+    public virtual void ShowSelf()
+    {
+        canvasGroup.DOFade(1, fadeDuration);
+    }
 
-    public abstract void HideSelf();
+    public virtual void HideSelf(TweenCallback callback = null)
+    {
+        canvasGroup.DOFade(0, fadeDuration).OnComplete(callback);
+    }
 
 
     protected virtual void OnClick(string buttonName)
@@ -37,6 +52,11 @@ public abstract class BasePanel : MonoBehaviour
     protected virtual void OnValueChanged(string sliderName, float value)
     {
 
+    }
+
+    public void ClearUIComponentDic()
+    {
+        UIComponentDic.Clear();
     }
 
     protected T GetUIComponent<T>(string uiObjName) where T : UIBehaviour
@@ -93,8 +113,4 @@ public abstract class BasePanel : MonoBehaviour
         }
     }
 
-    public void ClearUIComponentDic()
-    {
-        UIComponentDic.Clear();
-    }
 }

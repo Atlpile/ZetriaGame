@@ -159,6 +159,8 @@ public class PlayerController : BaseCharacter
         _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
     }
 
+
+    //FIXME：修复开枪时按下蹲键，动画没有切换下蹲动画
     private void UpdatePlayerState()
     {
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
@@ -190,7 +192,7 @@ public class PlayerController : BaseCharacter
             {
                 AlterWeapon();
             }
-            else if (InputController.GetKeyDown(E_InputType.Reload) && CanReload(_status) && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.Reload) && CanReload() && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && _status != E_PlayerStatus.NPC)
             {
                 Reload();
                 StopMove();
@@ -206,14 +208,14 @@ public class PlayerController : BaseCharacter
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
-                if (CanAttack(_status))
+                if (CanAttack())
                     PistolAttack();
                 else
                     EmptyAttack();
             }
             if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
-                if (CanAttack(_status))
+                if (CanAttack())
                     ShotGunAttack();
                 else
                     EmptyAttack();
@@ -234,14 +236,14 @@ public class PlayerController : BaseCharacter
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
-                if (CanAttack(_status))
+                if (CanAttack())
                     PistolAttack();
                 else
                     EmptyAttack();
             }
             if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
-                if (CanAttack(_status))
+                if (CanAttack())
                     ShotGunAttack();
                 else
                     EmptyAttack();
@@ -518,17 +520,17 @@ public class PlayerController : BaseCharacter
         return _headCheck ? false : true;
     }
 
-    private bool CanAttack(E_PlayerStatus status)
+    private bool CanAttack()
     {
-        switch (status)
+        switch (_status)
         {
             case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
-                if (ammoController.AmmoInfo._currentPistolAmmoCount != 0)
+                if (ammoController.AmmoInfo.currentPistolAmmoCount != 0)
                     return true;
                 break;
             case E_PlayerStatus.ShotGun:
-                if (ammoController.AmmoInfo._currentShotGunAmmoCount != 0)
+                if (ammoController.AmmoInfo.currentShotGunAmmoCount != 0)
                     return true;
                 break;
         }
@@ -536,16 +538,16 @@ public class PlayerController : BaseCharacter
         return false;
     }
 
-    private bool CanReload(E_PlayerStatus status)
+    private bool CanReload()
     {
-        switch (status)
+        switch (_status)
         {
             case E_PlayerStatus.Pistol:
-                if (ammoController.AmmoInfo._maxPistolAmmoCount > 0 && ammoController.AmmoInfo._currentPistolAmmoCount != ammoController.AmmoInfo._currentPistolAmmoLimit)
+                if (ammoController.AmmoInfo.maxPistolAmmoCount > 0 && ammoController.AmmoInfo.currentPistolAmmoCount != ammoController.AmmoInfo.currentPistolAmmoLimit)
                     return true;
                 break;
             case E_PlayerStatus.ShotGun:
-                if (ammoController.AmmoInfo._maxShotGunAmmoCount > 0 && ammoController.AmmoInfo._currentShotGunAmmoCount != ammoController.AmmoInfo._currentShotGunAmmoLimit)
+                if (ammoController.AmmoInfo.maxShotGunAmmoCount > 0 && ammoController.AmmoInfo.currentShotGunAmmoCount != ammoController.AmmoInfo.currentShotGunAmmoLimit)
                     return true;
                 break;
         }

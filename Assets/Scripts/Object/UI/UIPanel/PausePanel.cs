@@ -14,6 +14,8 @@ public class PausePanel : BasePanel
 
     protected override void Awake()
     {
+        base.Awake();
+
         GetChildrenAllUIComponent<Button>();
 
         btnResume = GetUIComponent<Button>("btnResume");
@@ -22,16 +24,6 @@ public class PausePanel : BasePanel
         btnTitleScreen = GetUIComponent<Button>("btnTitleScreen");
         btnBugReport = GetUIComponent<Button>("btnBugReport");
         btnExit = GetUIComponent<Button>("btnExit");
-    }
-
-    public override void ShowSelf()
-    {
-
-    }
-
-    public override void HideSelf()
-    {
-
     }
 
     protected override void OnClick(string buttonName)

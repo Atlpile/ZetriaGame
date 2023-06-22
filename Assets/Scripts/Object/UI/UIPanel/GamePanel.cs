@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +18,8 @@ public class GamePanel : BasePanel
 
     protected override void Awake()
     {
+        base.Awake();
+
         GetChildrenAllUIComponent<Text>();
         GetChildrenAllUIComponent<Image>();
 
@@ -44,6 +48,8 @@ public class GamePanel : BasePanel
 
     public override void ShowSelf()
     {
+        base.ShowSelf();
+
         UpdatePistolAmmoText(0, 0);
         UpdateShortGunAmmoText(0, 0);
         UpdateAmmoPointer(true);
@@ -51,8 +57,10 @@ public class GamePanel : BasePanel
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
     }
 
-    public override void HideSelf()
+    public override void HideSelf(TweenCallback callback = null)
     {
+        base.HideSelf(callback);
+
         GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 

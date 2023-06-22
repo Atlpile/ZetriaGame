@@ -10,20 +10,12 @@ public class WarnQuitPanel : BasePanel
 
     protected override void Awake()
     {
+        base.Awake();
+
         GetChildrenAllUIComponent<Button>();
 
         button_Yes = GetUIComponent<Button>("button_Yes");
         button_No = GetUIComponent<Button>("button_No");
-    }
-
-    public override void ShowSelf()
-    {
-
-    }
-
-    public override void HideSelf()
-    {
-
     }
 
     protected override void OnClick(string buttonName)

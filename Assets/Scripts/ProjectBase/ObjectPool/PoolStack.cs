@@ -8,10 +8,6 @@ public class PoolStack
     public GameObject childrenObj;
     public Stack<GameObject> poolStack = new Stack<GameObject>();
 
-
-    //FIXME：修复RectTransfom的取入和取出
-    //解决方案1：坐标转换
-    //解决方案2：创建UIPoolRoot
     public PoolStack(GameObject obj, GameObject poolRoot)
     {
         parentObj = new GameObject(obj.name + "_Pool");

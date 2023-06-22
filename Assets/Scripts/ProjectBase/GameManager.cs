@@ -12,7 +12,7 @@ public enum E_InitPanel
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private E_InitPanel panel;
-    [SerializeField] private bool activeEventWarning;
+    [SerializeField] private bool activeEventDebugger;
 
     private static GameManager s_instance;
     public static GameManager Instance => s_instance;
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         m_GameController.UpdateInput();
-        m_EventManager.isActiveWarning = activeEventWarning;
+        m_EventManager.isActiveWarning = activeEventDebugger;
 
         // if (Input.GetKeyDown(KeyCode.A))
         // {

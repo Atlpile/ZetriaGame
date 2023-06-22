@@ -21,6 +21,8 @@ public class InputPanel : BasePanel
 
     protected override void Awake()
     {
+        base.Awake();
+
         GetChildrenAllUIComponent<Button>();
         GetChildrenAllUIComponent<Text>();
 
@@ -42,12 +44,9 @@ public class InputPanel : BasePanel
 
     public override void ShowSelf()
     {
+        base.ShowSelf();
+
         LoadInputKey();
-    }
-
-    public override void HideSelf()
-    {
-
     }
 
     private void LoadInputKey()

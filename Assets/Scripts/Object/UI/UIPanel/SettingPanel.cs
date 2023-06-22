@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,8 @@ public class SettingPanel : BasePanel
 
     protected override void Awake()
     {
+        base.Awake();
+
         GetChildrenAllUIComponent<Slider>();
         GetChildrenAllUIComponent<Toggle>();
         GetChildrenAllUIComponent<Button>();
@@ -61,11 +64,15 @@ public class SettingPanel : BasePanel
 
     public override void ShowSelf()
     {
+        base.ShowSelf();
+
         LoadSettingData();
     }
 
-    public override void HideSelf()
+    public override void HideSelf(TweenCallback callback = null)
     {
+        base.HideSelf(callback);
+
         SaveSettingData();
     }
 

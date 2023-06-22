@@ -55,7 +55,7 @@ public class UIManager
         }
     }
 
-    public void HidePanel<T>() where T : BasePanel
+    public void HidePanel<T>(bool isFade = false) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (!PanelDic.ContainsKey(panelName))
@@ -65,9 +65,20 @@ public class UIManager
         }
         else
         {
-            PanelDic[panelName].HideSelf();
-            Object.Destroy(PanelDic[panelName].gameObject);
-            PanelDic.Remove(panelName);
+            if (isFade)
+            {
+                PanelDic[panelName].HideSelf(() =>
+                {
+                    Object.Destroy(PanelDic[panelName].gameObject);
+                    PanelDic.Remove(panelName);
+                });
+            }
+            else
+            {
+                PanelDic[panelName].HideSelf();
+                Object.Destroy(PanelDic[panelName].gameObject);
+                PanelDic.Remove(panelName);
+            }
         }
     }
 
@@ -171,7 +182,7 @@ public class UIManager
             return false;
     }
 
-    public void ClearUI()
+    public void Clear()
     {
         PanelDic.Clear();
     }
