@@ -25,22 +25,27 @@ public class FSM
         ChangeState(E_AIState.Null);
     }
 
-
-    public void UpdateFSM()
-    {
-        nowState.UpdateState();
-    }
-
     public void ChangeState(E_AIState state)
     {
         //旧状态退出
         if (currentState != E_AIState.Null)
             StateDic[currentState].ExitState();
 
-        this.currentState = state;
+        if (StateDic.ContainsKey(state))
+        {
+            currentState = state;
+        }
+
 
         //新状态进入
         StateDic[currentState].EnterState();
         nowState = StateDic[currentState];
     }
+
+    public void UpdateFSM()
+    {
+        nowState.UpdateState();
+    }
+
+
 }

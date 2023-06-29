@@ -65,9 +65,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InitUI();
-
         Application.targetFrameRate = 144;
+
+        LoadGameUI();
+
+
     }
 
     private void Update()
@@ -75,18 +77,11 @@ public class GameManager : MonoBehaviour
         m_GameController.UpdateInput();
         m_EventManager.isActiveWarning = activeEventDebugger;
 
-        // if (Input.GetKeyDown(KeyCode.A))
-        // {
-        //     m_UIManager.ShowPanel<LoadingPanel>();
-        // }
-        // else if (Input.GetKeyDown(KeyCode.D))
-        // {
-        //     m_UIManager.HidePanel<LoadingPanel>();
-        // }
+        TestInput();
     }
 
 
-    private void InitUI()
+    private void LoadGameUI()
     {
         switch (panel)
         {
@@ -102,12 +97,26 @@ public class GameManager : MonoBehaviour
                 m_UIManager.ShowPanel<GamePanel>();
                 break;
             case E_InitPanel.Loading:
-                m_UIManager.ShowPanel<LoadingPanel>();
+                LoadingPanel panel = m_UIManager.ShowPanel<LoadingPanel>(true);
+                panel.LoadingToTarget(() =>
+                {
+                    m_UIManager.HidePanel<LoadingPanel>(true);
+                    m_UIManager.ShowPanel<MainPanel>(true);
+                });
                 break;
         }
     }
 
-
-
+    private void TestInput()
+    {
+        // if (Input.GetKeyDown(KeyCode.A))
+        // {
+        //     m_UIManager.ShowPanel<LoadingPanel>();
+        // }
+        // else if (Input.GetKeyDown(KeyCode.D))
+        // {
+        //     m_UIManager.HidePanel<LoadingPanel>();
+        // }
+    }
 
 }

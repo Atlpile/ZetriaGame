@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlayerController : BaseCharacter
 {
+
+    #region Variable
+
     private ZetriaInfo zetriaInfo;
     private AmmoController ammoController;
     private E_PlayerStatus _status;
@@ -50,6 +53,10 @@ public class PlayerController : BaseCharacter
     private bool _isDead;
     private bool _canStand;
 
+    #endregion
+
+
+    #region Attribute & Property
 
     public Vector2 GroundCheckPos => (Vector2)this.transform.position + _groundCheckOffset;
     public Vector2 RayOffset
@@ -65,6 +72,12 @@ public class PlayerController : BaseCharacter
     public ZetriaInfo ZetriaInfo => zetriaInfo;
     private InputController InputController => GameManager.Instance.m_InputController;
 
+
+    #endregion
+
+
+    #region LifeCycle
+
     protected override void OnAwake()
     {
         base.OnAwake();
@@ -78,6 +91,7 @@ public class PlayerController : BaseCharacter
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
+        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PlayerDead, OnDead);
         GameManager.Instance.m_EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
@@ -96,7 +110,6 @@ public class PlayerController : BaseCharacter
 
         _moveSource.clip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.m_ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Entity, 3);
-
         InitPlayer();
 
     }
@@ -123,6 +136,24 @@ public class PlayerController : BaseCharacter
         }
     }
 
+    private void OnDestroy()
+    {
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
+        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PlayerDead, OnDead);
+        GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
+        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+
+    }
+
+    #endregion
+
+
+    #region Update & FixedUpdate
+
     protected override void SetAnimatorParameter()
     {
         anim.SetInteger("Horizontal", _horizontalMove);
@@ -132,33 +163,6 @@ public class PlayerController : BaseCharacter
         anim.SetInteger("PlayerStatus", (int)_status);
         anim.SetBool("IsDead", _isDead);
     }
-
-    private void OnDestroy()
-    {
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
-        GameManager.Instance.m_EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
-        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
-
-    }
-
-    private void InitPlayer()
-    {
-        isRight = true;
-        currentMoveSpeed = zetriaInfo.standSpeed;
-        rb2D.gravityScale = zetriaInfo.jumpGravity;
-        rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
-
-        _standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
-        _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
-        _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
-        _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
-    }
-
 
     //FIXME：修复开枪时按下蹲键，动画没有切换下蹲动画
     private void UpdatePlayerState()
@@ -190,7 +194,7 @@ public class PlayerController : BaseCharacter
             }
             else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC)
             {
-                AlterWeapon();
+                ChangeWeapon();
             }
             else if (InputController.GetKeyDown(E_InputType.Reload) && CanReload() && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && _status != E_PlayerStatus.NPC)
             {
@@ -230,7 +234,7 @@ public class PlayerController : BaseCharacter
             }
             else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC)
             {
-                AlterWeapon();
+                ChangeWeapon();
                 //OPTIMIZE:在空中时改变切枪动画状态
             }
 
@@ -273,20 +277,24 @@ public class PlayerController : BaseCharacter
         }
     }
 
-    private void Jump()
+    #endregion
+
+
+    #region Function
+
+    private void InitPlayer()
     {
-        rb2D.velocity = new Vector2(0f, zetriaInfo.jumpForce);
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_jump");
+        isRight = true;
+        currentMoveSpeed = zetriaInfo.standSpeed;
+        rb2D.gravityScale = zetriaInfo.jumpGravity;
+        rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
 
-        // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
-        // jumpFX.transform.position = this.transform.position + _jumpFXOffset;
+        _standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
+        _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
+        _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
+        _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
 
-        //TODO:创建的FX，通过协程延时调用返回至对象池
-    }
-
-    private IEnumerator IE_Jump()
-    {
-        yield return new WaitForSeconds(0.5f);
     }
 
     private void Crouch()
@@ -309,7 +317,7 @@ public class PlayerController : BaseCharacter
             currentMoveSpeed = zetriaInfo.standSpeed;
     }
 
-    private void AlterWeapon()
+    private void ChangeWeapon()
     {
         _status = (int)_status >= 1 ? _status = 0 : ++_status;
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
@@ -368,6 +376,36 @@ public class PlayerController : BaseCharacter
         rb2D.velocity = new Vector2(0, 0);
     }
 
+    private void PutDownNPC()
+    {
+        _status = E_PlayerStatus.Pistol;
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "npc_putdown");
+
+        GameObject sleepWomen = GameManager.Instance.m_ObjectPoolManager.GetObject("SleepWomen");
+        if (sleepWomen != null)
+            sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
+    }
+
+    #endregion
+
+
+    #region Coroutine Function
+
+    private void Jump()
+    {
+        rb2D.velocity = new Vector2(0f, zetriaInfo.jumpForce);
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_jump");
+
+        // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
+        // jumpFX.transform.position = this.transform.position + _jumpFXOffset;
+
+        //TODO:创建的FX，通过协程延时调用返回至对象池
+    }
+
+    private IEnumerator IE_Jump()
+    {
+        yield return new WaitForSeconds(0.5f);
+    }
 
     private void MeleeAttack()
     {
@@ -499,20 +537,32 @@ public class PlayerController : BaseCharacter
     private void Dead()
     {
         //TODO:死亡后，重新加载当前场景，初始化人物变量，更新UI
-        print("死亡时做的事情");
+        // print("死亡时做的事情");
         _moveSource.enabled = false;
+        zetriaInfo.currentHealth = 0;
+
+        GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
         StopMove();
+
+        StartCoroutine(IE_Dead());
     }
 
-    private void PutDownNPC()
+    private IEnumerator IE_Dead()
     {
-        _status = E_PlayerStatus.Pistol;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "npc_putdown");
-
-        GameObject sleepWomen = GameManager.Instance.m_ObjectPoolManager.GetObject("SleepWomen");
-        if (sleepWomen != null)
-            sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
+        yield return new WaitForSeconds(1f);
+        GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
+        GameManager.Instance.m_ObjectPoolManager.Clear();
+        GameManager.Instance.m_AudioManager.Clear();
+        GameManager.Instance.m_EventManager.Clear();
+        GameManager.Instance.m_UIManager.Clear();
+        GameManager.Instance.m_SceneLoader.LoadCurrentScene();
+        GameManager.Instance.m_UIManager.ShowPanel<GamePanel>();
     }
+
+    #endregion
+
+
+    #region Status
 
     private bool CanStand()
     {
@@ -554,6 +604,8 @@ public class PlayerController : BaseCharacter
         return false;
     }
 
+    #endregion
+
 
     #region Event
 
@@ -588,10 +640,17 @@ public class PlayerController : BaseCharacter
         _moveSource.volume = volume;
     }
 
+    public void OnDead()
+    {
+        _isDead = true;
+        Dead();
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(GroundCheckPos, _groundCheckRadius);
     }
 
     #endregion
+
 }

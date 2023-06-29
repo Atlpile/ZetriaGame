@@ -8,13 +8,11 @@ public enum E_InputType
     Interacitve, PutDownNPC, PickUpNPC,
     Pause
 }
-
-
 public enum E_EventType
 {
     PickUpNPC, PickUpShortGun, PickUpToken, PickUpDoorCard, PickUpPistolAmmo, PickUpShortGunAmmo,
     InitGamePanelUI,
-    PlayerFire, PlayerReload, PlayerAddHP, PlayerTeleport,
+    PlayerFire, PlayerReload, PlayerAddHP, PlayerTeleport, PlayerDead,
     MovePlatform,
     PressKey, PressKeyDown, PressKeyUp,
     UpdateAudioSourceVolume,
@@ -26,3 +24,4 @@ public enum E_AIState { Null, Patrol, Chase, Idle, Dead, Attack }
 public enum E_DoorType { Once, Condition, Smart }
 public enum E_MonsterType { Ground, Fly, Static }
 public enum E_CheckType { Rect, Sphere }
+public enum E_UITransitionType { Fade, }

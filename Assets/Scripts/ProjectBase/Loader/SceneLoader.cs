@@ -37,6 +37,11 @@ public class SceneLoader
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void LoadCurrentSceneAsync()
+    {
+
+    }
+
     private IEnumerator IE_LoadAsync(string sceneName, UnityAction loadAction)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);

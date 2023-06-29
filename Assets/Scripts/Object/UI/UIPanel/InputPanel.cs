@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,10 +43,8 @@ public class InputPanel : BasePanel
 
     }
 
-    public override void ShowSelf()
+    public override void Show(TweenCallback ShowCallBack = null)
     {
-        base.ShowSelf();
-
         LoadInputKey();
     }
 

@@ -44,22 +44,25 @@ public class GamePanel : BasePanel
         GameManager.Instance.m_EventManager.RemoveEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
     }
 
-
-
-    public override void ShowSelf()
+    public override void Show(TweenCallback ShowCallBack = null)
     {
-        base.ShowSelf();
-
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
         UpdatePistolAmmoText(0, 0);
         UpdateShortGunAmmoText(0, 0);
         UpdateAmmoPointer(true);
 
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
+        //FIXME：第二次加载场景时，未得到Player血量
+        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        Debug.Log(player.ZetriaInfo.currentHealth);
+        if (player)
+            UpdateLifeBar(player.ZetriaInfo.currentHealth, player.ZetriaInfo.maxHealth);
+        else
+            Debug.LogWarning("场景中不存在Player,无法更新血条");
     }
 
-    public override void HideSelf(TweenCallback callback = null)
+    public override void Hide(TweenCallback callback = null)
     {
-        base.HideSelf(callback);
+        base.Hide(callback);
 
         GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }

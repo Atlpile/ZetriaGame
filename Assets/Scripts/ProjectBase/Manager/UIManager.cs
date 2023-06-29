@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class UIManager
 {
+    //TODO：使用栈结构存储面板（作用：按ESC键时隐藏最上面的面板）
     public Dictionary<string, BasePanel> PanelDic = new Dictionary<string, BasePanel>();
     public RectTransform rectCanvas;
 
@@ -30,7 +31,11 @@ public class UIManager
 
     }
 
-    public T ShowPanel<T>() where T : BasePanel
+
+
+    #region Not Async
+
+    public T ShowPanel<T>(bool hasEffect = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (PanelDic.ContainsKey(panelName))
@@ -50,12 +55,27 @@ public class UIManager
 
             T panel = uiPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
-            panel.ShowSelf();
+
+            //若有切换特效
+            if (hasEffect)
+            {
+                //显示面板
+                PanelDic[panelName].Show(() =>
+                {
+                    TweenEndFunc?.Invoke();
+                });
+            }
+            //若没有切换特效
+            else
+            {
+                PanelDic[panelName].Show();
+            }
+
             return panel;
         }
     }
 
-    public void HidePanel<T>(bool isFade = false) where T : BasePanel
+    public void HidePanel<T>(bool hasEffect = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (!PanelDic.ContainsKey(panelName))
@@ -65,20 +85,25 @@ public class UIManager
         }
         else
         {
-            if (isFade)
+            if (hasEffect)
             {
-                PanelDic[panelName].HideSelf(() =>
+                PanelDic[panelName].Hide(() =>
                 {
                     Object.Destroy(PanelDic[panelName].gameObject);
                     PanelDic.Remove(panelName);
+                    TweenEndFunc?.Invoke();
                 });
             }
             else
             {
-                PanelDic[panelName].HideSelf();
+                PanelDic[panelName].Hide();
                 Object.Destroy(PanelDic[panelName].gameObject);
                 PanelDic.Remove(panelName);
             }
+
+            // PanelDic[panelName].Hide();
+            // Object.Destroy(PanelDic[panelName].gameObject);
+            // PanelDic.Remove(panelName);
         }
     }
 
@@ -106,7 +131,7 @@ public class UIManager
 
             T panel = poolPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
-            panel.ShowSelf();
+            panel.Show();
             return panel;
         }
     }
@@ -121,11 +146,16 @@ public class UIManager
         }
         else
         {
-            PanelDic[panelName].HideSelf();
+            PanelDic[panelName].Hide();
             GameManager.Instance.m_ObjectPoolManager.ReturnObject(PanelDic[panelName].gameObject);
             PanelDic.Remove(panelName);
         }
     }
+
+    #endregion
+
+
+    #region Async
 
     public void ShowPanelAsync<T>(UnityAction<T> LoadAction) where T : BasePanel
     {
@@ -155,10 +185,12 @@ public class UIManager
                 if (LoadAction != null)
                     LoadAction(panel);
 
-                panel.ShowSelf();
+                panel.Show();
             });
         }
     }
+
+    #endregion
 
     public T GetExistPanel<T>() where T : BasePanel
     {

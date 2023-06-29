@@ -44,3 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4d539364ffa4e4eae2b85bc66c3568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panel: 4
+  activeEventDebugger: 0

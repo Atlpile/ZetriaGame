@@ -5,11 +5,17 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
+/*
+    TODO：添加Panel切换动画
+
+*/
+
+
 public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
     private CanvasGroup canvasGroup;
-    private float fadeDuration = 1f;
+    private float fadeDuration = 2f;
 
     protected virtual void Awake()
     {
@@ -24,18 +30,16 @@ public abstract class BasePanel : MonoBehaviour
         canvasGroup = this.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
-
-        canvasGroup.alpha = 0;
     }
 
-    public virtual void ShowSelf()
+    public virtual void Show(TweenCallback ShowCallBack = null)
     {
-        canvasGroup.DOFade(1, fadeDuration);
+
     }
 
-    public virtual void HideSelf(TweenCallback callback = null)
+    public virtual void Hide(TweenCallback HideCallBack = null)
     {
-        canvasGroup.DOFade(0, fadeDuration).OnComplete(callback);
+
     }
 
 
@@ -113,4 +117,23 @@ public abstract class BasePanel : MonoBehaviour
         }
     }
 
+    protected void SetTransitionEffect(E_UITransitionType type, bool isIn, TweenCallback callback = null)
+    {
+        switch (type)
+        {
+            case E_UITransitionType.Fade:
+                if (isIn)
+                {
+                    canvasGroup.alpha = 0;
+                    canvasGroup.DOFade(1, fadeDuration).OnComplete(callback);
+                    // Debug.Log("淡入");
+                }
+                else
+                {
+                    // Debug.Log("淡出");
+                    canvasGroup.DOFade(1, fadeDuration).OnComplete(callback);
+                }
+                break;
+        }
+    }
 }
