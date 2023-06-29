@@ -23,18 +23,16 @@ public class LoadingPanel : BasePanel
 
     public override void Show(TweenCallback ShowCallBack = null)
     {
-        StartCoroutine(IE_LoadingEffect());
+        base.Show(ShowCallBack);
 
-        if (ShowCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, true, ShowCallBack);
+        StartCoroutine(IE_LoadingEffect());
     }
 
-    public override void Hide(TweenCallback RemoveCallBack = null)
+    public override void Hide(TweenCallback HideCallBack = null)
     {
-        StopCoroutine(IE_LoadingEffect());
+        base.Hide(HideCallBack);
 
-        if (RemoveCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, false, RemoveCallBack);
+        StopCoroutine(IE_LoadingEffect());
     }
 
     public void LoadingToTarget(UnityAction LoadAction)

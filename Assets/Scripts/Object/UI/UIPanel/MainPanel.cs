@@ -44,11 +44,10 @@ public class MainPanel : BasePanel
 
     public override void Show(TweenCallback ShowCallBack = null)
     {
+        base.Show(ShowCallBack);
+
         GameManager.Instance.m_AudioManager.LoadAudioData();
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
-
-        if (ShowCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, true, ShowCallBack);
     }
 
     public override void Hide(TweenCallback HideCallback = null)

@@ -34,12 +34,14 @@ public abstract class BasePanel : MonoBehaviour
 
     public virtual void Show(TweenCallback ShowCallBack = null)
     {
-
+        if (ShowCallBack != null)
+            SetTransitionEffect(E_UITransitionType.Fade, true, ShowCallBack);
     }
 
     public virtual void Hide(TweenCallback HideCallBack = null)
     {
-
+        if (HideCallBack != null)
+            SetTransitionEffect(E_UITransitionType.Fade, false, HideCallBack);
     }
 
 

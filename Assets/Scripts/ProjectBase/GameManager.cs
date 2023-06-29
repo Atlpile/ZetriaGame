@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
                 m_UIManager.ShowPanel<GamePanel>();
                 break;
             case E_InitPanel.Loading:
-                LoadingPanel panel = m_UIManager.ShowPanel<LoadingPanel>(true);
+                LoadingPanel panel = m_UIManager.ShowPanel<LoadingPanel>();
                 panel.LoadingToTarget(() =>
                 {
                     m_UIManager.HidePanel<LoadingPanel>(true);
