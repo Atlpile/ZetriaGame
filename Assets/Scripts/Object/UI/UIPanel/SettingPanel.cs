@@ -69,8 +69,6 @@ public class SettingPanel : BasePanel
 
     public override void Hide(TweenCallback callback = null)
     {
-        base.Hide(callback);
-
         SaveSettingData();
     }
 

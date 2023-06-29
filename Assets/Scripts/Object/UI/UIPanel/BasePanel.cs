@@ -5,12 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
-/*
-    TODO：添加Panel切换动画
-
-*/
-
-
 public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
@@ -119,7 +113,7 @@ public abstract class BasePanel : MonoBehaviour
         }
     }
 
-    protected void SetTransitionEffect(E_UITransitionType type, bool isIn, TweenCallback callback = null)
+    protected void SetTransitionEffect(E_UITransitionType type, bool isIn, TweenCallback CallBack = null)
     {
         switch (type)
         {
@@ -127,13 +121,13 @@ public abstract class BasePanel : MonoBehaviour
                 if (isIn)
                 {
                     canvasGroup.alpha = 0;
-                    canvasGroup.DOFade(1, fadeDuration).OnComplete(callback);
+                    canvasGroup.DOFade(1, fadeDuration).OnComplete(CallBack);
                     // Debug.Log("淡入");
                 }
                 else
                 {
                     // Debug.Log("淡出");
-                    canvasGroup.DOFade(1, fadeDuration).OnComplete(callback);
+                    canvasGroup.DOFade(1, fadeDuration).OnComplete(CallBack);
                 }
                 break;
         }

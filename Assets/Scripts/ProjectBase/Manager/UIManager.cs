@@ -35,6 +35,13 @@ public class UIManager
 
     #region Not Async
 
+    /// <summary>
+    /// 显示面板
+    /// </summary>
+    /// <param name="hasEffect">是否播放显示特效</param>
+    /// <param name="TweenEndFunc">特效显示结束时执行的内容（需配合hasEffect）</param>
+    /// <typeparam name="T">面板类</typeparam>
+    /// <returns></returns>
     public T ShowPanel<T>(bool hasEffect = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
@@ -56,16 +63,13 @@ public class UIManager
             T panel = uiPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
 
-            //若有切换特效
             if (hasEffect)
             {
-                //显示面板
                 PanelDic[panelName].Show(() =>
                 {
                     TweenEndFunc?.Invoke();
                 });
             }
-            //若没有切换特效
             else
             {
                 PanelDic[panelName].Show();
@@ -75,6 +79,12 @@ public class UIManager
         }
     }
 
+    /// <summary>
+    /// 隐藏面板
+    /// </summary>
+    /// <param name="hasEffect">是否显示特效</param>
+    /// <param name="TweenEndFunc">特效显示结束时执行的内容（需配合hasEffect）</param>
+    /// <typeparam name="T">面板类</typeparam>
     public void HidePanel<T>(bool hasEffect = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
