@@ -80,6 +80,13 @@ public class GameManager : MonoBehaviour
         TestInput();
     }
 
+    public void ClearSceneInfo()
+    {
+        m_ObjectPoolManager.Clear();
+        m_AudioManager.Clear();
+        m_EventManager.Clear();
+        m_UIManager.Clear();
+    }
 
     private void LoadGameUI()
     {
@@ -97,12 +104,7 @@ public class GameManager : MonoBehaviour
                 m_UIManager.ShowPanel<GamePanel>();
                 break;
             case E_InitPanel.Loading:
-                LoadingPanel panel = m_UIManager.ShowPanel<LoadingPanel>();
-                panel.LoadingToTarget(() =>
-                {
-                    m_UIManager.HidePanel<LoadingPanel>();
-                    m_UIManager.ShowPanel<MainPanel>();
-                });
+                LoadMainScene();
                 break;
         }
     }
@@ -118,5 +120,20 @@ public class GameManager : MonoBehaviour
         //     m_UIManager.HidePanel<LoadingPanel>();
         // }
     }
+
+    private void LoadMainScene()
+    {
+        LoadingPanel panel = m_UIManager.ShowPanel<LoadingPanel>();
+        panel.LoadingToTarget(() =>
+        {
+            m_UIManager.HidePanel<LoadingPanel>(true);
+            MainPanel mainPanel = m_UIManager.ShowPanel<MainPanel>(true, () =>
+            {
+                m_UIManager.GetExistPanel<MainPanel>().SetPanelInteractiveStatus(true);
+            });
+            mainPanel.SetPanelInteractiveStatus(false);
+        });
+    }
+
 
 }

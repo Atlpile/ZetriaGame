@@ -9,7 +9,8 @@ public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
     private CanvasGroup canvasGroup;
-    private float fadeDuration = 2f;
+    private float fadeDuration = 1f;
+
 
     protected virtual void Awake()
     {
@@ -26,18 +27,17 @@ public abstract class BasePanel : MonoBehaviour
             canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
     }
 
-    public virtual void Show(TweenCallback ShowCallBack = null)
-    {
-        if (ShowCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, true, ShowCallBack);
-    }
-
     public virtual void Hide(TweenCallback HideCallBack = null)
     {
         if (HideCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, false, HideCallBack);
+            SetTransitionEffect(E_UITransitionType.Fade, true, HideCallBack);
     }
 
+    public virtual void Show(TweenCallback ShowCallBack = null)
+    {
+        if (ShowCallBack != null)
+            SetTransitionEffect(E_UITransitionType.Fade, false, ShowCallBack);
+    }
 
     protected virtual void OnClick(string buttonName)
     {
@@ -54,10 +54,17 @@ public abstract class BasePanel : MonoBehaviour
 
     }
 
+
     public void ClearUIComponentDic()
     {
         UIComponentDic.Clear();
     }
+
+    public void SetPanelInteractiveStatus(bool canInteractive)
+    {
+        canvasGroup.blocksRaycasts = canInteractive;
+    }
+
 
     protected T GetUIComponent<T>(string uiObjName) where T : UIBehaviour
     {
@@ -113,23 +120,25 @@ public abstract class BasePanel : MonoBehaviour
         }
     }
 
-    protected void SetTransitionEffect(E_UITransitionType type, bool isIn, TweenCallback CallBack = null)
+    protected void SetTransitionEffect(E_UITransitionType type, bool isIn, TweenCallback CompleteCallBack = null)
     {
         switch (type)
         {
             case E_UITransitionType.Fade:
                 if (isIn)
                 {
-                    canvasGroup.alpha = 0;
-                    canvasGroup.DOFade(1, fadeDuration).OnComplete(CallBack);
+                    canvasGroup.alpha = 1;
+                    canvasGroup.DOFade(0, fadeDuration).OnComplete(CompleteCallBack);
                     // Debug.Log("淡入");
                 }
                 else
                 {
                     // Debug.Log("淡出");
-                    canvasGroup.DOFade(1, fadeDuration).OnComplete(CallBack);
+                    canvasGroup.alpha = 0;
+                    canvasGroup.DOFade(1, fadeDuration).OnComplete(CompleteCallBack);
                 }
                 break;
         }
     }
+
 }

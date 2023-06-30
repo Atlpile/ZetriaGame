@@ -46,6 +46,8 @@ public class GamePanel : BasePanel
 
     public override void Show(TweenCallback ShowCallBack = null)
     {
+        base.Show(ShowCallBack);
+
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
         UpdatePistolAmmoText(0, 0);
         UpdateShortGunAmmoText(0, 0);

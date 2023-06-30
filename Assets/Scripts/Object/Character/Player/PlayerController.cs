@@ -551,10 +551,7 @@ public class PlayerController : BaseCharacter
     {
         yield return new WaitForSeconds(1f);
         GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
-        GameManager.Instance.m_ObjectPoolManager.Clear();
-        GameManager.Instance.m_AudioManager.Clear();
-        GameManager.Instance.m_EventManager.Clear();
-        GameManager.Instance.m_UIManager.Clear();
+        GameManager.Instance.ClearSceneInfo();
         GameManager.Instance.m_SceneLoader.LoadCurrentScene();
         GameManager.Instance.m_UIManager.ShowPanel<GamePanel>();
     }

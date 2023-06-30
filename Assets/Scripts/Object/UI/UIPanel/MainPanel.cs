@@ -61,16 +61,20 @@ public class MainPanel : BasePanel
     private void NewGame()
     {
         GameManager.Instance.m_UIManager.HidePanel<MainPanel>();
+        GameManager.Instance.ClearSceneInfo();
 
-        GameManager.Instance.m_ObjectPoolManager.Clear();
-        GameManager.Instance.m_AudioManager.Clear();
-        GameManager.Instance.m_EventManager.Clear();
-
-        GameManager.Instance.m_SceneLoader.LoadSceneAsync("Level0", () =>
+        LoadingPanel panel = GameManager.Instance.m_UIManager.ShowPanel<LoadingPanel>();
+        panel.LoadingToTarget(() =>
         {
-            GameManager.Instance.m_UIManager.ShowPanel<LoadingPanel>();
-            GameManager.Instance.m_AudioManager.LoadAudioData();
+            GameManager.Instance.m_SceneLoader.LoadSceneAsync("Level0", () =>
+            {
+                GameManager.Instance.m_AudioManager.LoadAudioData();
+                GameManager.Instance.m_UIManager.HidePanel<LoadingPanel>(true);
+                GameManager.Instance.m_UIManager.ShowPanel<GamePanel>(true);
+            });
         });
+
+
     }
 
     private void ContinueGame()

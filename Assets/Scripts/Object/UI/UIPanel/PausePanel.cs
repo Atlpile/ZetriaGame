@@ -72,10 +72,7 @@ public class PausePanel : BasePanel
         GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
         GameManager.Instance.m_GameController.UpdateGameStatus();
         GameManager.Instance.m_InputController.SetInputStatus(true);
-
-        GameManager.Instance.m_ObjectPoolManager.Clear();
-        GameManager.Instance.m_AudioManager.Clear();
-        GameManager.Instance.m_EventManager.Clear();
+        GameManager.Instance.ClearSceneInfo();
 
         GameManager.Instance.m_SceneLoader.LoadSceneAsync("Main", () =>
         {

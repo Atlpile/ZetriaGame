@@ -228,4 +228,13 @@ public class UIManager
     {
         PanelDic.Clear();
     }
+
+    public void ClearExistPanel<T>() where T : BasePanel
+    {
+        string panelName = typeof(T).Name;
+        if (PanelDic.ContainsKey(panelName))
+            PanelDic.Remove(panelName);
+        else
+            Debug.Log("不存在该面板，不能从字典清除");
+    }
 }

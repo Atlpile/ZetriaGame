@@ -35,9 +35,9 @@ public class LoadingPanel : BasePanel
         StopCoroutine(IE_LoadingEffect());
     }
 
-    public void LoadingToTarget(UnityAction LoadAction)
+    public void LoadingToTarget(UnityAction LoadCompleteAction)
     {
-        StartCoroutine(IE_LoadingToTarget(LoadAction));
+        StartCoroutine(IE_LoadingToTarget(LoadCompleteAction));
     }
 
     private void SetLoadingText(string text)
@@ -60,10 +60,10 @@ public class LoadingPanel : BasePanel
         }
     }
 
-    private IEnumerator IE_LoadingToTarget(UnityAction LoadAction)
+    private IEnumerator IE_LoadingToTarget(UnityAction LoadCompleteAction)
     {
         yield return new WaitForSeconds(waitTime);
-        LoadAction?.Invoke();
+        LoadCompleteAction?.Invoke();
     }
 
 }
