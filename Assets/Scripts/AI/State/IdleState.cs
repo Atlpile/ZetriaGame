@@ -9,29 +9,26 @@ public class IdleState : BaseAIState
 
     public override void EnterState()
     {
-        //播放Idle动画
-        Monster.PlayAnim("Idle");
-
         //停止移动
+        Monster.StopMove();
+    }
 
+    public override void ExitState()
+    {
+        //恢复移动
+        Monster.ResumeMove();
     }
 
     public override void UpdateState()
     {
         //若发现Player，则切换为Chase状态
-        if (Monster.IsFindPlayer)
+        if (Monster.IsFindPlayer == true)
         {
             fsm.ChangeState(E_AIState.Chase);
-        }
-        else if (Monster is WolfMan)
-        {
-
+            // Debug.Log("追击Player");
         }
     }
 
-    public override void ExitState()
-    {
 
-    }
 }
 

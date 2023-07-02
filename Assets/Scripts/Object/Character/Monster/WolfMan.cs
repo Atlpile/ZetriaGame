@@ -10,8 +10,11 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class WolfMan : BaseMonster
 {
-    [SerializeField] private Transform check;
-    [SerializeField] private Vector3 size;
+    private void Reset()
+    {
+        check = this.transform.GetChild(0);
+        Debug.Log("编辑器");
+    }
 
     public override void InitComponent()
     {
@@ -20,11 +23,25 @@ public class WolfMan : BaseMonster
 
     protected override void InitCharacter()
     {
+        monsterInfo.attackDuration = 1.5f;
+        monsterInfo.attackDistance = 1f;
+        monsterInfo.checkSize = new Vector2(7, 2);
+        monsterInfo.checkRadius = 1f;
+        monsterInfo.groundSpeed = 3f;
+
+        currentMoveSpeed = monsterInfo.groundSpeed;
         fsm.ChangeState(E_AIState.Idle);
+    }
+
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+
+        isFindPlayer = GetPlayer(check.position, monsterInfo.checkSize);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(check.position, size);
+        Gizmos.DrawWireCube(check.position, monsterInfo.checkSize);
     }
 }

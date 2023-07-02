@@ -6,14 +6,25 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class BaseMonster : BaseCharacter
 {
+    [SerializeField] protected Transform check;
+    [SerializeField] protected Transform playerPos;
     [SerializeField] protected MonsterInfo monsterInfo;
     protected FSM fsm;
     protected E_AIState state = E_AIState.Null;
     protected bool isFindPlayer;
     protected bool isDead;
+    protected bool isAttack = false;
     protected bool canAttack;
 
     public bool IsFindPlayer => isFindPlayer;
+    // public bool IsFindPlayer
+    // {
+    //     get
+    //     {
+    //         if (playerPos != null) return true;
+    //         else return false;
+    //     }
+    // }
     public bool IsDead => isDead;
 
     protected abstract void InitCharacter();
@@ -34,6 +45,9 @@ public abstract class BaseMonster : BaseCharacter
 
         this.gameObject.layer = LayerMask.NameToLayer("Enemy");
 
+        if (GameObject.FindGameObjectWithTag("Player").transform != null)
+            playerPos = GameObject.FindGameObjectWithTag("Player").transform;
+
         InitCharacter();
     }
 
@@ -45,10 +59,39 @@ public abstract class BaseMonster : BaseCharacter
             fsm.UpdateFSM();
     }
 
+    protected override void SetAnimatorParameter()
+    {
+        anim.SetBool("IsFindPlayer", isFindPlayer);
+        anim.SetBool("IsAttack", isAttack);
+    }
+
+    public virtual void Attack()
+    {
+        if (!isAttack)
+            StartCoroutine(IE_BaseAttack());
+    }
+
+    private IEnumerator IE_BaseAttack()
+    {
+        isAttack = true;
+        StopMove();
+        anim.SetTrigger("Attack");
+        // Debug.Log("攻击Player");
+        yield return new WaitForSeconds(monsterInfo.attackDuration);
+
+        ResumeMove();
+        isAttack = false;
+    }
+
     public void StopMove()
     {
         currentMoveSpeed = 0;
         rb2D.velocity = Vector3.zero;
+    }
+
+    public void ResumeMove()
+    {
+        currentMoveSpeed = monsterInfo.groundSpeed;
     }
 
     public void UpdateMove()
@@ -67,7 +110,7 @@ public abstract class BaseMonster : BaseCharacter
             this.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
     }
 
-    public void SetMoveDirection(Transform playerPos)
+    public void FlipToPlayer()
     {
         if (this.transform.position.x < playerPos.position.x)
             isRight = true;
@@ -91,13 +134,42 @@ public abstract class BaseMonster : BaseCharacter
         return Physics2D.OverlapBox(checkPos, checkSize, 0, 1 << LayerMask.NameToLayer("Player"));
     }
 
+    public bool CanAttack()
+    {
+        // Debug.Log(Vector2.Distance(this.transform.position, playerPos.transform.position));
+        if (Vector2.Distance(this.transform.position, playerPos.transform.position) < monsterInfo.attackDistance)
+            return true;
+        else
+            return false;
+    }
+
     protected void LossPlayer()
     {
-        isFindPlayer = false;
+
     }
 
     public void ChangeSpeed(float speed)
     {
         currentMoveSpeed = speed;
     }
+
+    public void SetPatrolMove(bool isOpen)
+    {
+        if (isOpen)
+            StartCoroutine(IE_PatrolMove());
+        else
+            StopCoroutine(IE_PatrolMove());
+    }
+
+    public IEnumerator IE_PatrolMove()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(3f);
+            isRight = !isRight;
+        }
+    }
+
+
+
 }

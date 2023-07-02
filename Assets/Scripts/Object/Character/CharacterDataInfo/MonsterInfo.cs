@@ -7,9 +7,15 @@ public class MonsterInfo
 {
     public E_MonsterType monsterType;
     public float health;
-    public float groundSpeed;
+    public float groundSpeed = 3f;
     public float airSpeed;
-    public float attackRate;
+    public float attackDuration = 2f;
     public float attackDamage;
+    public float attackDistance = 1f;
     public float alertDistance;
+
+    public float patrolTime = 3f;
+
+    public Vector3 checkSize = new Vector3(7, 2, 0);
+    public float checkRadius = 1f;
 }

@@ -688,6 +688,10 @@ PrefabInstance:
       propertyPath: panel
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7382151319152587696, guid: 440445e020d092d408d9c3c216a17509, type: 3}
+      propertyPath: activeEvent
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7382151319152587698, guid: 440445e020d092d408d9c3c216a17509, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -39450,7 +39454,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2443729241261627249}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.74379, y: 10.951126, z: 0}
+  m_LocalPosition: {x: 1.86, y: 10.951126, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -39508,16 +39512,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eed8bb00cc8836a489a2c1896e704cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  check: {fileID: 435458828}
+  playerPos: {fileID: 0}
   monsterInfo:
     monsterType: 0
     health: 0
-    groundSpeed: 0
+    groundSpeed: 3
     airSpeed: 0
-    attackRate: 0
+    attackDuration: 2
     attackDamage: 0
+    attackDistance: 1
     alertDistance: 0
-  check: {fileID: 435458828}
-  size: {x: 7, y: 2, z: 0}
+    patrolTime: 3
+    checkSize: {x: 7, y: 2, z: 0}
+    checkRadius: 1
 --- !u!95 &2622590105443856955
 Animator:
   serializedVersion: 4
@@ -39625,7 +39633,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &2622590105443856968
 Rigidbody2D:
   serializedVersion: 4
@@ -39675,14 +39683,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c4b6b17a71d5854884b1b13a08484a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  check: {fileID: 0}
+  playerPos: {fileID: 0}
   monsterInfo:
     monsterType: 0
     health: 0
     groundSpeed: 0
     airSpeed: 0
-    attackRate: 0
+    attackDuration: 2
     attackDamage: 0
+    attackDistance: 1
     alertDistance: 0
+    patrolTime: 3
+    checkSize: {x: 7, y: 2, z: 0}
+    checkRadius: 1
 --- !u!212 &2754921621973214376
 SpriteRenderer:
   m_ObjectHideFlags: 0

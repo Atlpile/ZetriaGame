@@ -40,7 +40,8 @@ public class EventInfo<T, K> : IEventInfo
 }
 
 
-//FIXME：Event需要在Start时才能添加
+//Event需要在Start时才能添加（已解决）
+//在Edit - Project Settings - Script Execution Order 修改GameManager时间为-2即可
 
 public class EventManager
 {

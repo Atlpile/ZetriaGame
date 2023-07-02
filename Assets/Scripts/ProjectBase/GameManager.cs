@@ -68,8 +68,6 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 144;
 
         LoadGameUI();
-
-
     }
 
     private void Update()
