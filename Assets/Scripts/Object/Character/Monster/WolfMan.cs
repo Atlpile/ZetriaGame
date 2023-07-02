@@ -10,12 +10,6 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class WolfMan : BaseMonster
 {
-    private void Reset()
-    {
-        check = this.transform.GetChild(0);
-        Debug.Log("编辑器");
-    }
-
     public override void InitComponent()
     {
         check = this.transform.GetChild(0);
@@ -28,6 +22,7 @@ public class WolfMan : BaseMonster
         monsterInfo.checkSize = new Vector2(7, 2);
         monsterInfo.checkRadius = 1f;
         monsterInfo.groundSpeed = 3f;
+        monsterInfo.currentHealth = monsterInfo.maxHealth;
 
         currentMoveSpeed = monsterInfo.groundSpeed;
         fsm.ChangeState(E_AIState.Idle);

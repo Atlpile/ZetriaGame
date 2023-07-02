@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayerController : BaseCharacter
+public class PlayerController : BaseCharacter, IDamageable
 {
 
     #region Variable
@@ -207,7 +207,7 @@ public class PlayerController : BaseCharacter
             }
             else if (Input.GetKeyDown(KeyCode.H))
             {
-                Hurt();
+                Damage();
             }
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
@@ -510,13 +510,13 @@ public class PlayerController : BaseCharacter
         _isReload = false;
     }
 
-    public void Hurt()
+    public void Damage()
     {
         if (!_isHurt && !_isDead)
-            StartCoroutine(IE_Hurt());
+            StartCoroutine(IE_Damage());
     }
 
-    private IEnumerator IE_Hurt()
+    private IEnumerator IE_Damage()
     {
         _isHurt = true;
 

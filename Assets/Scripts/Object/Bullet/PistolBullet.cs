@@ -29,13 +29,21 @@ public class PistolBullet : MonoBehaviour
 
     public void Hide()
     {
-        // GameManager.Instance.m_ObjectPool.ReturnObject(this.gameObject.name, this.gameObject, Release);
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
-
     }
 
     public void Release()
     {
         this.transform.position = new Vector2(0, 0);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        IDamageable hurtTarget = other.GetComponent<IDamageable>();
+        if (hurtTarget != null && other.gameObject.name != "Player")
+        {
+            hurtTarget.Damage();
+            Hide();
+        }
     }
 }

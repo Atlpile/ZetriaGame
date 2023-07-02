@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public abstract class BaseMonster : BaseCharacter
+public abstract class BaseMonster : BaseCharacter, IDamageable
 {
     [SerializeField] protected Transform check;
     [SerializeField] protected Transform playerPos;
@@ -17,18 +17,15 @@ public abstract class BaseMonster : BaseCharacter
     protected bool canAttack;
 
     public bool IsFindPlayer => isFindPlayer;
-    // public bool IsFindPlayer
-    // {
-    //     get
-    //     {
-    //         if (playerPos != null) return true;
-    //         else return false;
-    //     }
-    // }
     public bool IsDead => isDead;
 
     protected abstract void InitCharacter();
     public virtual void InitComponent() { }
+
+    private void Reset()
+    {
+        check = this.transform.GetChild(0);
+    }
 
     protected override void OnAwake()
     {
@@ -170,6 +167,30 @@ public abstract class BaseMonster : BaseCharacter
         }
     }
 
+    public virtual void Damage()
+    {
+        monsterInfo.currentHealth--;
+        Debug.Log("Monster受伤");
 
+        if (monsterInfo.currentHealth == 0)
+        {
+            Dead();
+        }
+    }
 
+    public virtual void Dead()
+    {
+        StartCoroutine(IE_BaseDead());
+    }
+
+    public IEnumerator IE_BaseDead()
+    {
+        anim.SetTrigger("Dead");
+        StopMove();
+        rb2D.bodyType = RigidbodyType2D.Kinematic;
+        col2D.enabled = false;
+
+        yield return new WaitForSeconds(1f);
+        Destroy(this.gameObject);
+    }
 }

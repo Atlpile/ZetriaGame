@@ -6,7 +6,8 @@ using UnityEngine;
 public class MonsterInfo
 {
     public E_MonsterType monsterType;
-    public float health;
+    public int maxHealth = 5;
+    public int currentHealth;
     public float groundSpeed = 3f;
     public float airSpeed;
     public float attackDuration = 2f;

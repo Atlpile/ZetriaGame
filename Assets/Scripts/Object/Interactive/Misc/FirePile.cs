@@ -21,7 +21,7 @@ public class FirePile : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            other.GetComponent<PlayerController>().Hurt();
+            other.GetComponent<PlayerController>().Damage();
         }
     }
 
