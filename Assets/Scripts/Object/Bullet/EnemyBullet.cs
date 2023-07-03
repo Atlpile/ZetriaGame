@@ -8,6 +8,11 @@ public class EnemyBullet : BaseBullet
     [SerializeField] private Transform _playerPos;
     private float _chaseDistance = 3f;
 
+    private void Update()
+    {
+        Move(_type);
+    }
+
     private void Move(E_EnemyBulletType type)
     {
         switch (type)
@@ -45,15 +50,4 @@ public class EnemyBullet : BaseBullet
             //利用向量使其移动
         }
     }
-
-    protected override void OnTriggerEnter2D(Collider2D other)
-    {
-        IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
-        if (damageable != null && other.gameObject.name == "Player")
-        {
-            damageable.Damage();
-            Debug.Log("player受伤");
-        }
-    }
-
 }

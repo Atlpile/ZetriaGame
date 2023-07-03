@@ -21,6 +21,7 @@ public class FSM
         StateDic.Add(E_AIState.Idle, new IdleState(this));
         StateDic.Add(E_AIState.Patrol, new PatrolState(this));
         StateDic.Add(E_AIState.Chase, new ChaseState(this));
+        StateDic.Add(E_AIState.Attack, new AttackState(this));
 
         ChangeState(E_AIState.Null);
     }

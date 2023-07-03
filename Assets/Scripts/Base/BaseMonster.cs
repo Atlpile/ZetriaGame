@@ -16,6 +16,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     protected bool isAttack = false;
     protected bool canAttack;
 
+    public MonsterInfo MonsterInfo => monsterInfo;
     public bool IsFindPlayer => isFindPlayer;
     public bool IsDead => isDead;
     public bool IsAttack => isAttack;

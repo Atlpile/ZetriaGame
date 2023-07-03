@@ -24,6 +24,11 @@ public class Tank : BaseMonster
         isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
 
+    protected override void SetAnimatorParameter()
+    {
+        anim.SetBool("IsFindPlayer", isFindPlayer);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
@@ -37,6 +42,10 @@ public class Tank : BaseMonster
 
     private IEnumerator IE_Attack()
     {
+        isAttack = true;
+        Debug.Log("Tank攻击");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
         yield return new WaitForSeconds(monsterInfo.attackDuration);
+        isAttack = false;
     }
 }

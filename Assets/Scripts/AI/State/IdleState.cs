@@ -9,14 +9,22 @@ public class IdleState : BaseAIState
 
     public override void EnterState()
     {
-        //停止移动
-        Monster.StopMove();
+        //静态类型的怪物不移动
+        if (Monster.MonsterInfo.monsterType != E_MonsterType.Static)
+        {
+            //可动类型的怪物初始时停止移动
+            Monster.StopMove();
+        }
     }
 
     public override void ExitState()
     {
-        //恢复移动
-        Monster.ResumeMove();
+        //同上
+        if (Monster.MonsterInfo.monsterType != E_MonsterType.Static)
+        {
+            //恢复移动
+            Monster.ResumeMove();
+        }
     }
 
     public override void UpdateState()
@@ -24,7 +32,14 @@ public class IdleState : BaseAIState
         //若发现Player，则切换为Chase状态
         if (Monster.IsFindPlayer == true)
         {
-            fsm.ChangeState(E_AIState.Chase);
+            if (Monster is Tank)
+            {
+                fsm.ChangeState(E_AIState.Attack);
+            }
+            else
+            {
+                fsm.ChangeState(E_AIState.Chase);
+            }
         }
     }
 
