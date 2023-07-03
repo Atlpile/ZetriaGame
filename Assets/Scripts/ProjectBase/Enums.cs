@@ -20,6 +20,7 @@ public enum E_EventType
 }
 public enum E_AmmoType { Pistol, ShotGun }
 public enum E_BulletMoveType { Upward, Straight, Downward }
+public enum E_EnemyBulletType { Horizontal, Vertical, Chase }
 public enum E_AIState { Null, Patrol, Chase, Idle, Dead, Attack }
 public enum E_DoorType { Once, Condition, Smart }
 public enum E_MonsterType { Ground, Fly, Static }

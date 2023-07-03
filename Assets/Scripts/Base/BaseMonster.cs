@@ -18,9 +18,14 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public bool IsFindPlayer => isFindPlayer;
     public bool IsDead => isDead;
+    public bool IsAttack => isAttack;
 
     protected abstract void InitCharacter();
-    public virtual void InitComponent() { }
+
+    public virtual void InitComponent()
+    {
+        check = this.transform.GetChild(0);
+    }
 
     private void Reset()
     {
@@ -71,8 +76,8 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     private IEnumerator IE_BaseAttack()
     {
         isAttack = true;
-        StopMove();
         anim.SetTrigger("Attack");
+        StopMove();
         // Debug.Log("攻击Player");
         yield return new WaitForSeconds(monsterInfo.attackDuration);
 
@@ -170,7 +175,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public virtual void Damage()
     {
         monsterInfo.currentHealth--;
-        Debug.Log("Monster受伤");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
 
         if (monsterInfo.currentHealth == 0)
         {
@@ -189,6 +194,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         StopMove();
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
 
         yield return new WaitForSeconds(1f);
         Destroy(this.gameObject);

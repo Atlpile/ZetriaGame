@@ -4,7 +4,7 @@ using UnityEngine;
 
 /*
     写显示逻辑
-    写专有组件逻辑
+    写专有逻辑
 */
 
 [RequireComponent(typeof(CapsuleCollider2D))]
@@ -20,7 +20,6 @@ public class WolfMan : BaseMonster
         monsterInfo.attackDuration = 1.5f;
         monsterInfo.attackDistance = 1f;
         monsterInfo.checkSize = new Vector2(7, 2);
-        monsterInfo.checkRadius = 1f;
         monsterInfo.groundSpeed = 3f;
         monsterInfo.currentHealth = monsterInfo.maxHealth;
 

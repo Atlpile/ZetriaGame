@@ -25,7 +25,6 @@ public class IdleState : BaseAIState
         if (Monster.IsFindPlayer == true)
         {
             fsm.ChangeState(E_AIState.Chase);
-            // Debug.Log("追击Player");
         }
     }
 

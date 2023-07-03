@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class PistolBullet : MonoBehaviour
 {
+    private Rigidbody2D rb;
     [SerializeField] private float _moveSpeed = 20f;
     [SerializeField] private float _destroyTime = 1f;
+
+    private void Awake()
+    {
+        rb = this.GetComponent<Rigidbody2D>();
+    }
 
     private void OnEnable()
     {
@@ -15,6 +21,11 @@ public class PistolBullet : MonoBehaviour
         Create();
     }
 
+    private void Start()
+    {
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.freezeRotation = true;
+    }
 
     private void Update()
     {
@@ -39,10 +50,17 @@ public class PistolBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        IDamageable hurtTarget = other.GetComponent<IDamageable>();
+        IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();
         if (hurtTarget != null && other.gameObject.name != "Player")
         {
             hurtTarget.Damage();
+            Hide();
+        }
+
+        if (other.gameObject.name == "Ground")
+        {
+            Debug.Log("子弹撞墙");
+            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
             Hide();
         }
     }

@@ -18,5 +18,6 @@ public class MonsterInfo
     public float patrolTime = 3f;
 
     public Vector3 checkSize = new Vector3(7, 2, 0);
+    public Vector3 checkOffset;
     public float checkRadius = 1f;
 }
