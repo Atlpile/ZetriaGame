@@ -45,7 +45,7 @@ public class EnemyBullet : BaseBullet
         this.transform.position = _playerPos.position;
 
         //到达一定距离时不进行追击
-        if (Vector2.Distance(this.transform.position, _playerPos.position) < 3f)
+        if (Vector2.Distance(this.transform.position, _playerPos.position) < _chaseDistance)
         {
             //利用向量使其移动
         }

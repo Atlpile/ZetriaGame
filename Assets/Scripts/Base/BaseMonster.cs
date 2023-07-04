@@ -11,6 +11,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     [SerializeField] protected MonsterInfo monsterInfo;
     protected FSM fsm;
     protected E_AIState state = E_AIState.Null;
+    protected float destroyTime = 1f;
     protected bool isFindPlayer;
     protected bool isDead;
     protected bool isAttack = false;
@@ -197,7 +198,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         col2D.enabled = false;
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);
     }
 }

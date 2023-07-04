@@ -7,8 +7,8 @@ public class BaseBullet : MonoBehaviour
 {
     protected Animator anim;
     protected Rigidbody2D rb;
-    protected float moveSpeed = 20f;
-    protected float destroyTime = 1f;
+    [SerializeField] protected float moveSpeed = 20f;
+    [SerializeField] protected float destroyTime = 1f;
 
     private void Awake()
     {

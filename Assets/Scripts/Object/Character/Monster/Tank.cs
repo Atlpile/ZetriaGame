@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class Tank : BaseMonster
 {
+    [SerializeField] private Vector3 bulletOffset = new Vector2(1.5f, 0.75f);
+
     protected override void InitCharacter()
     {
         monsterInfo.monsterType = E_MonsterType.Static;
@@ -43,9 +45,27 @@ public class Tank : BaseMonster
     private IEnumerator IE_Attack()
     {
         isAttack = true;
-        Debug.Log("Tank攻击");
+        // Debug.Log("Tank攻击");
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
+        GameObject bullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("TankBullet", E_ResourcesPath.Object);
+        bullet.GetComponent<EnemyBullet>().InitBulletPostion(this.transform.position + bulletOffset);
+
         yield return new WaitForSeconds(monsterInfo.attackDuration);
         isAttack = false;
+    }
+
+    public override void Dead()
+    {
+
+    }
+
+    private IEnumerator IE_Dead()
+    {
+        anim.SetTrigger("Dead");
+        rb2D.bodyType = RigidbodyType2D.Kinematic;
+        col2D.enabled = false;
+        // GameManager.Instance.m_AudioManager.AudioPlay
+
+        yield return new WaitForSeconds(destroyTime);
     }
 }
