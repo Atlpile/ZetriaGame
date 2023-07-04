@@ -19,7 +19,7 @@ public class PlayerController : BaseCharacter, IDamageable
 
     //跳跃相关
     private int _currentJumpCount;
-    private Vector3 _jumpFXOffset;
+
 
     [Header("Player Size & Offset")]
     private Vector2 _crouchSize;
@@ -41,6 +41,11 @@ public class PlayerController : BaseCharacter, IDamageable
     private Vector3 _shotGunBulletLeftOffset = new Vector2(-0.5f, 0.75f);
     private Vector3 _shotGunBulletRightOffset = new Vector2(0.5f, 0.75f);
     private Vector3 _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
+
+    [Header("FXOffset")]
+    private Vector3 _kickFXRightOffset = new Vector2(0.75f, 1f);
+    private Vector3 _kickFXLeftOffset = new Vector2(-0.75f, 1f);
+    [SerializeField] private Vector3 _jumpFXOffset;
 
     [Header("Status")]
     private bool _isMeleeAttack;
@@ -370,6 +375,16 @@ public class PlayerController : BaseCharacter, IDamageable
         bullet.transform.localRotation = this.transform.localRotation;
     }
 
+    private void SetFXPos(GameObject fx, Vector3 leftOffset, Vector3 rightOffset)
+    {
+        if (isRight)
+            fx.transform.position = this.transform.position + rightOffset;
+        else
+            fx.transform.position = this.transform.position + leftOffset;
+
+        fx.transform.localRotation = this.transform.localRotation;
+    }
+
     private void StopMove()
     {
         _horizontalMove = 0;
@@ -417,9 +432,11 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         _isMeleeAttack = true;
 
-        //TODO:设置攻击范围
         anim.SetTrigger("MeleeAttack");
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
+
+        GameObject kickFX = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("FX_Kick", E_ResourcesPath.FX);
+        SetFXPos(kickFX, _kickFXLeftOffset, _kickFXRightOffset);
 
         yield return new WaitForSeconds(zetriaInfo.meleeAttackCD);
         _isMeleeAttack = false;

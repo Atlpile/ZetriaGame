@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FXSpawner : MonoBehaviour
+public class FXSpawner : MonoBehaviour, IObject
 {
-    public float destroyTime;
+    [SerializeField] private float _destroyTime = 0.5f;
     private Animator animator;
 
     private void Awake()
@@ -14,14 +14,33 @@ public class FXSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        animator.Play("create");
-        Invoke("Hide", destroyTime);
+        Create();
     }
 
-
-    private void Hide()
+    private void OnDisable()
     {
+        Release();
+    }
+
+    public void Create()
+    {
+        animator.Play("Create");
+        Hide();
+    }
+
+    public void Hide()
+    {
+        StartCoroutine(IE_Hide());
+    }
+
+    public void Release()
+    {
+        StopCoroutine(IE_Hide());
+    }
+
+    private IEnumerator IE_Hide()
+    {
+        yield return new WaitForSeconds(_destroyTime);
         GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
     }
-
 }

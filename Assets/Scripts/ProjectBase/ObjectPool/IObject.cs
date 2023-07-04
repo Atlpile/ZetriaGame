@@ -8,5 +8,5 @@ public interface IObject
 
     void Hide();
 
-    void Delete();
+    void Release();
 }
