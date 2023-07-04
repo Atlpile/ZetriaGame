@@ -36,7 +36,7 @@ public class ZetriaInfo
         shotGunAttackCD = 0.9f;
         emptyAttackCD = 0.45f;
         reloadCD = 0.8f;
-        hurtCD = 1f;
+        hurtCD = 0.5f;
 
         hasToken = false;
         hasDoorCard = false;

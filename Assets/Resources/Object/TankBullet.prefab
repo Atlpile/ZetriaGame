@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8400793837699817323}
   - component: {fileID: 6226638562245288396}
   - component: {fileID: 3292028007671383785}
-  - component: {fileID: 8400793837699817322}
+  - component: {fileID: 1067822869}
   m_Layer: 0
   m_Name: TankBullet
   m_TagString: Untagged
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 8400793837699817326}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 20902cb6497b53545bf42e10bea2c51e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 204ba8ba083b49c429de9e32a93714d4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -145,7 +145,7 @@ CapsuleCollider2D:
   m_Offset: {x: -0.05, y: 0}
   m_Size: {x: 0.5, y: 0.15}
   m_Direction: 1
---- !u!114 &8400793837699817322
+--- !u!114 &1067822869
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,10 +154,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8400793837699817326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a0c2d545700f974baf35ed707b899c8, type: 3}
+  m_Script: {fileID: 11500000, guid: ef296b65aae53ef4783501560bf1bdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  destroyTime: 1
-  _type: 0
-  _playerPos: {fileID: 0}
+  moveSpeed: 20
+  explosionTime: 1
+  disappearTime: 0.5

@@ -2,18 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Bullet循环过程：Create —— Move —— Explosion —— Release —— Hide —— Create
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class BaseBullet : MonoBehaviour
 {
     protected Animator anim;
     protected Rigidbody2D rb;
+    protected Collider2D coll2d;
     [SerializeField] protected float moveSpeed = 20f;
-    [SerializeField] protected float destroyTime = 1f;
+    protected float currentMoveSpeed;
+    [SerializeField] protected float explosionTime = 1f;
+    [SerializeField] protected float disappearTime = 1f;
 
     private void Awake()
     {
-        rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent<Animator>();
+        rb = this.GetComponent<Rigidbody2D>();
+        coll2d = this.GetComponent<Collider2D>();
 
         InitComponent();
     }
@@ -45,7 +51,7 @@ public class BaseBullet : MonoBehaviour
 
     protected virtual void Create()
     {
-        StartCoroutine(IE_BaseCreate());
+        StartCoroutine(IE_BaseDisappear());
     }
 
     protected virtual void Hide()
@@ -56,7 +62,7 @@ public class BaseBullet : MonoBehaviour
     protected virtual void Release()
     {
         this.transform.position = Vector2.zero;
-        StopCoroutine(IE_BaseCreate());
+        StopCoroutine(IE_BaseDisappear());
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -65,8 +71,23 @@ public class BaseBullet : MonoBehaviour
         if (damageable != null && other.gameObject.name == "Player")
         {
             damageable.Damage();
-            Debug.Log("player受伤");
+            Hide();
+            // Debug.Log("player受伤");
         }
+    }
+
+    protected virtual void Explosion()
+    {
+
+    }
+
+    protected void ChangeMove(bool canStop)
+    {
+        if (canStop == true)
+            currentMoveSpeed = 0;
+        else
+            currentMoveSpeed = moveSpeed;
+
     }
 
     public void InitBulletPostion(Vector3 positon)
@@ -74,9 +95,11 @@ public class BaseBullet : MonoBehaviour
         this.transform.position = positon;
     }
 
-    private IEnumerator IE_BaseCreate()
+    private IEnumerator IE_BaseDisappear()
     {
-        yield return new WaitForSeconds(destroyTime);
+        yield return new WaitForSeconds(disappearTime);
         Hide();
     }
+
+
 }
