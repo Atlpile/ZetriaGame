@@ -35,7 +35,6 @@ public class TankBullet : BaseBullet
     protected override void Release()
     {
         this.transform.position = Vector2.zero;
-        // StopCoroutine(IE_Disappear());
         StopAllCoroutines();
     }
 

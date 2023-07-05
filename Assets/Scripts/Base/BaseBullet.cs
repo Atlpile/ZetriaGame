@@ -72,7 +72,6 @@ public class BaseBullet : MonoBehaviour
         {
             damageable.Damage();
             Hide();
-            // Debug.Log("player受伤");
         }
     }
 

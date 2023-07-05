@@ -45,7 +45,7 @@ public class Tank : BaseMonster
     private IEnumerator IE_Attack()
     {
         isAttack = true;
-        // Debug.Log("Tank攻击");
+
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
         GameObject bullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("TankBullet", E_ResourcesPath.Object);
         bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);

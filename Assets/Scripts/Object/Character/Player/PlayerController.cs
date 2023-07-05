@@ -403,15 +403,8 @@ public class PlayerController : BaseCharacter, IDamageable
         rb2D.velocity = new Vector2(0f, zetriaInfo.jumpForce);
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_jump");
 
-        // GameObject jumpFX = GameManager.Instance.m_ObjectPool.GetOrLoadObject("fx_jump", E_ResourcesPath.FX);
-        // jumpFX.transform.position = this.transform.position + _jumpFXOffset;
-
-        //TODO:创建的FX，通过协程延时调用返回至对象池
-    }
-
-    private IEnumerator IE_Jump()
-    {
-        yield return new WaitForSeconds(0.5f);
+        GameObject jumpFX = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("FX_Jump", E_ResourcesPath.FX);
+        SetFXPos(jumpFX, _jumpFXOffset, _jumpFXOffset);
     }
 
     private void MeleeAttack()
