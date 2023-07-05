@@ -7,16 +7,11 @@ using UnityEngine;
     写专有逻辑
 */
 
-[RequireComponent(typeof(CapsuleCollider2D))]
 public class WolfMan : BaseMonster
 {
-    public override void InitComponent()
-    {
-        check = this.transform.GetChild(0);
-    }
-
     protected override void InitCharacter()
     {
+        monsterInfo.monsterType = E_MonsterType.Ground;
         monsterInfo.attackDuration = 1.5f;
         monsterInfo.attackDistance = 1f;
         monsterInfo.checkSize = new Vector2(7, 2);
@@ -31,7 +26,7 @@ public class WolfMan : BaseMonster
     {
         base.OnUpdate();
 
-        isFindPlayer = GetPlayer(check.position, monsterInfo.checkSize);
+        isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
 
     private void OnDrawGizmos()

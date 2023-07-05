@@ -45,7 +45,7 @@ public class PlayerController : BaseCharacter, IDamageable
     [Header("FXOffset")]
     private Vector3 _kickFXRightOffset = new Vector2(0.75f, 1f);
     private Vector3 _kickFXLeftOffset = new Vector2(-0.75f, 1f);
-    [SerializeField] private Vector3 _jumpFXOffset;
+    private Vector3 _jumpFXOffset;
 
     [Header("Status")]
     private bool _isMeleeAttack;

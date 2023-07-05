@@ -32,7 +32,7 @@ public class IdleState : BaseAIState
         //若发现Player，则切换为Chase状态
         if (Monster.IsFindPlayer == true)
         {
-            if (Monster is Tank)
+            if (Monster is Tank || Monster is Egg)
             {
                 fsm.ChangeState(E_AIState.Attack);
             }

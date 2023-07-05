@@ -26,3 +26,4 @@ public enum E_DoorType { Once, Condition, Smart }
 public enum E_MonsterType { Ground, Fly, Static }
 public enum E_CheckType { Rect, Sphere }
 public enum E_UITransitionType { Fade, }
+public enum E_SpawnMonsterType { Null, Mon1, Mon2, Mon3 }

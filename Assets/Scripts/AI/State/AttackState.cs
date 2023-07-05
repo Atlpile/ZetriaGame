@@ -11,12 +11,15 @@ public class AttackState : BaseAIState
 
     public override void EnterState()
     {
-        Debug.Log("Tank进入AttackState");
+        if (Monster is Egg)
+        {
+            Monster.Attack();
+        }
     }
 
     public override void ExitState()
     {
-        Debug.Log("Tank离开AttackState");
+
     }
 
     public override void UpdateState()

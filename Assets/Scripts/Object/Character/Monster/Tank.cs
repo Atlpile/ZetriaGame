@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CapsuleCollider2D))]
 public class Tank : BaseMonster
 {
     [SerializeField] private Vector3 bulletOffset = new Vector2(1.5f, 0.75f);
+
 
     protected override void InitCharacter()
     {
@@ -16,6 +16,7 @@ public class Tank : BaseMonster
         monsterInfo.currentHealth = 1;
 
         currentMoveSpeed = monsterInfo.groundSpeed;
+        destroyTime = 0.5f;
         fsm.ChangeState(E_AIState.Idle);
     }
 
@@ -31,10 +32,6 @@ public class Tank : BaseMonster
         anim.SetBool("IsFindPlayer", isFindPlayer);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
-    }
 
     public override void Attack()
     {
@@ -56,7 +53,7 @@ public class Tank : BaseMonster
 
     public override void Dead()
     {
-
+        StartCoroutine(IE_Dead());
     }
 
     private IEnumerator IE_Dead()
@@ -64,8 +61,15 @@ public class Tank : BaseMonster
         anim.SetTrigger("Dead");
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
-        // GameManager.Instance.m_AudioManager.AudioPlay
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "alien_blast");
 
         yield return new WaitForSeconds(destroyTime);
+        Destroy(this.gameObject);
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
 }
