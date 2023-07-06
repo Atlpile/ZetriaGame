@@ -32,12 +32,17 @@ public class Tank : BaseMonster
         anim.SetBool("IsFindPlayer", isFindPlayer);
     }
 
-
     public override void Attack()
     {
         if (!isAttack)
             StartCoroutine(IE_Attack());
     }
+
+    public override void Dead()
+    {
+        StartCoroutine(IE_Dead());
+    }
+
 
     private IEnumerator IE_Attack()
     {
@@ -49,11 +54,6 @@ public class Tank : BaseMonster
 
         yield return new WaitForSeconds(monsterInfo.attackDuration);
         isAttack = false;
-    }
-
-    public override void Dead()
-    {
-        StartCoroutine(IE_Dead());
     }
 
     private IEnumerator IE_Dead()

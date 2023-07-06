@@ -55,12 +55,17 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         InitCharacter();
     }
 
-    protected override void OnUpdate()
+    protected override void OnFixedUpdate()
     {
-        base.OnUpdate();
+        base.OnFixedUpdate();
 
         if (fsm != null)
             fsm.UpdateFSM();
+    }
+
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
     }
 
     protected override void SetAnimatorParameter()
@@ -100,10 +105,13 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public void UpdateMove()
     {
-        if (isRight)
-            rb2D.velocity = Vector2.right * currentMoveSpeed;
-        else
-            rb2D.velocity = -Vector2.right * currentMoveSpeed;
+        // if (isRight)
+        //     // rb2D.velocity = Vector2.right * currentMoveSpeed;
+        //     this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+        // else
+        //     // rb2D.velocity = -Vector2.right * currentMoveSpeed;
+        //     this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+        this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
     }
 
     public void UpdateFlip()
@@ -174,14 +182,29 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         }
     }
 
-    public virtual void Damage()
+    public virtual void Damage(Vector2 attakerPos)
     {
         monsterInfo.currentHealth--;
+        AddDamageForce(attakerPos);
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
 
         if (monsterInfo.currentHealth == 0)
         {
             Dead();
+        }
+    }
+
+    protected void AddDamageForce(Vector2 attacker)
+    {
+        if (attacker.x < this.transform.position.x)
+        {
+            Debug.Log("向右施加力");
+            rb2D.velocity = Vector2.right * 3;
+        }
+        else
+        {
+            Debug.Log("向左施加力");
+            rb2D.velocity = Vector2.left * 3;
         }
     }
 

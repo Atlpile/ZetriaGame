@@ -53,7 +53,7 @@ public class PistolBullet : MonoBehaviour
         IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();
         if (hurtTarget != null && other.gameObject.name != "Player")
         {
-            hurtTarget.Damage();
+            hurtTarget.Damage(this.transform.position);
             Hide();
         }
 

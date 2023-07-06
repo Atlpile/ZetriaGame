@@ -70,7 +70,7 @@ public class BaseBullet : MonoBehaviour
         IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
         if (damageable != null && other.gameObject.name == "Player")
         {
-            damageable.Damage();
+            damageable.Damage(this.transform.position);
             Hide();
         }
     }

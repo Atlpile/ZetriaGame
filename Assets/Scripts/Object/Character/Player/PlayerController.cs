@@ -11,6 +11,7 @@ public class PlayerController : BaseCharacter, IDamageable
     private ZetriaInfo zetriaInfo;
     private AmmoController ammoController;
     private E_PlayerStatus _status;
+    [SerializeField] private float hurtForce = 5f;
 
     //移动相关
     private int _horizontalMove;
@@ -76,7 +77,6 @@ public class PlayerController : BaseCharacter, IDamageable
     }
     public ZetriaInfo ZetriaInfo => zetriaInfo;
     private InputController InputController => GameManager.Instance.m_InputController;
-
 
     #endregion
 
@@ -204,7 +204,11 @@ public class PlayerController : BaseCharacter, IDamageable
             }
             else if (Input.GetKeyDown(KeyCode.H))
             {
-                Damage();
+                Damage(this.transform.position);
+            }
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                ForceTest();
             }
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
@@ -393,6 +397,26 @@ public class PlayerController : BaseCharacter, IDamageable
             sleepWomen.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + 1f);
     }
 
+    private void AddHurtForce(Vector2 attackerPos)
+    {
+        //FIXME：优化移动效果
+        if (attackerPos.x < this.transform.position.x)
+        {
+            Debug.Log("向右施加力");
+            rb2D.velocity = Vector2.right * hurtForce;
+        }
+        else
+        {
+            Debug.Log("向左施加力");
+            rb2D.velocity = Vector2.left * hurtForce;
+        }
+    }
+
+    private void ForceTest()
+    {
+        rb2D.AddForce(Vector2.right * hurtForce);
+    }
+
     #endregion
 
 
@@ -512,27 +536,30 @@ public class PlayerController : BaseCharacter, IDamageable
         _isReload = false;
     }
 
-    public void Damage()
+    public void Damage(Vector2 attacker)
     {
         if (!_isHurt && !_isDead)
-            StartCoroutine(IE_Damage());
+            StartCoroutine(IE_Damage(attacker));
     }
 
-    private IEnumerator IE_Damage()
+    private IEnumerator IE_Damage(Vector2 attacker)
     {
         _isHurt = true;
 
-        zetriaInfo.currentHealth = zetriaInfo.currentHealth > 0 ? --zetriaInfo.currentHealth : 0;
-        _isDead = zetriaInfo.currentHealth == 0 ? true : false;
-
-        anim.SetTrigger("Hurt");
-
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "player_hurt_1");
         GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
+        GameManager.Instance.m_InputController.SetInputStatus(false);
+
+        zetriaInfo.currentHealth = zetriaInfo.currentHealth > 0 ? --zetriaInfo.currentHealth : 0;
+        _isDead = zetriaInfo.currentHealth == 0 ? true : false;
+        anim.SetTrigger("Hurt");
+        AddHurtForce(attacker);
 
         if (_isDead) Dead();
 
         yield return new WaitForSeconds(zetriaInfo.hurtCD);
+        GameManager.Instance.m_InputController.SetInputStatus(true);
+
         _isHurt = false;
     }
 
@@ -654,7 +681,7 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         BaseMonster monster = other.GetComponent<BaseMonster>();
         if (monster != null)
-            monster.Damage();
+            monster.Damage(this.transform.position);
     }
 
     #endregion

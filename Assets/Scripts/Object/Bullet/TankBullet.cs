@@ -67,7 +67,7 @@ public class TankBullet : BaseBullet
         IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
         if (damageable != null && other.gameObject.name == "Player")
         {
-            damageable.Damage();
+            damageable.Damage(this.transform.position);
             StartCoroutine(IE_HurtPlayer());
         }
     }

@@ -1,5 +1,5 @@
 
-
+[System.Serializable]
 public class ZetriaInfo
 {
     public int maxHealth;
