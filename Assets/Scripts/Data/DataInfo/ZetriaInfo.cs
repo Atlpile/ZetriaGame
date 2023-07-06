@@ -10,6 +10,7 @@ public class ZetriaInfo
     public float crouchSpeed;
     public float jumpForce;
     public float jumpGravity;
+    public float drag;
     public float meleeAttackCD;
     public float pistolAttackCD;
     public float shotGunAttackCD;
@@ -29,7 +30,8 @@ public class ZetriaInfo
         standSpeed = 4f;
         getNPCSpeed = 3.5f;
         crouchSpeed = 2f;
-        jumpForce = 12f;
+        jumpForce = 15f;
+        drag = 3f;
         jumpGravity = 5f;
         meleeAttackCD = 0.4f;
         pistolAttackCD = 0.45f;

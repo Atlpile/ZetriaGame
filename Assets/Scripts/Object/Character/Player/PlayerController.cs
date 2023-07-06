@@ -203,14 +203,6 @@ public class PlayerController : BaseCharacter, IDamageable
             {
                 PutDownNPC();
             }
-            else if (Input.GetKeyDown(KeyCode.H))
-            {
-                Damage(this.transform.position);
-            }
-            else if (Input.GetKeyDown(KeyCode.L))
-            {
-                ForceTest();
-            }
 
             if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
@@ -310,6 +302,7 @@ public class PlayerController : BaseCharacter, IDamageable
         isRight = true;
         currentMoveSpeed = zetriaInfo.standSpeed;
         rb2D.gravityScale = zetriaInfo.jumpGravity;
+        rb2D.drag = zetriaInfo.drag;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
 
@@ -438,11 +431,6 @@ public class PlayerController : BaseCharacter, IDamageable
             // rb2D.AddForce(new Vector2(-hurtForce, hurtForce));
             rb2D.velocity = new Vector2(-2, 5);
         }
-    }
-
-    private void ForceTest()
-    {
-        rb2D.AddForce(Vector2.right * hurtForce);
     }
 
     #endregion
@@ -586,7 +574,7 @@ public class PlayerController : BaseCharacter, IDamageable
         if (_isDead) Dead();
 
         yield return new WaitForSeconds(zetriaInfo.hurtCD);
-        rb2D.velocity = Vector2.zero;
+        // rb2D.velocity = Vector2.zero;
         GameManager.Instance.m_InputController.SetInputStatus(true);
 
         _isHurt = false;

@@ -105,12 +105,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public void UpdateMove()
     {
-        // if (isRight)
-        //     // rb2D.velocity = Vector2.right * currentMoveSpeed;
-        //     this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
-        // else
-        //     // rb2D.velocity = -Vector2.right * currentMoveSpeed;
-        //     this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
         this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
     }
 
