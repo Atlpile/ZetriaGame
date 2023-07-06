@@ -128,8 +128,9 @@ public class PlayerController : BaseCharacter, IDamageable
 
         if (!_isMeleeAttack && !_isReload)
         {
-            Move();
-            Flip();
+            // Move();
+            // Flip();
+            MoveAndFlip();
         }
     }
 
@@ -261,7 +262,11 @@ public class PlayerController : BaseCharacter, IDamageable
     private void Move()
     {
         _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
-        rb2D.velocity = new Vector2(currentMoveSpeed * _horizontalMove, rb2D.velocity.y);
+        // rb2D.velocity = new Vector2(currentMoveSpeed * _horizontalMove, rb2D.velocity.y);
+        if (_horizontalMove > 0)
+            this.transform.Translate(Vector2.right * _horizontalMove * currentMoveSpeed * Time.deltaTime);
+        else
+            this.transform.Translate(Vector2.left * _horizontalMove * currentMoveSpeed * Time.deltaTime);
     }
 
     private void Flip()
@@ -273,6 +278,23 @@ public class PlayerController : BaseCharacter, IDamageable
         }
         else if (_horizontalMove < 0)
         {
+            transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            isRight = false;
+        }
+    }
+
+    private void MoveAndFlip()
+    {
+        _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
+        if (_horizontalMove > 0)
+        {
+            this.transform.Translate(Vector2.right * _horizontalMove * currentMoveSpeed * Time.deltaTime);
+            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            isRight = true;
+        }
+        else if (_horizontalMove < 0)
+        {
+            this.transform.Translate(Vector2.left * _horizontalMove * currentMoveSpeed * Time.deltaTime);
             transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
             isRight = false;
         }
@@ -403,12 +425,18 @@ public class PlayerController : BaseCharacter, IDamageable
         if (attackerPos.x < this.transform.position.x)
         {
             Debug.Log("向右施加力");
-            rb2D.velocity = Vector2.right * hurtForce;
+            // rb2D.AddForce(Vector2.right * hurtForce);
+            // rb2D.AddForce(Vector2.one * hurtForce);
+            // rb2D.AddForce(new Vector2(hurtForce, hurtForce));
+            rb2D.velocity = new Vector2(2, 5);
         }
         else
         {
             Debug.Log("向左施加力");
-            rb2D.velocity = Vector2.left * hurtForce;
+            // rb2D.AddForce(Vector2.left * hurtForce);
+            // rb2D.AddForce(-Vector2.left * hurtForce);
+            // rb2D.AddForce(new Vector2(-hurtForce, hurtForce));
+            rb2D.velocity = new Vector2(-2, 5);
         }
     }
 
@@ -558,6 +586,7 @@ public class PlayerController : BaseCharacter, IDamageable
         if (_isDead) Dead();
 
         yield return new WaitForSeconds(zetriaInfo.hurtCD);
+        rb2D.velocity = Vector2.zero;
         GameManager.Instance.m_InputController.SetInputStatus(true);
 
         _isHurt = false;

@@ -39084,7 +39084,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8269594407595764205, guid: 685f9b73088892a488d45c05a4d3fa04, type: 3}
       propertyPath: hurtForce
-      value: 500
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8269594407595764205, guid: 685f9b73088892a488d45c05a4d3fa04, type: 3}
       propertyPath: _kickFXOffset.x
@@ -40100,7 +40100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1426262762751888661, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3612666047262636541, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: m_IsTrigger
@@ -61272,7 +61272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6630430325894063424, guid: 64c8107703f622742bc26992de2dd1f1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6630430325894063430, guid: 64c8107703f622742bc26992de2dd1f1, type: 3}
       propertyPath: m_RootOrder
