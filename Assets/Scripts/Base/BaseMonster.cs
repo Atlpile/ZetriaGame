@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public abstract class BaseMonster : BaseCharacter, IDamageable
 {
     [SerializeField] protected Transform check;
-    [SerializeField] protected Transform playerPos;
+    [SerializeField] protected Transform player;
     [SerializeField] protected MonsterInfo monsterInfo;
     protected FSM fsm;
     protected E_AIState state = E_AIState.Null;
@@ -44,14 +44,14 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         this.gameObject.layer = LayerMask.NameToLayer("Enemy");
 
         if (GameObject.FindGameObjectWithTag("Player").transform != null)
-            playerPos = GameObject.FindGameObjectWithTag("Player").transform;
+            player = GameObject.FindGameObjectWithTag("Player").transform;
 
         InitCharacter();
     }
 
     protected override void OnUpdate()
     {
-        base.OnUpdate();
+        //TODO:IsFindPlayer重复优化
     }
 
     protected override void OnFixedUpdate()
@@ -76,11 +76,9 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     }
 
 
-    public virtual void Attack()
-    {
-        // if (!isAttack)
-        //     StartCoroutine(IE_BaseAttack());
-    }
+    public abstract void Attack();
+
+    public abstract void Dead();
 
     public virtual void Damage(Vector2 attakerPos)
     {
@@ -94,11 +92,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         }
     }
 
-    public virtual void Dead()
-    {
-        // StartCoroutine(IE_BaseDead());
-    }
-
 
     public void StopMove()
     {
@@ -109,11 +102,17 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public void ResumeMove()
     {
         currentMoveSpeed = monsterInfo.groundSpeed;
+        currentMoveSpeed = monsterInfo.airSpeed;
     }
 
-    public void UpdateMove()
+    public void UpdateGroundMove()
     {
         this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+    }
+
+    public virtual void UpdateAirMove()
+    {
+        //根据怪物类型，向Player移动
     }
 
     public void UpdateFlip()
@@ -126,7 +125,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public void FlipToPlayer()
     {
-        if (this.transform.position.x < playerPos.position.x)
+        if (this.transform.position.x < player.position.x)
             isRight = true;
         else
             isRight = false;
@@ -163,8 +162,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public bool CanAttack()
     {
-        // Debug.Log(Vector2.Distance(this.transform.position, playerPos.transform.position));
-        if (Vector2.Distance(this.transform.position, playerPos.transform.position) < monsterInfo.attackDistance)
+        if (Vector2.Distance(this.transform.position, player.transform.position) < monsterInfo.attackDistance)
             return true;
         else
             return false;

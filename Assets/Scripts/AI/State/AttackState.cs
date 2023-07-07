@@ -28,6 +28,13 @@ public class AttackState : BaseAIState
         {
             Monster.Attack();
         }
+        else if (Monster is Gargoyle)
+        {
+            Monster.UpdateFlip();
+            Monster.FlipToPlayer();
+            Monster.UpdateAirMove();
+            Monster.Attack();
+        }
 
 
         if (Monster.IsFindPlayer == false)

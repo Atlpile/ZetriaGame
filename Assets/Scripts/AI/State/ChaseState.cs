@@ -20,7 +20,7 @@ public class ChaseState : BaseAIState
     public override void UpdateState()
     {
         //向Player移动
-        Monster.UpdateMove();
+        Monster.UpdateGroundMove();
         Monster.UpdateFlip();
         Monster.FlipToPlayer();
 

@@ -5,6 +5,16 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class Runner : BaseMonster
 {
+    public override void Attack()
+    {
+
+    }
+
+    public override void Dead()
+    {
+
+    }
+
     protected override void InitCharacter()
     {
         monsterInfo.attackDuration = 1.5f;
@@ -20,8 +30,6 @@ public class Runner : BaseMonster
 
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
         isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
 

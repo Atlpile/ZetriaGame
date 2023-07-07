@@ -23,7 +23,7 @@ public class PatrolState : BaseAIState
 
     public override void UpdateState()
     {
-        Monster.UpdateMove();
+        Monster.UpdateGroundMove();
         Monster.UpdateFlip();
 
         if (Monster.IsFindPlayer == true)

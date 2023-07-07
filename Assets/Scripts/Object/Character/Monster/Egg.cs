@@ -22,8 +22,6 @@ public class Egg : BaseMonster
 
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
         isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
     }
 

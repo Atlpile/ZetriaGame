@@ -23,7 +23,7 @@ public enum E_BulletMoveType { Upward, Straight, Downward }
 public enum E_EnemyBulletType { Horizontal, Vertical, Chase }
 public enum E_AIState { Null, Patrol, Chase, Idle, Dead, Attack }
 public enum E_DoorType { Once, Condition, Smart }
-public enum E_MonsterType { Ground, Fly, Static }
+public enum E_MonsterType { Null, Ground, Fly, Static }
 public enum E_CheckType { Rect, Sphere }
 public enum E_UITransitionType { Fade, }
 public enum E_SpawnMonsterType { Null, Mon1, Mon2, Mon3 }

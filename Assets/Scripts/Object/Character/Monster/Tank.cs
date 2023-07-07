@@ -23,8 +23,6 @@ public class Tank : BaseMonster
 
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
         isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
 
