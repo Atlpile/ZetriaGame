@@ -11,7 +11,6 @@ public class PlayerController : BaseCharacter, IDamageable
     private ZetriaInfo zetriaInfo;
     private AmmoController ammoController;
     private E_PlayerStatus _status;
-    [SerializeField] private float hurtForce = 5f;
 
     //移动相关
     private int _horizontalMove;
@@ -417,18 +416,12 @@ public class PlayerController : BaseCharacter, IDamageable
         //FIXME：优化移动效果
         if (attackerPos.x < this.transform.position.x)
         {
-            Debug.Log("向右施加力");
-            // rb2D.AddForce(Vector2.right * hurtForce);
-            // rb2D.AddForce(Vector2.one * hurtForce);
-            // rb2D.AddForce(new Vector2(hurtForce, hurtForce));
+            //向右施加弹力
             rb2D.velocity = new Vector2(2, 5);
         }
         else
         {
-            Debug.Log("向左施加力");
-            // rb2D.AddForce(Vector2.left * hurtForce);
-            // rb2D.AddForce(-Vector2.left * hurtForce);
-            // rb2D.AddForce(new Vector2(-hurtForce, hurtForce));
+            //向左施加弹力
             rb2D.velocity = new Vector2(-2, 5);
         }
     }

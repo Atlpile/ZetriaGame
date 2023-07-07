@@ -29,6 +29,46 @@ public class WolfMan : BaseMonster
         isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
 
+    protected override void SetAnimatorParameter()
+    {
+        anim.SetBool("IsFindPlayer", isFindPlayer);
+        anim.SetBool("IsAttack", isAttack);
+    }
+
+    public override void Attack()
+    {
+        if (!isAttack)
+            StartCoroutine(IE_Attack());
+    }
+
+    public override void Dead()
+    {
+        StartCoroutine(IE_Dead());
+    }
+
+    private IEnumerator IE_Attack()
+    {
+        isAttack = true;
+        anim.SetTrigger("Attack");
+        StopMove();
+
+        yield return new WaitForSeconds(monsterInfo.attackDuration);
+        ResumeMove();
+        isAttack = false;
+    }
+
+    private IEnumerator IE_Dead()
+    {
+        anim.SetTrigger("Dead");
+        StopMove();
+        rb2D.bodyType = RigidbodyType2D.Kinematic;
+        col2D.enabled = false;
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
+
+        yield return new WaitForSeconds(destroyTime);
+        Destroy(this.gameObject);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(check.position, monsterInfo.checkSize);

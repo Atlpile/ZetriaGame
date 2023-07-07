@@ -17,6 +17,7 @@ public class Tank : BaseMonster
 
         currentMoveSpeed = monsterInfo.groundSpeed;
         destroyTime = 0.5f;
+
         fsm.ChangeState(E_AIState.Idle);
     }
 

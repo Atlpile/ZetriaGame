@@ -22,12 +22,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public bool IsDead => isDead;
     public bool IsAttack => isAttack;
 
-    protected abstract void InitCharacter();
-
-    public virtual void InitComponent()
-    {
-        check = this.transform.GetChild(0);
-    }
 
     private void Reset()
     {
@@ -55,6 +49,11 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         InitCharacter();
     }
 
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
+
     protected override void OnFixedUpdate()
     {
         base.OnFixedUpdate();
@@ -63,34 +62,43 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             fsm.UpdateFSM();
     }
 
-    protected override void OnUpdate()
+    public virtual void InitComponent()
     {
-        base.OnUpdate();
+        check = this.transform.GetChild(0);
     }
+
+    protected abstract void InitCharacter();
 
     protected override void SetAnimatorParameter()
     {
-        anim.SetBool("IsFindPlayer", isFindPlayer);
-        anim.SetBool("IsAttack", isAttack);
+        // anim.SetBool("IsFindPlayer", isFindPlayer);
+        // anim.SetBool("IsAttack", isAttack);
     }
+
 
     public virtual void Attack()
     {
-        if (!isAttack)
-            StartCoroutine(IE_BaseAttack());
+        // if (!isAttack)
+        //     StartCoroutine(IE_BaseAttack());
     }
 
-    private IEnumerator IE_BaseAttack()
+    public virtual void Damage(Vector2 attakerPos)
     {
-        isAttack = true;
-        anim.SetTrigger("Attack");
-        StopMove();
-        // Debug.Log("攻击Player");
-        yield return new WaitForSeconds(monsterInfo.attackDuration);
+        AddDamageForce(attakerPos);
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
 
-        ResumeMove();
-        isAttack = false;
+        monsterInfo.currentHealth--;
+        if (monsterInfo.currentHealth == 0)
+        {
+            Dead();
+        }
     }
+
+    public virtual void Dead()
+    {
+        // StartCoroutine(IE_BaseDead());
+    }
+
 
     public void StopMove()
     {
@@ -124,6 +132,19 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             isRight = false;
     }
 
+    public void ChangeSpeed(float speed)
+    {
+        currentMoveSpeed = speed;
+    }
+
+    public void SetPatrolMove(bool isOpen)
+    {
+        if (isOpen)
+            StartCoroutine(IE_PatrolMove());
+        else
+            StopCoroutine(IE_PatrolMove());
+    }
+
     public bool GetPlayer(Vector2 checkPos, float checkRadius)
     {
         if (checkRadius == 0)
@@ -154,40 +175,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     }
 
-    public void ChangeSpeed(float speed)
-    {
-        currentMoveSpeed = speed;
-    }
-
-    public void SetPatrolMove(bool isOpen)
-    {
-        if (isOpen)
-            StartCoroutine(IE_PatrolMove());
-        else
-            StopCoroutine(IE_PatrolMove());
-    }
-
-    public IEnumerator IE_PatrolMove()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(3f);
-            isRight = !isRight;
-        }
-    }
-
-    public virtual void Damage(Vector2 attakerPos)
-    {
-        monsterInfo.currentHealth--;
-        AddDamageForce(attakerPos);
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
-
-        if (monsterInfo.currentHealth == 0)
-        {
-            Dead();
-        }
-    }
-
     protected void AddDamageForce(Vector2 attacker)
     {
         if (attacker.x < this.transform.position.x)
@@ -202,12 +189,29 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         }
     }
 
-    public virtual void Dead()
+
+
+    private IEnumerator IE_PatrolMove()
     {
-        StartCoroutine(IE_BaseDead());
+        while (true)
+        {
+            yield return new WaitForSeconds(3f);
+            isRight = !isRight;
+        }
     }
 
-    public IEnumerator IE_BaseDead()
+    private IEnumerator IE_BaseAttack()
+    {
+        isAttack = true;
+        anim.SetTrigger("Attack");
+        StopMove();
+
+        yield return new WaitForSeconds(monsterInfo.attackDuration);
+        ResumeMove();
+        isAttack = false;
+    }
+
+    private IEnumerator IE_BaseDead()
     {
         anim.SetTrigger("Dead");
         StopMove();
