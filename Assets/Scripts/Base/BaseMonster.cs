@@ -170,12 +170,12 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     {
         if (attacker.x < this.transform.position.x)
         {
-            Debug.Log("向右施加力");
+            // Debug.Log("向右施加力");
             rb2D.velocity = Vector2.right * 3;
         }
         else
         {
-            Debug.Log("向左施加力");
+            // Debug.Log("向左施加力");
             rb2D.velocity = Vector2.left * 3;
         }
     }
