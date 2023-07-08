@@ -582,6 +582,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
+      propertyPath: _moveSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
       propertyPath: smoothTime
       value: 0.15
       objectReference: {fileID: 0}
@@ -39701,6 +39705,10 @@ PrefabInstance:
     - target: {fileID: 1578947596797826380, guid: 8614a855941bb8449ab0e0aaeaeded50, type: 3}
       propertyPath: m_Name
       value: Gargoyle
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578947596797826380, guid: 8614a855941bb8449ab0e0aaeaeded50, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1578947596797826382, guid: 8614a855941bb8449ab0e0aaeaeded50, type: 3}
       propertyPath: m_RootOrder
