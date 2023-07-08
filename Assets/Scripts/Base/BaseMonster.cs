@@ -11,7 +11,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     [SerializeField] protected MonsterInfo monsterInfo;
     protected FSM fsm;
     protected E_AIState state = E_AIState.Null;
-    protected float destroyTime = 1f;
+    protected float destroyTime = 0.5f;
     protected bool isFindPlayer;
     protected bool isDead;
     protected bool isAttack = false;
@@ -69,13 +69,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     protected abstract void InitCharacter();
 
-    protected override void SetAnimatorParameter()
-    {
-        // anim.SetBool("IsFindPlayer", isFindPlayer);
-        // anim.SetBool("IsAttack", isAttack);
-    }
-
-
     public abstract void Attack();
 
     public abstract void Dead();
@@ -112,7 +105,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public virtual void UpdateAirMove()
     {
-        //根据怪物类型，向Player移动
+        //怪物空中移动由怪物自己决定
     }
 
     public void UpdateFlip()
@@ -209,7 +202,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         isAttack = false;
     }
 
-    private IEnumerator IE_BaseDead()
+    protected IEnumerator IE_BaseDead()
     {
         anim.SetTrigger("Dead");
         StopMove();

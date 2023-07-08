@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class Gargoyle : BaseMonster
 {
+    [SerializeField] private Vector3 bulletOffset;
+
     protected override void InitCharacter()
     {
         monsterInfo.monsterType = E_MonsterType.Fly;
         monsterInfo.groundSpeed = 0;
         monsterInfo.airSpeed = 2f;
+        monsterInfo.currentHealth = 1;
 
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;
@@ -23,7 +26,7 @@ public class Gargoyle : BaseMonster
 
     protected override void SetAnimatorParameter()
     {
-        anim.SetBool(Consts.Anim_IsFindPlayer, isFindPlayer);
+
     }
 
     public override void UpdateAirMove()
@@ -37,13 +40,25 @@ public class Gargoyle : BaseMonster
 
     public override void Attack()
     {
-        //发射水滴向下攻击
-        // Debug.Log("攻击");
+        if (!isAttack)
+            StartCoroutine(IE_Attack());
     }
 
     public override void Dead()
     {
+        StartCoroutine(IE_BaseDead());
+    }
 
+    private IEnumerator IE_Attack()
+    {
+        isAttack = true;
+
+        anim.SetTrigger("Attack");
+        GameObject bullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("EnemyBullet", E_ResourcesPath.Object);
+        bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
+
+        yield return new WaitForSeconds(monsterInfo.attackDuration);
+        isAttack = false;
     }
 
     private void OnDrawGizmos()

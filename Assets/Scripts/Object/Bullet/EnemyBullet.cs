@@ -8,10 +8,27 @@ public class EnemyBullet : BaseBullet
     [SerializeField] private Transform _playerPos;
     private float _chaseDistance = 3f;
 
+    protected override void InitBullet()
+    {
+        moveSpeed = 10f;
+        currentMoveSpeed = moveSpeed;
+
+        _playerPos = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    protected override void Create()
+    {
+        base.Create();
+
+        anim.Play("Run");
+    }
+
     private void Update()
     {
         Move(_type);
     }
+
+
 
     private void Move(E_EnemyBulletType type)
     {
@@ -31,12 +48,12 @@ public class EnemyBullet : BaseBullet
 
     private void HorizontalMove()
     {
-        transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
+        transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
     }
 
     private void VerticalMove()
     {
-        transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
+        transform.Translate(Vector2.down * currentMoveSpeed * Time.deltaTime);
     }
 
     private void ChaseMove()
@@ -50,4 +67,6 @@ public class EnemyBullet : BaseBullet
             //利用向量使其移动
         }
     }
+
+
 }
