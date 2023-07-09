@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyBullet : BaseBullet
 {
-    [SerializeField] private E_EnemyBulletType _type;
+    public E_EnemyBulletType type;
     [SerializeField] private Transform _playerPos;
     private float _chaseDistance = 3f;
 
@@ -25,7 +25,7 @@ public class EnemyBullet : BaseBullet
 
     private void Update()
     {
-        Move(_type);
+        Move(type);
     }
 
 

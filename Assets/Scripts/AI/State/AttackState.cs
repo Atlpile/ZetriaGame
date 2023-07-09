@@ -28,7 +28,7 @@ public class AttackState : BaseAIState
         {
             Monster.Attack();
         }
-        else if (Monster is Gargoyle)
+        else if (Monster is Gargoyle || Monster is JellyFish)
         {
             Monster.UpdateFlip();
             Monster.FlipToPlayer();

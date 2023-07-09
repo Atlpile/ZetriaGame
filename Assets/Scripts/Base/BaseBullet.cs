@@ -15,6 +15,7 @@ public abstract class BaseBullet : MonoBehaviour
     protected float currentMoveSpeed;
     [SerializeField] protected float explosionTime = 1f;
     [SerializeField] protected float disappearTime = 0.5f;
+    private bool _isExplosion;
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public abstract class BaseBullet : MonoBehaviour
 
     protected virtual void Create()
     {
+        _isExplosion = false;
         coll2d.enabled = true;
         SetMoveStatus(false);
         StartCoroutine(IE_Disappear());
@@ -71,27 +73,28 @@ public abstract class BaseBullet : MonoBehaviour
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
-        if (damageable != null && other.gameObject.name == "Player")
+        if (damageable != null && (other.gameObject.name == "Player" || other.gameObject.name == "Ground"))
         {
             damageable.Damage(this.transform.position);
-            StartCoroutine(IE_TriggerExplosion());
-        }
-
-        if (other.gameObject.name == "Ground")
-        {
-            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
             StartCoroutine(IE_TriggerExplosion());
         }
     }
 
     protected virtual void Explosion()
     {
-        //播放爆炸动画
-        anim.Play("Explosion");
-        //消除Bullet的交互效果
-        coll2d.enabled = false;
-        SetMoveStatus(true);
-        // rb.velocity = Vector2.zero;
+        if (_isExplosion == false)
+        {
+            _isExplosion = true;
+            //播放爆炸动画，消除Bullet的交互效果
+            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
+            Debug.Log("爆炸");
+            anim.Play("Explosion");
+            coll2d.enabled = false;
+            SetMoveStatus(true);
+
+            // rb.velocity = Vector2.zero;
+        }
+
     }
 
     protected void SetMoveStatus(bool canStop)
