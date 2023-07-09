@@ -17,13 +17,14 @@ public class PlayerCamera : MonoBehaviour
     private Vector3 _maxSpeed = Vector3.zero;
 
     [Header("边界设置")]
-    [SerializeField] private float _boundsX;
-    [SerializeField] private float _boundsY;
+    // [SerializeField] private float _boundsX;
+    // [SerializeField] private float _boundsY;
+    [SerializeField] private Vector3 bounds = new Vector2(10, 5);
 
     //鼠标
     private float _distanceToPlayer;
     private Vector3 _screenMousePos;
-    [SerializeField] private float _moveSpeed = 0.1f;
+    [SerializeField] private float _moveSpeed = 25f;
 
     private void Awake()
     {
@@ -39,14 +40,10 @@ public class PlayerCamera : MonoBehaviour
 
             //若按下鼠标右键，则摄像机跟随鼠标
             if (Input.GetMouseButton(1))
-            {
                 MoveToMousePosition();
-            }
             //否则摄像机跟随Player
             else
-            {
                 SmoothFollowPlayer();
-            }
         }
     }
 
@@ -61,31 +58,16 @@ public class PlayerCamera : MonoBehaviour
         //获取鼠标在世界位置
         _screenMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        //摄像机移动到鼠标转换的屏幕位置
+        _screenMousePos.x = Mathf.Clamp(_screenMousePos.x, _targetPos.x - bounds.x, _targetPos.x + bounds.x);
+        _screenMousePos.y = Mathf.Clamp(_screenMousePos.y, _targetPos.y - bounds.y, _targetPos.y + bounds.y);
+
         this.transform.position = Vector3.Lerp(_targetPos, _screenMousePos, _moveSpeed * Time.deltaTime);
-
-        Debug.Log(Vector2.Distance(_targetPos, _screenMousePos));
     }
 
-    private void MouseMoveCamera()
+    private void OnDrawGizmos()
     {
-        Vector3 mousePos = new Vector3(
-            Input.mousePosition.x,
-            Input.mousePosition.y,
-            Mathf.Abs(Camera.main.transform.position.z - this.transform.position.z)
-        );
-
-        Vector3 screenMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        screenMousePos.z = this.transform.position.z;
-
-        this.transform.position = Vector2.Lerp(screenMousePos, _targetPos, _moveSpeed * Time.deltaTime);
+        Gizmos.DrawWireCube(_targetPos, bounds);
     }
-
-    private bool CanMouseMove()
-    {
-        return false;
-    }
-
 }
 
 

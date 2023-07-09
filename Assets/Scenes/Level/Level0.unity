@@ -582,8 +582,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
+      propertyPath: bounds.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
+      propertyPath: bounds.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
       propertyPath: _moveSpeed
-      value: 15
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
       propertyPath: smoothTime
