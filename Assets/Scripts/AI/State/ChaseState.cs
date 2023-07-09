@@ -20,7 +20,16 @@ public class ChaseState : BaseAIState
     public override void UpdateState()
     {
         //向Player移动
-        Monster.UpdateGroundMove();
+        if (Monster.MonsterInfo.monsterType == E_MonsterType.Fly)
+        {
+            Monster.UpdateAirMove();
+        }
+        else
+        {
+            Monster.UpdateGroundMove();
+        }
+
+
         Monster.UpdateFlip();
         Monster.FlipToPlayer();
 

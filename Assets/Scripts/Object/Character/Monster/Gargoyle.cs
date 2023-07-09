@@ -24,11 +24,6 @@ public class Gargoyle : BaseMonster
         isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
     }
 
-    protected override void SetAnimatorParameter()
-    {
-
-    }
-
     public override void UpdateAirMove()
     {
         //根据Player位置平移移动

@@ -16,15 +16,10 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private float _smoothTime = 0.15f;
     private Vector3 _maxSpeed = Vector3.zero;
 
-    [Header("边界设置")]
-    // [SerializeField] private float _boundsX;
-    // [SerializeField] private float _boundsY;
-    [SerializeField] private Vector3 bounds = new Vector2(10, 5);
-
-    //鼠标
-    private float _distanceToPlayer;
+    [Header("鼠标控制设置")]
     private Vector3 _screenMousePos;
-    [SerializeField] private float _moveSpeed = 25f;
+    [SerializeField] private Vector3 _bounds = new Vector2(10, 5);
+    [SerializeField] private float _mouseMoveSpeed = 25f;
 
     private void Awake()
     {
@@ -38,10 +33,9 @@ public class PlayerCamera : MonoBehaviour
         {
             _targetPos = new Vector3(_player.position.x + _offsetX, _player.position.y + _offsetY, _player.position.z - 10f);
 
-            //若按下鼠标右键，则摄像机跟随鼠标
+            //若按下鼠标右键，则摄像机跟随鼠标，否则摄像机跟随Player
             if (Input.GetMouseButton(1))
                 MoveToMousePosition();
-            //否则摄像机跟随Player
             else
                 SmoothFollowPlayer();
         }
@@ -58,15 +52,17 @@ public class PlayerCamera : MonoBehaviour
         //获取鼠标在世界位置
         _screenMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        _screenMousePos.x = Mathf.Clamp(_screenMousePos.x, _targetPos.x - bounds.x, _targetPos.x + bounds.x);
-        _screenMousePos.y = Mathf.Clamp(_screenMousePos.y, _targetPos.y - bounds.y, _targetPos.y + bounds.y);
+        //设置摄像机范围
+        _screenMousePos.x = Mathf.Clamp(_screenMousePos.x, _targetPos.x - _bounds.x, _targetPos.x + _bounds.x);
+        _screenMousePos.y = Mathf.Clamp(_screenMousePos.y, _targetPos.y - _bounds.y, _targetPos.y + _bounds.y);
 
-        this.transform.position = Vector3.Lerp(_targetPos, _screenMousePos, _moveSpeed * Time.deltaTime);
+        this.transform.position = Vector3.Lerp(_targetPos, _screenMousePos, _mouseMoveSpeed * Time.deltaTime);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(_targetPos, bounds);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(_targetPos, _bounds);
     }
 }
 

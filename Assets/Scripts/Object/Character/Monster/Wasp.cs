@@ -1,0 +1,77 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Wasp : BaseMonster
+{
+    private Vector3 _chaseOffset = new Vector2(0, 0.5f);
+    protected override void InitCharacter()
+    {
+        monsterInfo.monsterType = E_MonsterType.Fly;
+        monsterInfo.groundSpeed = 0;
+        monsterInfo.airSpeed = 3f;
+        monsterInfo.currentHealth = 3;
+        monsterInfo.attackDuration = 1;
+
+        currentMoveSpeed = monsterInfo.airSpeed;
+        rb2D.gravityScale = 0;
+
+        fsm.ChangeState(E_AIState.Idle);
+    }
+
+    public override void UpdateAirMove()
+    {
+        //向Player移动
+        this.transform.position = Vector2.MoveTowards(
+            this.transform.position,
+            player.transform.position + _chaseOffset,
+            currentMoveSpeed * Time.deltaTime
+        );
+    }
+
+    private void Update()
+    {
+        isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
+    }
+
+    public override void Attack()
+    {
+        if (!isAttack)
+            StartCoroutine(IE_Attack());
+    }
+
+    public override void Dead()
+    {
+        StartCoroutine(IE_Dead());
+    }
+
+    private IEnumerator IE_Attack()
+    {
+        isAttack = true;
+        anim.SetTrigger("Attack");
+        StopMove();
+
+        yield return new WaitForSeconds(monsterInfo.attackDuration);
+        ResumeMove();
+        isAttack = false;
+    }
+
+    private IEnumerator IE_Dead()
+    {
+        anim.SetTrigger("Dead");
+        StopMove();
+        rb2D.bodyType = RigidbodyType2D.Kinematic;
+        col2D.enabled = false;
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
+
+        yield return new WaitForSeconds(destroyTime);
+        Destroy(this.gameObject);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
+    }
+
+
+}

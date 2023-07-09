@@ -529,10 +529,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7191759097302458485, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: m_AllowMSAA
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7191759097302458486, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
       propertyPath: m_Name
       value: PlayerCamera
@@ -580,22 +576,6 @@ PrefabInstance:
     - target: {fileID: 7191759097302458506, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: bounds.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: bounds.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: _moveSpeed
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: smoothTime
-      value: 0.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
@@ -39398,7 +39378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2796022822087200575, guid: 1c664c55e0e552d4f9e513b7487c32e6, type: 3}
       propertyPath: m_Name
-      value: Tank
+      value: Turret
       objectReference: {fileID: 0}
     - target: {fileID: 2796022822087200575, guid: 1c664c55e0e552d4f9e513b7487c32e6, type: 3}
       propertyPath: m_IsActive
@@ -39836,13 +39816,16 @@ GameObject:
   - component: {fileID: 4526185331070467684}
   - component: {fileID: 4526185331070467685}
   - component: {fileID: 4526185331070467687}
+  - component: {fileID: 4526185331070467690}
+  - component: {fileID: 4526185331070467689}
+  - component: {fileID: 4526185331070467688}
   m_Layer: 0
   m_Name: Wasp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4526185331070467684
 Transform:
   m_ObjectHideFlags: 0
@@ -39932,6 +39915,71 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4526185331070467688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4526185331070467682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b73270c404dfc89478a4e88a61908835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  check: {fileID: 1729845747}
+  player: {fileID: 0}
+  monsterInfo:
+    monsterType: 2
+    maxHealth: 5
+    currentHealth: 0
+    groundSpeed: 3
+    airSpeed: 0
+    attackDuration: 2
+    attackDamage: 0
+    attackDistance: 1
+    alertDistance: 0
+    patrolTime: 3
+    checkSize: {x: 7, y: 2, z: 0}
+    checkOffset: {x: 0, y: 0.5, z: 0}
+    checkRadius: 3
+--- !u!70 &4526185331070467689
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4526185331070467682}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.5}
+  m_Size: {x: 1, y: 1}
+  m_Direction: 0
+--- !u!50 &4526185331070467690
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4526185331070467682}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!4 &4597456254467354074 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2796022822087200573, guid: 1c664c55e0e552d4f9e513b7487c32e6, type: 3}
@@ -40168,7 +40216,7 @@ GameObject:
   - component: {fileID: 7175465860201682429}
   - component: {fileID: 7175465860201682427}
   m_Layer: 0
-  m_Name: Static_Mon2
+  m_Name: Steam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
