@@ -27,3 +27,4 @@ public enum E_MonsterType { Null, Ground, Fly, Static }
 public enum E_CheckType { Rect, Sphere }
 public enum E_UITransitionType { Fade, }
 public enum E_SpawnMonsterType { Null, Mon1, Mon2, Mon3 }
+public enum E_GizmosType { Null, Rect, Circle }

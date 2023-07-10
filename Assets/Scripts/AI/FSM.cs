@@ -19,7 +19,6 @@ public class FSM
         //OPTIMIZE：自动添加状态
         StateDic.Add(E_AIState.Null, new NullState(this));
         StateDic.Add(E_AIState.Idle, new IdleState(this));
-        StateDic.Add(E_AIState.Patrol, new PatrolState(this));
         StateDic.Add(E_AIState.Chase, new ChaseState(this));
         StateDic.Add(E_AIState.Attack, new AttackState(this));
 

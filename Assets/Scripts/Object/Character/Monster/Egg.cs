@@ -95,7 +95,7 @@ public class Egg : BaseMonster
         }
     }
 
-    private void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
         if (canCreateMonster)
             Gizmos.DrawWireSphere(this.transform.position, monsterInfo.checkRadius);

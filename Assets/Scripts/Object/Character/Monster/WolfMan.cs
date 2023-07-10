@@ -67,10 +67,4 @@ public class WolfMan : BaseMonster
         yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);
     }
-
-    //TODO:DrawGizmos有两种方式，在父类中实现
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(check.position, monsterInfo.checkSize);
-    }
 }

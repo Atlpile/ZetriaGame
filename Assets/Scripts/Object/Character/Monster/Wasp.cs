@@ -69,10 +69,4 @@ public class Wasp : BaseMonster
         Destroy(this.gameObject);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
-    }
-
-
 }

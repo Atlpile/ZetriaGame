@@ -67,8 +67,4 @@ public class JellyFish : BaseMonster
         isAttack = false;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
-    }
 }

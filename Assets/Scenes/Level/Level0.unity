@@ -39605,19 +39605,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c561e4a7ce036c438e2e1fd7b248b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gizmosType: 0
+  canDrawGizmos: 1
   check: {fileID: 1132149906}
   player: {fileID: 0}
   monsterInfo:
     monsterType: 2
     maxHealth: 5
-    currentHealth: 0
     groundSpeed: 3
     airSpeed: 0
     attackDuration: 2
-    attackDamage: 0
+    attackDamage: 1
     attackDistance: 1
-    alertDistance: 0
-    patrolTime: 3
     checkSize: {x: 7, y: 2, z: 0}
     checkOffset: {x: 0, y: 1, z: 0}
     checkRadius: 5
@@ -39717,6 +39716,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1426262762751888661, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
+      propertyPath: gizmosType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
+      propertyPath: monsterInfo.monsterType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3612666047262636541, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}

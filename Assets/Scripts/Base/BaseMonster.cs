@@ -6,6 +6,9 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class BaseMonster : BaseCharacter, IDamageable
 {
+    public E_GizmosType gizmosType = E_GizmosType.Null;
+    public bool canDrawGizmos = true;
+
     [SerializeField] protected Transform check;
     [SerializeField] protected Transform player;
     [SerializeField] protected MonsterInfo monsterInfo;
@@ -135,14 +138,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         currentMoveSpeed = speed;
     }
 
-    public void SetPatrolMove(bool isOpen)
-    {
-        if (isOpen)
-            StartCoroutine(IE_PatrolMove());
-        else
-            StopCoroutine(IE_PatrolMove());
-    }
-
     public bool GetPlayer(Vector2 checkPos, float checkRadius)
     {
         if (checkRadius == 0)
@@ -180,17 +175,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             rb2D.velocity = Vector2.left * damageForce;
     }
 
-
-
-    private IEnumerator IE_PatrolMove()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(3f);
-            isRight = !isRight;
-        }
-    }
-
     private IEnumerator IE_BaseAttack()
     {
         isAttack = true;
@@ -214,5 +198,19 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         Destroy(this.gameObject);
     }
 
-
+    protected virtual void OnDrawGizmos()
+    {
+        if (canDrawGizmos)
+        {
+            switch (gizmosType)
+            {
+                case E_GizmosType.Rect:
+                    Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
+                    break;
+                case E_GizmosType.Circle:
+                    Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
+                    break;
+            }
+        }
+    }
 }

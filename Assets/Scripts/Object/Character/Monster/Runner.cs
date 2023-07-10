@@ -32,9 +32,4 @@ public class Runner : BaseMonster
     {
         isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
-    }
 }

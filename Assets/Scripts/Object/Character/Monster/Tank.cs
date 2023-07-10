@@ -67,9 +67,4 @@ public class Tank : BaseMonster
         Destroy(this.gameObject);
     }
 
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
-    }
 }
