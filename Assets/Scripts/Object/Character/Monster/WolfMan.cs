@@ -16,8 +16,8 @@ public class WolfMan : BaseMonster
         monsterInfo.attackDistance = 1f;
         monsterInfo.checkSize = new Vector2(7, 2);
         monsterInfo.groundSpeed = 3f;
-        monsterInfo.currentHealth = monsterInfo.maxHealth;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         fsm.ChangeState(E_AIState.Idle);
     }
@@ -47,6 +47,7 @@ public class WolfMan : BaseMonster
     private IEnumerator IE_Attack()
     {
         isAttack = true;
+
         anim.SetTrigger("Attack");
         StopMove();
 
@@ -67,6 +68,7 @@ public class WolfMan : BaseMonster
         Destroy(this.gameObject);
     }
 
+    //TODO:DrawGizmos有两种方式，在父类中实现
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(check.position, monsterInfo.checkSize);

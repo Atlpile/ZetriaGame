@@ -12,8 +12,8 @@ public class JellyFish : BaseMonster
         monsterInfo.monsterType = E_MonsterType.Fly;
         monsterInfo.groundSpeed = 0;
         monsterInfo.airSpeed = 1f;
-        monsterInfo.currentHealth = 3;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;
 
@@ -27,7 +27,11 @@ public class JellyFish : BaseMonster
 
     public override void UpdateAirMove()
     {
+        //获取Player距离
 
+        //移动至Player同一水平位置
+
+        //到达一定距离时不移动 
     }
 
     public override void Attack()

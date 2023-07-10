@@ -56,6 +56,7 @@ public class PlayerCamera : MonoBehaviour
         _screenMousePos.x = Mathf.Clamp(_screenMousePos.x, _targetPos.x - _bounds.x, _targetPos.x + _bounds.x);
         _screenMousePos.y = Mathf.Clamp(_screenMousePos.y, _targetPos.y - _bounds.y, _targetPos.y + _bounds.y);
 
+        //OPTIMIZE：效果不变，移动到鼠标位置时速度降低
         this.transform.position = Vector3.Lerp(_targetPos, _screenMousePos, _mouseMoveSpeed * Time.deltaTime);
     }
 

@@ -11,11 +11,15 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     [SerializeField] protected MonsterInfo monsterInfo;
     protected FSM fsm;
     protected E_AIState state = E_AIState.Null;
+    protected float currentHealth;
     protected float destroyTime = 0.5f;
+    protected float damageForce = 3f;
+
     protected bool isFindPlayer;
     protected bool isDead;
     protected bool isAttack = false;
     protected bool canAttack;
+    [SerializeField] protected bool hasAttackForce = true;
 
     public MonsterInfo MonsterInfo => monsterInfo;
     public bool IsFindPlayer => isFindPlayer;
@@ -75,11 +79,13 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public virtual void Damage(Vector2 attakerPos)
     {
-        AddDamageForce(attakerPos);
+        if (hasAttackForce)
+            AddDamageForce(attakerPos);
+
         GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
 
-        monsterInfo.currentHealth--;
-        if (monsterInfo.currentHealth == 0)
+        currentHealth--;
+        if (currentHealth == 0)
         {
             Dead();
         }
@@ -169,15 +175,9 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     protected void AddDamageForce(Vector2 attacker)
     {
         if (attacker.x < this.transform.position.x)
-        {
-            // Debug.Log("向右施加力");
-            rb2D.velocity = Vector2.right * 3;
-        }
+            rb2D.velocity = Vector2.right * damageForce;
         else
-        {
-            // Debug.Log("向左施加力");
-            rb2D.velocity = Vector2.left * 3;
-        }
+            rb2D.velocity = Vector2.left * damageForce;
     }
 
 
@@ -213,4 +213,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);
     }
+
+
 }

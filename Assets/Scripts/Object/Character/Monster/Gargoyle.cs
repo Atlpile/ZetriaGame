@@ -11,8 +11,8 @@ public class Gargoyle : BaseMonster
         monsterInfo.monsterType = E_MonsterType.Fly;
         monsterInfo.groundSpeed = 0;
         monsterInfo.airSpeed = 2f;
-        monsterInfo.currentHealth = 1;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;
 

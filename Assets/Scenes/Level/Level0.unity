@@ -39621,6 +39621,7 @@ MonoBehaviour:
     checkSize: {x: 7, y: 2, z: 0}
     checkOffset: {x: 0, y: 1, z: 0}
     checkRadius: 5
+  hasAttackForce: 1
   bulletOffset: {x: 0, y: 1, z: 0}
 --- !u!70 &3312828456128428280
 CapsuleCollider2D:
@@ -39716,7 +39717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1426262762751888661, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3612666047262636541, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: m_IsTrigger

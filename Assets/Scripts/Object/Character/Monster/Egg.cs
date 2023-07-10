@@ -12,9 +12,9 @@ public class Egg : BaseMonster
     {
         monsterInfo.monsterType = E_MonsterType.Static;
         monsterInfo.groundSpeed = 0;
-        monsterInfo.currentHealth = 3;
         monsterInfo.checkRadius = 3;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         destroyTime = 0.3f;
         fsm.ChangeState(E_AIState.Idle);

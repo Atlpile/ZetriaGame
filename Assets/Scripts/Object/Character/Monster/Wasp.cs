@@ -10,9 +10,9 @@ public class Wasp : BaseMonster
         monsterInfo.monsterType = E_MonsterType.Fly;
         monsterInfo.groundSpeed = 0;
         monsterInfo.airSpeed = 3f;
-        monsterInfo.currentHealth = 3;
         monsterInfo.attackDuration = 1;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;
 
@@ -21,6 +21,7 @@ public class Wasp : BaseMonster
 
     public override void UpdateAirMove()
     {
+        //TODO:使用Lerp移动
         //向Player移动
         this.transform.position = Vector2.MoveTowards(
             this.transform.position,

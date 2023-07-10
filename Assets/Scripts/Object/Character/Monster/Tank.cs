@@ -13,8 +13,9 @@ public class Tank : BaseMonster
         monsterInfo.checkSize = new Vector2(7, 2);
         monsterInfo.checkOffset = new Vector2(3.5f, 1);
         monsterInfo.groundSpeed = 0;
-        monsterInfo.currentHealth = 1;
+        monsterInfo.maxHealth = 1;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         destroyTime = 0.5f;
 
@@ -60,7 +61,7 @@ public class Tank : BaseMonster
         anim.SetTrigger("Dead");
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "alien_blast");
+        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
 
         yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);

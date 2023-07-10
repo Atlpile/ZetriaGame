@@ -22,8 +22,8 @@ public class Runner : BaseMonster
         monsterInfo.checkSize = new Vector2(7, 2);
         monsterInfo.checkOffset = new Vector2(0, 0.75f);
         monsterInfo.groundSpeed = 4f;
-        monsterInfo.currentHealth = monsterInfo.maxHealth;
 
+        currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         fsm.ChangeState(E_AIState.Idle);
     }
