@@ -19,11 +19,6 @@ public class Gargoyle : BaseMonster
         fsm.ChangeState(E_AIState.Idle);
     }
 
-    protected override void OnUpdate()
-    {
-        isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
-    }
-
     public override void UpdateAirMove()
     {
         //根据Player位置平移移动

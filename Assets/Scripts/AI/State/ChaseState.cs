@@ -9,7 +9,7 @@ public class ChaseState : BaseAIState
 
     public override void EnterState()
     {
-        //切换到跑步动画
+
     }
 
     public override void ExitState()
@@ -19,6 +19,9 @@ public class ChaseState : BaseAIState
 
     public override void UpdateState()
     {
+        Monster.UpdateFlip();
+        Monster.FlipToPlayer();
+
         //向Player移动
         if (Monster.MonsterInfo.monsterType == E_MonsterType.Fly)
         {
@@ -28,10 +31,6 @@ public class ChaseState : BaseAIState
         {
             Monster.UpdateGroundMove();
         }
-
-
-        Monster.UpdateFlip();
-        Monster.FlipToPlayer();
 
         //到一定距离时停下并攻击Player
         if (Monster.CanAttack())

@@ -27,9 +27,4 @@ public class Runner : BaseMonster
         currentMoveSpeed = monsterInfo.groundSpeed;
         fsm.ChangeState(E_AIState.Idle);
     }
-
-    protected override void OnUpdate()
-    {
-        isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
-    }
 }

@@ -22,11 +22,6 @@ public class Tank : BaseMonster
         fsm.ChangeState(E_AIState.Idle);
     }
 
-    protected override void OnUpdate()
-    {
-        isFindPlayer = GetPlayer(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
-    }
-
     protected override void SetAnimatorParameter()
     {
         anim.SetBool("IsFindPlayer", isFindPlayer);

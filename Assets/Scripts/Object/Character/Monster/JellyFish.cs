@@ -20,11 +20,6 @@ public class JellyFish : BaseMonster
         fsm.ChangeState(E_AIState.Idle);
     }
 
-    private void Update()
-    {
-        isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
-    }
-
     public override void UpdateAirMove()
     {
         //获取Player距离

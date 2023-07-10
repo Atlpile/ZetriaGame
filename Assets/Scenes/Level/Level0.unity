@@ -39243,6 +39243,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1338528975}
     m_Modifications:
+    - target: {fileID: 3883033540281871539, guid: 667df417a9b13f64bbffa6088bfbed2f, type: 3}
+      propertyPath: gizmosType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3883033540281871545, guid: 667df417a9b13f64bbffa6088bfbed2f, type: 3}
       propertyPath: m_Name
       value: Wasp
@@ -39304,6 +39308,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1338528975}
     m_Modifications:
+    - target: {fileID: 2796022822087200571, guid: 1c664c55e0e552d4f9e513b7487c32e6, type: 3}
+      propertyPath: gizmosType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2796022822087200573, guid: 1c664c55e0e552d4f9e513b7487c32e6, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -39572,7 +39580,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &3312828456128428278
 Animator:
   serializedVersion: 4
@@ -39605,10 +39613,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c561e4a7ce036c438e2e1fd7b248b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmosType: 0
+  gizmosType: 2
   canDrawGizmos: 1
-  check: {fileID: 1132149906}
-  player: {fileID: 0}
   monsterInfo:
     monsterType: 2
     maxHealth: 5
@@ -39716,14 +39722,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1426262762751888661, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: gizmosType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
+      propertyPath: canDrawGizmos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
+      propertyPath: monsterInfo.airSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
       propertyPath: monsterInfo.monsterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426262762751888671, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
+      propertyPath: monsterInfo.checkOffset.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3612666047262636541, guid: 37ec3e18a9b625f4cac1c9c130c865a6, type: 3}
@@ -39790,6 +39808,10 @@ PrefabInstance:
     - target: {fileID: 1578947596797826382, guid: 8614a855941bb8449ab0e0aaeaeded50, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578947596797826418, guid: 8614a855941bb8449ab0e0aaeaeded50, type: 3}
+      propertyPath: gizmosType
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8614a855941bb8449ab0e0aaeaeded50, type: 3}
@@ -60900,6 +60922,10 @@ PrefabInstance:
     - target: {fileID: 6630430325894063430, guid: 64c8107703f622742bc26992de2dd1f1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6630430325894063449, guid: 64c8107703f622742bc26992de2dd1f1, type: 3}
+      propertyPath: gizmosType
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64c8107703f622742bc26992de2dd1f1, type: 3}

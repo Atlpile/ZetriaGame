@@ -20,11 +20,6 @@ public class Egg : BaseMonster
         fsm.ChangeState(E_AIState.Idle);
     }
 
-    protected override void OnUpdate()
-    {
-        isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
-    }
-
     protected override void SetAnimatorParameter()
     {
 

@@ -30,11 +30,6 @@ public class Wasp : BaseMonster
         );
     }
 
-    private void Update()
-    {
-        isFindPlayer = GetPlayer(this.transform.position, monsterInfo.checkRadius);
-    }
-
     public override void Attack()
     {
         if (!isAttack)

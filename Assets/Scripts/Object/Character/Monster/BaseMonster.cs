@@ -9,11 +9,9 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public E_GizmosType gizmosType = E_GizmosType.Null;
     public bool canDrawGizmos = true;
 
-    [SerializeField] protected Transform check;
-    [SerializeField] protected Transform player;
+    protected Transform player;
     [SerializeField] protected MonsterInfo monsterInfo;
     protected FSM fsm;
-    protected E_AIState state = E_AIState.Null;
     protected float currentHealth;
     protected float destroyTime = 0.5f;
     protected float damageForce = 3f;
@@ -29,11 +27,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public bool IsDead => isDead;
     public bool IsAttack => isAttack;
 
-
-    private void Reset()
-    {
-        check = this.transform.GetChild(0);
-    }
 
     protected override void OnAwake()
     {
@@ -59,6 +52,15 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     protected override void OnUpdate()
     {
         //TODO:IsFindPlayer重复优化
+        switch (gizmosType)
+        {
+            case E_GizmosType.Rect:
+                isFindPlayer = GetPlayer(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkSize);
+                break;
+            case E_GizmosType.Circle:
+                isFindPlayer = GetPlayer(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
+                break;
+        }
     }
 
     protected override void OnFixedUpdate()
@@ -71,7 +73,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public virtual void InitComponent()
     {
-        check = this.transform.GetChild(0);
+
     }
 
     protected abstract void InitCharacter();
@@ -103,8 +105,20 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public void ResumeMove()
     {
-        currentMoveSpeed = monsterInfo.groundSpeed;
-        currentMoveSpeed = monsterInfo.airSpeed;
+        switch (monsterInfo.monsterType)
+        {
+            case E_MonsterType.Ground:
+                currentMoveSpeed = monsterInfo.groundSpeed;
+                break;
+            case E_MonsterType.Fly:
+                currentMoveSpeed = monsterInfo.airSpeed;
+                break;
+        }
+    }
+
+    public void ChangeSpeed(float speed)
+    {
+        currentMoveSpeed = speed;
     }
 
     public void UpdateGroundMove()
@@ -133,10 +147,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             isRight = false;
     }
 
-    public void ChangeSpeed(float speed)
-    {
-        currentMoveSpeed = speed;
-    }
+
 
     public bool GetPlayer(Vector2 checkPos, float checkRadius)
     {
@@ -202,10 +213,15 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     {
         if (canDrawGizmos)
         {
+            if (isFindPlayer)
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+
             switch (gizmosType)
             {
                 case E_GizmosType.Rect:
-                    Gizmos.DrawWireCube(check.position + monsterInfo.checkOffset, monsterInfo.checkSize);
+                    Gizmos.DrawWireCube(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkSize);
                     break;
                 case E_GizmosType.Circle:
                     Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
