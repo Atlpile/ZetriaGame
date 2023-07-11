@@ -51,7 +51,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     protected override void OnUpdate()
     {
-        //TODO:IsFindPlayer重复优化
         switch (gizmosType)
         {
             case E_GizmosType.Rect:
@@ -87,7 +86,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         if (hasAttackForce)
             AddDamageForce(attakerPos);
 
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "enemy_damage");
 
         currentHealth--;
         if (currentHealth == 0)
@@ -114,11 +113,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
                 currentMoveSpeed = monsterInfo.airSpeed;
                 break;
         }
-    }
-
-    public void ChangeSpeed(float speed)
-    {
-        currentMoveSpeed = speed;
     }
 
     public void UpdateGroundMove()
@@ -148,7 +142,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     }
 
 
-
     public bool GetPlayer(Vector2 checkPos, float checkRadius)
     {
         if (checkRadius == 0)
@@ -173,11 +166,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             return false;
     }
 
-    protected void LossPlayer()
-    {
-
-    }
-
     protected void AddDamageForce(Vector2 attacker)
     {
         if (attacker.x < this.transform.position.x)
@@ -186,7 +174,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             rb2D.velocity = Vector2.left * damageForce;
     }
 
-    private IEnumerator IE_BaseAttack()
+    protected IEnumerator IE_BaseAttack()
     {
         isAttack = true;
         anim.SetTrigger("Attack");
@@ -203,11 +191,12 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         StopMove();
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
 
         yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);
     }
+
 
     protected virtual void OnDrawGizmos()
     {
@@ -227,6 +216,15 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
                     Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
                     break;
             }
+        }
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+        IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
+        if (damageable != null && other.gameObject.name == "Player")
+        {
+            damageable.Damage(this.transform.position);
         }
     }
 }

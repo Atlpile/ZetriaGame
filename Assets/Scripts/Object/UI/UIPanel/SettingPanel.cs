@@ -54,10 +54,10 @@ public class SettingPanel : BasePanel
         switch (sliderName)
         {
             case "slider_BGM":
-                GameManager.Instance.m_AudioManager.SetVolume(E_AudioType.BGM, value);
+                GameManager.Instance.AudioManager.SetVolume(E_AudioType.BGM, value);
                 break;
             case "slider_Effect":
-                GameManager.Instance.m_AudioManager.SetVolume(E_AudioType.Effect, value);
+                GameManager.Instance.AudioManager.SetVolume(E_AudioType.Effect, value);
                 break;
         }
     }
@@ -74,12 +74,12 @@ public class SettingPanel : BasePanel
 
     private void CloseSettingPanel()
     {
-        GameManager.Instance.m_UIManager.HidePanel<SettingPanel>();
+        GameManager.Instance.UIManager.HidePanel<SettingPanel>();
     }
 
     public void LoadSettingData()
     {
-        SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
+        SettingData settingData = GameManager.Instance.SaveLoadManager.LoadData<SettingData>("SettingData");
 
         slider_BGM.value = settingData.volume_BGM;
         slider_Effect.value = settingData.volume_Effect;
@@ -92,6 +92,6 @@ public class SettingPanel : BasePanel
         settingData.volume_BGM = slider_BGM.value;
         settingData.volume_Effect = slider_Effect.value;
 
-        GameManager.Instance.m_SaveLoadManager.SaveData(settingData, "SettingData");
+        GameManager.Instance.SaveLoadManager.SaveData(settingData, "SettingData");
     }
 }

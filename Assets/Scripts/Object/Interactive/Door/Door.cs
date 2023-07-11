@@ -58,6 +58,6 @@ public class Door : MonoBehaviour
     public void UpdateDoor(bool isOpen)
     {
         animator.SetBool("IsOpen", isOpen);
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_shut");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_shut");
     }
 }

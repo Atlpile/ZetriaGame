@@ -18,7 +18,7 @@ public class HPSpaceShip : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
+        if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
         {
             AddHP();
         }

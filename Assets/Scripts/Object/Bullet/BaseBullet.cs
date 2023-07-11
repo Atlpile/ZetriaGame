@@ -61,7 +61,7 @@ public abstract class BaseBullet : MonoBehaviour
 
     protected virtual void Hide()
     {
-        GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 
     protected virtual void Release()
@@ -86,8 +86,8 @@ public abstract class BaseBullet : MonoBehaviour
         {
             _isExplosion = true;
             //播放爆炸动画，消除Bullet的交互效果
-            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
-            Debug.Log("爆炸");
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
+            // Debug.Log("爆炸");
             anim.Play("Explosion");
             coll2d.enabled = false;
             SetMoveStatus(true);

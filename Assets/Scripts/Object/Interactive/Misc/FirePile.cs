@@ -9,12 +9,12 @@ public class FirePile : MonoBehaviour
     private void Awake()
     {
         fireSource = this.GetComponent<AudioSource>();
-        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+        GameManager.Instance.EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
     private void OnDestroy()
     {
-        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+        GameManager.Instance.EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
     private void OnTriggerStay2D(Collider2D other)

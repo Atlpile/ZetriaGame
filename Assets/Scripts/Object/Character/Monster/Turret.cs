@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tank : BaseMonster
+public class Turret : BaseMonster
 {
     [SerializeField] private Vector3 bulletOffset = new Vector2(1.5f, 0.75f);
 
@@ -17,6 +17,7 @@ public class Tank : BaseMonster
 
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
+        hasAttackForce = false;
         destroyTime = 0.5f;
 
         fsm.ChangeState(E_AIState.Idle);
@@ -43,8 +44,8 @@ public class Tank : BaseMonster
     {
         isAttack = true;
 
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
-        GameObject bullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("TankBullet", E_ResourcesPath.Object);
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
+        GameObject bullet = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("TankBullet", E_ResourcesPath.Object);
         bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
 
         yield return new WaitForSeconds(monsterInfo.attackDuration);
@@ -56,10 +57,19 @@ public class Tank : BaseMonster
         anim.SetTrigger("Dead");
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
 
         yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);
     }
 
+    protected override void OnTriggerEnter2D(Collider2D other)
+    {
+        //TODO:优化
+        PistolBullet pistolBullet = other.gameObject.GetComponent<PistolBullet>();
+        if (pistolBullet != null)
+        {
+            pistolBullet.Hide();
+        }
+    }
 }

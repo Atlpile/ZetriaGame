@@ -39,7 +39,7 @@ public class WarnQuitPanel : BasePanel
 
     private void NotQuit()
     {
-        GameManager.Instance.m_UIManager.HidePanel<WarnQuitPanel>();
+        GameManager.Instance.UIManager.HidePanel<WarnQuitPanel>();
     }
 
 

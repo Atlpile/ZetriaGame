@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &807116288869468969
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 807116288869468968}
-  m_Layer: 0
-  m_Name: CheckArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &807116288869468968
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807116288869468969}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3883033540281871551}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &807116288978202559
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3883033540281871551}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &807116288978202557
 BoxCollider2D:
@@ -122,7 +91,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 807116288869468968}
   - {fileID: 807116288978202558}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -248,19 +216,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b73270c404dfc89478a4e88a61908835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  check: {fileID: 807116288869468968}
-  player: {fileID: 0}
+  gizmosType: 0
+  canDrawGizmos: 1
   monsterInfo:
     monsterType: 2
     maxHealth: 5
-    currentHealth: 0
     groundSpeed: 3
     airSpeed: 0
     attackDuration: 2
     attackDamage: 0
     attackDistance: 1
-    alertDistance: 0
-    patrolTime: 3
     checkSize: {x: 7, y: 2, z: 0}
     checkOffset: {x: 0, y: 0.5, z: 0}
     checkRadius: 3
+  hasAttackForce: 1

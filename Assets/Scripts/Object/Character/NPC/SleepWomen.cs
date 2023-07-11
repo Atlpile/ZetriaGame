@@ -19,18 +19,18 @@ public class SleepWomen : BaseCharacter
     {
         base.OnUpdate();
 
-        if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.PickUpNPC) && _canPickUp)
+        if (GameManager.Instance.InputController.GetKeyDown(E_InputType.PickUpNPC) && _canPickUp)
         {
             //OPTIMIZE：拾取与放下NPC，当按键重复时，会重叠导致第一次拾取后立即放下，存在先后逻辑
-            GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpNPC);
-            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "npc_pickup");
+            GameManager.Instance.EventManager.EventTrigger(E_EventType.PickUpNPC);
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "npc_pickup");
             Hide();
         }
     }
 
     private void Hide()
     {
-        GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

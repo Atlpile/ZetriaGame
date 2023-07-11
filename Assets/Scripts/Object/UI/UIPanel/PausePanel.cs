@@ -54,29 +54,29 @@ public class PausePanel : BasePanel
 
     private void ResumeGame()
     {
-        GameManager.Instance.m_GameController.UpdateGameStatus();
+        GameManager.Instance.GameController.UpdateGameStatus();
     }
 
     private void RestartGame()
     {
-        GameManager.Instance.m_UIManager.ShowPanel<WarnRestartPanel>();
+        GameManager.Instance.UIManager.ShowPanel<WarnRestartPanel>();
     }
 
     private void OpenOptionsPanel()
     {
-        GameManager.Instance.m_UIManager.ShowPanel<SettingPanel>();
+        GameManager.Instance.UIManager.ShowPanel<SettingPanel>();
     }
 
     private void BackToTitle()
     {
-        GameManager.Instance.m_UIManager.HidePanel<GamePanel>();
-        GameManager.Instance.m_GameController.UpdateGameStatus();
-        GameManager.Instance.m_InputController.SetInputStatus(true);
+        GameManager.Instance.UIManager.HidePanel<GamePanel>();
+        GameManager.Instance.GameController.UpdateGameStatus();
+        GameManager.Instance.InputController.SetInputStatus(true);
         GameManager.Instance.ClearSceneInfo();
 
-        GameManager.Instance.m_SceneLoader.LoadSceneAsync("Main", () =>
+        GameManager.Instance.SceneLoader.LoadSceneAsync("Main", () =>
         {
-            GameManager.Instance.m_UIManager.ShowPanel<MainPanel>();
+            GameManager.Instance.UIManager.ShowPanel<MainPanel>();
         });
     }
 
@@ -87,7 +87,7 @@ public class PausePanel : BasePanel
 
     private void ExitGame()
     {
-        GameManager.Instance.m_UIManager.ShowPanel<WarnQuitPanel>();
+        GameManager.Instance.UIManager.ShowPanel<WarnQuitPanel>();
     }
 
 

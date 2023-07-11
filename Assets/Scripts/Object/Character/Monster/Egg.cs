@@ -20,12 +20,6 @@ public class Egg : BaseMonster
         fsm.ChangeState(E_AIState.Idle);
     }
 
-    protected override void SetAnimatorParameter()
-    {
-
-    }
-
-
     public override void Attack()
     {
         //若可以生成怪物，则根据生成类型生成怪物
@@ -48,7 +42,7 @@ public class Egg : BaseMonster
                 break;
             case E_SpawnMonsterType.Mon1:
                 Debug.Log("Egg生成Horizontal");
-                GameObject monster = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.Object, "Wolfman");
+                GameObject monster = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.Object, "Wolfman");
                 monster.transform.position = this.transform.position;
                 break;
             case E_SpawnMonsterType.Mon2:
@@ -62,7 +56,7 @@ public class Egg : BaseMonster
         anim.Play("Dead");
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_01");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_01");
 
 
         yield return new WaitForSeconds(destroyTime);
@@ -73,7 +67,7 @@ public class Egg : BaseMonster
     {
         anim.Play("Dead");
         SpawnMonster();
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_01");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_01");
         isDead = true;
 
         yield return new WaitForSeconds(destroyTime);
@@ -93,6 +87,6 @@ public class Egg : BaseMonster
     protected override void OnDrawGizmos()
     {
         if (canCreateMonster)
-            Gizmos.DrawWireSphere(this.transform.position, monsterInfo.checkRadius);
+            base.OnDrawGizmos();
     }
 }

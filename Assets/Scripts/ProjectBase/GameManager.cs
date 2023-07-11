@@ -17,18 +17,18 @@ public class GameManager : MonoBehaviour
     private static GameManager s_instance;
     public static GameManager Instance => s_instance;
 
-    public SceneLoader m_SceneLoader { get; set; }
-    public ResourceLoader m_ResourcesLoader { get; set; }
+    public SceneLoader SceneLoader { get; set; }
+    public ResourceLoader ResourcesLoader { get; set; }
 
-    public EventManager m_EventManager { get; set; }
-    public ObjectPoolManager m_ObjectPoolManager { get; set; }
-    public SaveLoadManager m_SaveLoadManager { get; set; }
-    public AudioManager m_AudioManager { get; set; }
-    public UIManager m_UIManager { get; set; }
+    public EventManager EventManager { get; set; }
+    public ObjectPoolManager ObjectPoolManager { get; set; }
+    public SaveLoadManager SaveLoadManager { get; set; }
+    public AudioManager AudioManager { get; set; }
+    public UIManager UIManager { get; set; }
 
-    public InputController m_InputController { get; set; }
-    public GameController m_GameController { get; set; }
-    public ItemManager m_ItemManager { get; set; }
+    public InputController InputController { get; set; }
+    public GameController GameController { get; set; }
+    public ItemManager ItemManager { get; set; }
 
 
 
@@ -41,26 +41,28 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(this);
 
-        Init();
+        InitTools();
+        InitExtra();
     }
 
-    private void Init()
+    private void InitTools()
     {
-        m_SceneLoader = new SceneLoader();
-        m_ResourcesLoader = new ResourceLoader();
+        SceneLoader = new SceneLoader();
+        ResourcesLoader = new ResourceLoader();
 
-        m_EventManager = new EventManager();
-        m_ObjectPoolManager = new ObjectPoolManager();
-        m_SaveLoadManager = new SaveLoadManager();
-        m_AudioManager = new AudioManager();
-        m_UIManager = new UIManager();
+        EventManager = new EventManager();
+        ObjectPoolManager = new ObjectPoolManager();
+        SaveLoadManager = new SaveLoadManager();
+        AudioManager = new AudioManager();
+        UIManager = new UIManager();
+    }
 
+    private void InitExtra()
+    {
+        InputController = new InputController();
+        GameController = new GameController();
 
-        m_InputController = new InputController();
-        m_GameController = new GameController();
-
-        m_ItemManager = new ItemManager();
-
+        ItemManager = new ItemManager();
     }
 
     private void Start()
@@ -72,18 +74,18 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        m_GameController.UpdateInput();
-        m_EventManager.isActiveWarning = activeEventDebugger;
+        GameController.UpdateInput();
+        EventManager.isActiveWarning = activeEventDebugger;
 
         TestInput();
     }
 
     public void ClearSceneInfo()
     {
-        m_ObjectPoolManager.Clear();
-        m_AudioManager.Clear();
-        m_EventManager.Clear();
-        m_UIManager.Clear();
+        ObjectPoolManager.Clear();
+        AudioManager.Clear();
+        EventManager.Clear();
+        UIManager.Clear();
     }
 
     private void LoadGameUI()
@@ -93,13 +95,13 @@ public class GameManager : MonoBehaviour
             case E_InitPanel.None:
                 break;
             case E_InitPanel.Main:
-                m_UIManager.ShowPanel<MainPanel>();
+                UIManager.ShowPanel<MainPanel>();
                 break;
             case E_InitPanel.Input:
-                m_UIManager.ShowPanel<InputPanel>();
+                UIManager.ShowPanel<InputPanel>();
                 break;
             case E_InitPanel.Game:
-                m_UIManager.ShowPanel<GamePanel>();
+                UIManager.ShowPanel<GamePanel>();
                 break;
             case E_InitPanel.Loading:
                 LoadMainScene();
@@ -121,13 +123,13 @@ public class GameManager : MonoBehaviour
 
     private void LoadMainScene()
     {
-        LoadingPanel panel = m_UIManager.ShowPanel<LoadingPanel>();
+        LoadingPanel panel = UIManager.ShowPanel<LoadingPanel>();
         panel.LoadingToTarget(() =>
         {
-            m_UIManager.HidePanel<LoadingPanel>(true);
-            MainPanel mainPanel = m_UIManager.ShowPanel<MainPanel>(true, () =>
+            UIManager.HidePanel<LoadingPanel>(true);
+            MainPanel mainPanel = UIManager.ShowPanel<MainPanel>(true, () =>
             {
-                m_UIManager.GetExistPanel<MainPanel>().SetPanelInteractiveStatus(true);
+                UIManager.GetExistPanel<MainPanel>().SetPanelInteractiveStatus(true);
             });
             mainPanel.SetPanelInteractiveStatus(false);
         });

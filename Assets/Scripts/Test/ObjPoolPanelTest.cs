@@ -8,11 +8,11 @@ public class ObjPoolPanelTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            GameManager.Instance.m_UIManager.ShowPanelFromPool<MainPanel>();
+            GameManager.Instance.UIManager.ShowPanelFromPool<MainPanel>();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            GameManager.Instance.m_UIManager.HidePanelFromPool<MainPanel>();
+            GameManager.Instance.UIManager.HidePanelFromPool<MainPanel>();
         }
     }
 }

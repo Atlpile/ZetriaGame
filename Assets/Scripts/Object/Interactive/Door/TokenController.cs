@@ -21,9 +21,9 @@ public class TokenController : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
+        if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
         {
-            GameData gameData = GameManager.Instance.m_SaveLoadManager.LoadData<GameData>("GameData");
+            GameData gameData = GameManager.Instance.SaveLoadManager.LoadData<GameData>("GameData");
             if (gameData.TokenDic.Count >= needTokenNum)
             {
                 if (door != null && door.type == E_DoorType.Condition)
@@ -31,13 +31,13 @@ public class TokenController : MonoBehaviour
                     Debug.Log("令牌数量足够");
                     _canUse = false;
                     door.UpdateDoor(true);
-                    GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
+                    GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
                 }
             }
             else
             {
                 Debug.Log("令牌数量不够");
-                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_error");
+                GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_error");
                 ControllerError();
             }
 

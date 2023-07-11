@@ -48,7 +48,7 @@ public class ShotGunBullet : MonoBehaviour
 
     public void Hide()
     {
-        GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 
     public void Release()

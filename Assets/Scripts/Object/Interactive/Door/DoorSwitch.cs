@@ -17,14 +17,14 @@ public class DoorSwitch : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.Interacitve) && _canOpen == true)
+        if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _canOpen == true)
         {
             if (door != null && door.type == E_DoorType.Condition)
             {
                 _isOpen = !_isOpen;
                 UpdateSignLights();
                 door.UpdateDoor(_isOpen);
-                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
+                GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
             }
             else if (door != null && door.type != E_DoorType.Condition)
             {

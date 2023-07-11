@@ -33,7 +33,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8808891191763378185}
   - {fileID: 8808891193495990601}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -159,55 +158,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fdd5bbbbb2608d4c9daadeca6d5bafa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  check: {fileID: 8808891191763378185}
-  playerPos: {fileID: 0}
+  gizmosType: 0
+  canDrawGizmos: 1
   monsterInfo:
     monsterType: 2
     maxHealth: 5
-    currentHealth: 0
     groundSpeed: 3
     airSpeed: 0
     attackDuration: 2
     attackDamage: 0
     attackDistance: 1
-    alertDistance: 0
-    patrolTime: 3
     checkSize: {x: 7, y: 2, z: 0}
     checkOffset: {x: 0, y: 0, z: 0}
     checkRadius: 3
+  hasAttackForce: 1
   canCreateMonster: 0
   spawnType: 1
---- !u!1 &8808891191763378230
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8808891191763378185}
-  m_Layer: 0
-  m_Name: CheckArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8808891191763378185
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8808891191763378230}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6630430325894063430}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8808891193495990646
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +204,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6630430325894063430}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &8808891193495990600
 CircleCollider2D:

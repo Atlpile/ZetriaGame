@@ -10,7 +10,7 @@ public class Platform : MonoBehaviour
     private void Awake()
     {
         platformMoveSource = this.GetComponent<AudioSource>();
-        GameManager.Instance.m_EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+        GameManager.Instance.EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 
     public void Move(Transform target, float moveSpeed)
@@ -49,6 +49,6 @@ public class Platform : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.m_EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
+        GameManager.Instance.EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
 }

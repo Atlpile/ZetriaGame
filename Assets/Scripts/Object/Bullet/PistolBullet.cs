@@ -40,7 +40,7 @@ public class PistolBullet : MonoBehaviour
 
     public void Hide()
     {
-        GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 
     public void Release()
@@ -60,7 +60,7 @@ public class PistolBullet : MonoBehaviour
         if (other.gameObject.name == "Ground")
         {
             Debug.Log("子弹撞墙");
-            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
             Hide();
         }
     }

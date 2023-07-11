@@ -27,7 +27,7 @@ public class Teleport : MonoBehaviour
     {
         if (targetPoint != null)
         {
-            if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer)
+            if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer)
             {
                 TeleportToTarget();
             }
@@ -54,9 +54,9 @@ public class Teleport : MonoBehaviour
 
     private void TeleportToTarget()
     {
-        GameManager.Instance.m_EventManager.EventTrigger<Vector3>(E_EventType.PlayerTeleport, targetPoint.transform.position);
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "teleport_player");
-        GameObject fx = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("FX_Teleport", E_ResourcesPath.FX);
+        GameManager.Instance.EventManager.EventTrigger<Vector3>(E_EventType.PlayerTeleport, targetPoint.transform.position);
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "teleport_player");
+        GameObject fx = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("FX_Teleport", E_ResourcesPath.FX);
         fx.transform.position = targetPoint.transform.position;
         //TODO:生成粒子效果
     }

@@ -10,9 +10,9 @@ public class Token : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            GameManager.Instance.m_EventManager.EventTrigger<Token>(E_EventType.PickUpToken, this);
-            GameManager.Instance.m_ItemManager.GetToken(tokenID);
-            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "collect");
+            GameManager.Instance.EventManager.EventTrigger<Token>(E_EventType.PickUpToken, this);
+            GameManager.Instance.ItemManager.GetToken(tokenID);
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "collect");
             Destroy(this.gameObject);
         }
     }

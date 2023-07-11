@@ -13,14 +13,14 @@ public class AmmoPackage : MonoBehaviour
             switch (ammoType)
             {
                 case E_AmmoType.Pistol:
-                    GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpPistolAmmo);
+                    GameManager.Instance.EventManager.EventTrigger(E_EventType.PickUpPistolAmmo);
                     break;
                 case E_AmmoType.ShotGun:
-                    GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PickUpShortGunAmmo);
+                    GameManager.Instance.EventManager.EventTrigger(E_EventType.PickUpShortGunAmmo);
                     break;
             }
 
-            GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "pistol_ammo_collect");
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_ammo_collect");
             Destroy(this.gameObject);
         }
     }

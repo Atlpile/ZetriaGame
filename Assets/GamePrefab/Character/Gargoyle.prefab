@@ -33,7 +33,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4035477273214599555}
   - {fileID: 4035477273263840835}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -159,54 +158,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07565684d4f9fc4286e503342a451d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  check: {fileID: 4035477273214599555}
-  player: {fileID: 0}
+  gizmosType: 0
+  canDrawGizmos: 1
   monsterInfo:
     monsterType: 2
     maxHealth: 5
-    currentHealth: 0
     groundSpeed: 3
     airSpeed: 0
     attackDuration: 1
     attackDamage: 0
     attackDistance: 1
-    alertDistance: 0
-    patrolTime: 3
     checkSize: {x: 7, y: 2, z: 0}
     checkOffset: {x: 0, y: 0.27, z: 0}
     checkRadius: 5
+  hasAttackForce: 1
   bulletOffset: {x: 0, y: 0, z: 0}
---- !u!1 &4035477273214599554
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4035477273214599555}
-  m_Layer: 0
-  m_Name: CheckArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4035477273214599555
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4035477273214599554}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1578947596797826382}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4035477273263840834
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +203,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1578947596797826382}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &4035477273263840836
 BoxCollider2D:

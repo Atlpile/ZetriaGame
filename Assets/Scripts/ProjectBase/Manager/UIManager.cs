@@ -17,7 +17,7 @@ public class UIManager
         //创建Canvas
         if (!GameObject.FindGameObjectWithTag("Canvas"))
         {
-            canvas = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
+            canvas = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
             rectCanvas = canvas.transform as RectTransform;
             GameObject.DontDestroyOnLoad(canvas);
         }
@@ -25,7 +25,7 @@ public class UIManager
         //创建EventSystem
         if (!GameObject.FindGameObjectWithTag("EventSystem"))
         {
-            eventSystem = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
+            eventSystem = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
             GameObject.DontDestroyOnLoad(eventSystem);
         }
 
@@ -52,7 +52,7 @@ public class UIManager
         }
         else
         {
-            GameObject uiPrefab = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
+            GameObject uiPrefab = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
 
             uiPrefab.transform.SetParent(rectCanvas);
             uiPrefab.transform.localPosition = Vector3.zero;
@@ -124,14 +124,14 @@ public class UIManager
         //有面板
         if (PanelDic.ContainsKey(panelName))
         {
-            GameManager.Instance.m_ObjectPoolManager.GetObject(panelName, rectCanvas);
+            GameManager.Instance.ObjectPoolManager.GetObject(panelName, rectCanvas);
             Debug.LogWarning("UIManager:场景中存在该Panel");
             return PanelDic[panelName] as T;
         }
         //没有面板
         else
         {
-            GameObject poolPrefab = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject(panelName, E_ResourcesPath.UI, rectCanvas);
+            GameObject poolPrefab = GameManager.Instance.ObjectPoolManager.GetOrLoadObject(panelName, E_ResourcesPath.UI, rectCanvas);
 
             poolPrefab.transform.SetParent(rectCanvas);
             poolPrefab.transform.localPosition = Vector3.zero;
@@ -157,7 +157,7 @@ public class UIManager
         else
         {
             PanelDic[panelName].Hide();
-            GameManager.Instance.m_ObjectPoolManager.ReturnObject(PanelDic[panelName].gameObject);
+            GameManager.Instance.ObjectPoolManager.ReturnObject(PanelDic[panelName].gameObject);
             PanelDic.Remove(panelName);
         }
     }
@@ -181,7 +181,7 @@ public class UIManager
         }
         else
         {
-            GameManager.Instance.m_ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.UI, panelName, (uiPrefab) =>
+            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.UI, panelName, (uiPrefab) =>
             {
                 uiPrefab.transform.SetParent(rectCanvas);
                 uiPrefab.transform.localPosition = Vector3.zero;

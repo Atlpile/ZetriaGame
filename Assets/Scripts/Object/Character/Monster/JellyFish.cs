@@ -43,8 +43,8 @@ public class JellyFish : BaseMonster
 
     private void Fire()
     {
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "bullet_fire");
-        bullet = GameManager.Instance.m_ObjectPoolManager.GetOrLoadObject("EnemyBullet", E_ResourcesPath.Object);
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_fire");
+        bullet = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("EnemyBullet", E_ResourcesPath.Object);
         bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
         bullet.GetComponent<EnemyBullet>().type = E_EnemyBulletType.Horizontal;
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Wasp : BaseMonster
 {
     private Vector3 _chaseOffset = new Vector2(0, 0.5f);
+
     protected override void InitCharacter()
     {
         monsterInfo.monsterType = E_MonsterType.Fly;
@@ -58,7 +59,7 @@ public class Wasp : BaseMonster
         StopMove();
         rb2D.bodyType = RigidbodyType2D.Kinematic;
         col2D.enabled = false;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
 
         yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);

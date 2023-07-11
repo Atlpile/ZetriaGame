@@ -8,7 +8,7 @@ public class AmmoController
     public AmmoInfo AmmoInfo => ammoInfo;
 
 
-    private GamePanel _GamePanel => GameManager.Instance.m_UIManager.GetExistPanel<GamePanel>();
+    private GamePanel _GamePanel => GameManager.Instance.UIManager.GetExistPanel<GamePanel>();
 
 
     public AmmoController()

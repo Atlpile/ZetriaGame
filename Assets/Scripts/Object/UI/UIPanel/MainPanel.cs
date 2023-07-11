@@ -46,31 +46,31 @@ public class MainPanel : BasePanel
     {
         base.Show(ShowCallBack);
 
-        GameManager.Instance.m_AudioManager.LoadAudioData();
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
+        GameManager.Instance.AudioManager.LoadAudioData();
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
     }
 
     public override void Hide(TweenCallback HideCallback = null)
     {
         base.Hide(HideCallback);
 
-        GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Stop);
+        GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 
 
     private void NewGame()
     {
-        GameManager.Instance.m_UIManager.HidePanel<MainPanel>();
+        GameManager.Instance.UIManager.HidePanel<MainPanel>();
         GameManager.Instance.ClearSceneInfo();
 
-        LoadingPanel panel = GameManager.Instance.m_UIManager.ShowPanel<LoadingPanel>();
+        LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>();
         panel.LoadingToTarget(() =>
         {
-            GameManager.Instance.m_SceneLoader.LoadSceneAsync("Level0", () =>
+            GameManager.Instance.SceneLoader.LoadSceneAsync("Level0", () =>
             {
-                GameManager.Instance.m_AudioManager.LoadAudioData();
-                GameManager.Instance.m_UIManager.HidePanel<LoadingPanel>(true);
-                GameManager.Instance.m_UIManager.ShowPanel<GamePanel>(true);
+                GameManager.Instance.AudioManager.LoadAudioData();
+                GameManager.Instance.UIManager.HidePanel<LoadingPanel>(true);
+                GameManager.Instance.UIManager.ShowPanel<GamePanel>(true);
             });
         });
 
@@ -84,11 +84,11 @@ public class MainPanel : BasePanel
 
     private void OpenOptionsPanel()
     {
-        GameManager.Instance.m_UIManager.ShowPanel<SettingPanel>();
+        GameManager.Instance.UIManager.ShowPanel<SettingPanel>();
     }
 
     private void ExitGame()
     {
-        GameManager.Instance.m_UIManager.ShowPanel<WarnQuitPanel>();
+        GameManager.Instance.UIManager.ShowPanel<WarnQuitPanel>();
     }
 }

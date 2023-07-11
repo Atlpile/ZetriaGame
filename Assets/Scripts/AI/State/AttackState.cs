@@ -24,7 +24,7 @@ public class AttackState : BaseAIState
 
     public override void UpdateState()
     {
-        if (Monster is Tank)
+        if (Monster is Turret)
         {
             Monster.Attack();
         }

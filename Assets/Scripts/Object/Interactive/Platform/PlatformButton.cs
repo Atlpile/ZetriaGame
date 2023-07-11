@@ -41,7 +41,7 @@ public class PlatformButton : MonoBehaviour
     private void Update()
     {
         //更新按钮输入
-        _isInteractive = GameManager.Instance.m_InputController.GetKey(E_InputType.Interacitve) ? true : false;
+        _isInteractive = GameManager.Instance.InputController.GetKey(E_InputType.Interacitve) ? true : false;
     }
 
     private void FixedUpdate()

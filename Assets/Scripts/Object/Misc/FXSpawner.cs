@@ -41,6 +41,6 @@ public class FXSpawner : MonoBehaviour, IObject
     private IEnumerator IE_Hide()
     {
         yield return new WaitForSeconds(_destroyTime);
-        GameManager.Instance.m_ObjectPoolManager.ReturnObject(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 }

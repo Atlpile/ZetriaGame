@@ -28,13 +28,13 @@ public class AudioManager
     {
         if (AudioDict.ContainsKey(name))
         {
-            GameObject poolObj = GameManager.Instance.m_ObjectPoolManager.GetObject(name);
+            GameObject poolObj = GameManager.Instance.ObjectPoolManager.GetObject(name);
             PlayAudioClip(type, name, AudioDict[name], poolObj, isLoop);
         }
         else
         {
             //加载音频
-            AudioClip audioClip = GameManager.Instance.m_ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, name);
+            AudioClip audioClip = GameManager.Instance.ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, name);
             if (audioClip == null)
             {
                 Debug.LogError("AudioManager:未找到该名称的音频：" + name + ",请检查Resources文件夹中的音频是否存在");
@@ -48,8 +48,8 @@ public class AudioManager
 
             //记录音乐对象
             AudioDict.Add(name, audioClip);
-            GameManager.Instance.m_ObjectPoolManager.AddObject(soundObj, name);
-            GameObject poolObj = GameManager.Instance.m_ObjectPoolManager.GetObject(name);
+            GameManager.Instance.ObjectPoolManager.AddObject(soundObj, name);
+            GameObject poolObj = GameManager.Instance.ObjectPoolManager.GetObject(name);
 
             //播放音频及设置
             PlayAudioClip(type, name, audioClip, poolObj, isLoop);
@@ -63,7 +63,7 @@ public class AudioManager
             switch (type)
             {
                 case E_AudioSettingType.Stop:
-                    GameManager.Instance.m_ObjectPoolManager.ReturnObject(bgmChannel.gameObject);
+                    GameManager.Instance.ObjectPoolManager.ReturnObject(bgmChannel.gameObject);
                     bgmChannel = null;
                     break;
                 case E_AudioSettingType.Pause:
@@ -90,15 +90,15 @@ public class AudioManager
             case E_AudioType.Effect:
                 SetEffectVolume(volume);
 
-                if (GameManager.Instance.m_EventManager.GetEventExist(E_EventType.UpdateAudioSourceVolume))
-                    GameManager.Instance.m_EventManager.EventTrigger(E_EventType.UpdateAudioSourceVolume, volume);
+                if (GameManager.Instance.EventManager.GetEventExist(E_EventType.UpdateAudioSourceVolume))
+                    GameManager.Instance.EventManager.EventTrigger(E_EventType.UpdateAudioSourceVolume, volume);
                 break;
         }
     }
 
     public void LoadAudioData()
     {
-        SettingData settingData = GameManager.Instance.m_SaveLoadManager.LoadData<SettingData>("SettingData");
+        SettingData settingData = GameManager.Instance.SaveLoadManager.LoadData<SettingData>("SettingData");
 
         SetVolume(E_AudioType.BGM, settingData.volume_BGM);
         SetVolume(E_AudioType.Effect, settingData.volume_Effect);
@@ -140,7 +140,7 @@ public class AudioManager
     private IEnumerator IE_PlayOnceAudio(string name, AudioClip clip, GameObject audioObj)
     {
         yield return new WaitForSeconds(clip.length);
-        GameManager.Instance.m_ObjectPoolManager.ReturnObject(audioObj);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(audioObj);
     }
 
     private void SetBGMVolume(float volume)

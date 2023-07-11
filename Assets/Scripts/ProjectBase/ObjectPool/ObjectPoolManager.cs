@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//对象池优化：初始时AddObject，使用时LoadObject
 
 public class ObjectPoolManager
 {
@@ -41,7 +42,7 @@ public class ObjectPoolManager
 
         if (!ObjectPoolsDic.ContainsKey(name))
         {
-            GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
+            GameObject resObj = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name, canCreate);
             resObj.name = name;
             ObjectPoolsDic.Add(resObj.name, new PoolStack(resObj, poolRoot));
             return resObj;
@@ -103,7 +104,7 @@ public class ObjectPoolManager
             if (poolRoot == null)
                 poolRoot = new GameObject("PoolRoot");
 
-            GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
+            GameObject resObj = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name, canCreate);
             resObj.name = name;
             ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
             ObjectPoolsDic[name].ReturnToObjectPool(resObj);
@@ -115,7 +116,7 @@ public class ObjectPoolManager
         if (poolRoot == null)
             poolRoot = new GameObject("PoolRoot");
 
-        GameObject resObj = GameManager.Instance.m_ResourcesLoader.Load<GameObject>(path, name, canCreate);
+        GameObject resObj = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name, canCreate);
         resObj.name = name;
         ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
         ObjectPoolsDic[name].FillObjectPool(fillCount);

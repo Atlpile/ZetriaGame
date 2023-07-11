@@ -33,15 +33,15 @@ public class WarnRestartPanel : BasePanel
 
     private void RestartCurrentLevel()
     {
-        GameManager.Instance.m_UIManager.HidePanel<WarnRestartPanel>();
-        GameManager.Instance.m_GameController.UpdateGameStatus();
-        GameManager.Instance.m_InputController.SetInputStatus(true);
-        GameManager.Instance.m_EventManager.EventTrigger(E_EventType.PlayerDead);
+        GameManager.Instance.UIManager.HidePanel<WarnRestartPanel>();
+        GameManager.Instance.GameController.UpdateGameStatus();
+        GameManager.Instance.InputController.SetInputStatus(true);
+        GameManager.Instance.EventManager.EventTrigger(E_EventType.PlayerDead);
     }
 
     private void NotRestart()
     {
-        GameManager.Instance.m_UIManager.HidePanel<WarnRestartPanel>();
+        GameManager.Instance.UIManager.HidePanel<WarnRestartPanel>();
     }
 
 

@@ -19,6 +19,8 @@ public class WolfMan : BaseMonster
 
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
+        rb2D.drag = 3f;
+        rb2D.gravityScale = 3f;
         fsm.ChangeState(E_AIState.Idle);
     }
 
@@ -31,35 +33,11 @@ public class WolfMan : BaseMonster
     public override void Attack()
     {
         if (!isAttack)
-            StartCoroutine(IE_Attack());
+            StartCoroutine(IE_BaseAttack());
     }
 
     public override void Dead()
     {
-        StartCoroutine(IE_Dead());
-    }
-
-    private IEnumerator IE_Attack()
-    {
-        isAttack = true;
-
-        anim.SetTrigger("Attack");
-        StopMove();
-
-        yield return new WaitForSeconds(monsterInfo.attackDuration);
-        ResumeMove();
-        isAttack = false;
-    }
-
-    private IEnumerator IE_Dead()
-    {
-        anim.SetTrigger("Dead");
-        StopMove();
-        rb2D.bodyType = RigidbodyType2D.Kinematic;
-        col2D.enabled = false;
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "enemy_death_02");
-
-        yield return new WaitForSeconds(destroyTime);
-        Destroy(this.gameObject);
+        StartCoroutine(IE_BaseDead());
     }
 }

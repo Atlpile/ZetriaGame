@@ -51,7 +51,7 @@ public class InputPanel : BasePanel
     private void LoadInputKey()
     {
         //OPTIMIZE：使用循环来同步按键
-        var InputDic = GameManager.Instance.m_InputController.CustomInputDic;
+        var InputDic = GameManager.Instance.InputController.CustomInputDic;
         txtSwitchWeaponKey.text = InputDic[E_InputType.SwitchWeapon].ToString();
         txtCrouchKey.text = InputDic[E_InputType.Crouch].ToString();
         txtGunAttackKey.text = InputDic[E_InputType.GunAttack].ToString();
@@ -94,7 +94,7 @@ public class InputPanel : BasePanel
         {
             if (Input.anyKeyDown)
             {
-                GameManager.Instance.m_InputController.ChangeKey(inputType);
+                GameManager.Instance.InputController.ChangeKey(inputType);
                 //TODO:保存按键配置数据
                 changeKeyTip.SetActive(false);
                 LoadInputKey();

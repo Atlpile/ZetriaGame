@@ -22,7 +22,7 @@ public class DoorCardController : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.m_InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
+        if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
         {
             if (_hasDoorCard)
             {
@@ -31,12 +31,12 @@ public class DoorCardController : MonoBehaviour
                     _canUse = false;
                     door.UpdateDoor(true);
                     UpdateSignLights();
-                    GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
+                    GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_confirm");
                 }
             }
             else
             {
-                GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.Effect, "door_error");
+                GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_error");
                 ControllerError();
             }
         }

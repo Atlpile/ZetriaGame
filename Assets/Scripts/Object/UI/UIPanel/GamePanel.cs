@@ -31,24 +31,24 @@ public class GamePanel : BasePanel
         DoorCard = GetUIComponent<Image>("DoorCard");
         Token_Obtain = GetUIComponent<Image>("Token_Obtain");
 
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
-        GameManager.Instance.m_EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
-        GameManager.Instance.m_EventManager.AddEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
+        GameManager.Instance.EventManager.AddEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
 
     }
 
     private void OnDestroy()
     {
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
-        GameManager.Instance.m_EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
-        GameManager.Instance.m_EventManager.RemoveEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
+        GameManager.Instance.EventManager.RemoveEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
     }
 
     public override void Show(TweenCallback ShowCallBack = null)
     {
         base.Show(ShowCallBack);
 
-        GameManager.Instance.m_AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
         UpdatePistolAmmoText(0, 0);
         UpdateShortGunAmmoText(0, 0);
         UpdateAmmoPointer(true);
@@ -66,7 +66,7 @@ public class GamePanel : BasePanel
     {
         base.Hide(callback);
 
-        GameManager.Instance.m_AudioManager.BGMSetting(E_AudioSettingType.Stop);
+        GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 
     public void UpdateDoorCard()
