@@ -2,53 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PistolBullet : MonoBehaviour
+public class PistolBullet : BaseBullet
 {
-    private Rigidbody2D rb;
-    [SerializeField] private float _moveSpeed = 20f;
-    [SerializeField] private float _destroyTime = 1f;
 
-    private void Awake()
+    protected override void InitBullet()
     {
-        rb = this.GetComponent<Rigidbody2D>();
-    }
+        base.InitBullet();
 
-    private void OnEnable()
-    {
-        if (IsInvoking())
-            CancelInvoke();
-
-        Create();
-    }
-
-    private void Start()
-    {
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.freezeRotation = true;
     }
 
     private void Update()
     {
-        transform.Translate(Vector3.right * Time.deltaTime * _moveSpeed);
+        Move();
     }
 
-
-    public void Create()
+    private void Move()
     {
-        Invoke("Hide", _destroyTime);
+        transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
     }
 
-    public void Hide()
-    {
-        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
-    }
 
-    public void Release()
-    {
-        this.transform.position = new Vector2(0, 0);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
         IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();
         if (hurtTarget != null && other.gameObject.name != "Player")

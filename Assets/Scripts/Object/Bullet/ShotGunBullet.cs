@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotGunBullet : MonoBehaviour
+public class ShotGunBullet : BaseBullet
 {
     public E_BulletMoveType moveType;
     public float verticalSpeed;
-    [SerializeField] private float _moveSpeed = 20f;
-    [SerializeField] private float _destroyTime = 0.5f;
 
-    private void OnEnable()
+
+    protected override void InitBullet()
     {
-        Create();
+        base.InitBullet();
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.freezeRotation = true;
     }
+
 
     private void Update()
     {
@@ -24,35 +27,31 @@ public class ShotGunBullet : MonoBehaviour
         switch (moveType)
         {
             case E_BulletMoveType.Upward:
-                transform.Translate(new Vector2(1, 0 + verticalSpeed) * Time.deltaTime * _moveSpeed);
+                transform.Translate(new Vector2(1, 0 + verticalSpeed) * Time.deltaTime * currentMoveSpeed);
                 break;
             case E_BulletMoveType.Straight:
-                transform.Translate(Vector2.right * Time.deltaTime * _moveSpeed);
+                transform.Translate(Vector2.right * Time.deltaTime * currentMoveSpeed);
                 break;
             case E_BulletMoveType.Downward:
-                transform.Translate(new Vector2(1, 0 - verticalSpeed) * Time.deltaTime * _moveSpeed);
+                transform.Translate(new Vector2(1, 0 - verticalSpeed) * Time.deltaTime * currentMoveSpeed);
                 break;
         }
-
     }
 
-    private Vector2 SlowMove()
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
-        return Vector2.zero * Time.deltaTime;
-    }
+        IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();
+        if (hurtTarget != null && other.gameObject.name != "Player")
+        {
+            hurtTarget.Damage(this.transform.position);
+            Hide();
+        }
 
-    public void Create()
-    {
-        Invoke("Hide", _destroyTime);
-    }
-
-    public void Hide()
-    {
-        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
-    }
-
-    public void Release()
-    {
-        this.transform.position = new Vector2(0, 0);
+        if (other.gameObject.name == "Ground")
+        {
+            Debug.Log("子弹撞墙");
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
+            Hide();
+        }
     }
 }

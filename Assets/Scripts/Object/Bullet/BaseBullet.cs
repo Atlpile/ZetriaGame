@@ -59,7 +59,7 @@ public abstract class BaseBullet : MonoBehaviour
         StartCoroutine(IE_Disappear());
     }
 
-    protected virtual void Hide()
+    public virtual void Hide()
     {
         GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
@@ -91,8 +91,6 @@ public abstract class BaseBullet : MonoBehaviour
             anim.Play("Explosion");
             coll2d.enabled = false;
             SetMoveStatus(true);
-
-            // rb.velocity = Vector2.zero;
         }
 
     }

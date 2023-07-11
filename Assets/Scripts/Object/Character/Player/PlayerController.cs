@@ -105,7 +105,7 @@ public class PlayerController : BaseCharacter, IDamageable
         base.OnStart();
 
         _moveSource.clip = GameManager.Instance.ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
-        GameManager.Instance.ObjectPoolManager.AddObjectFromResources("ShotGunBullet", E_ResourcesPath.Object, 3);
+        GameManager.Instance.ObjectPoolManager.AddObjectFromResources("ShortGunBullet", E_ResourcesPath.Object, 3);
         InitPlayer();
 
     }
@@ -353,9 +353,9 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_fire");
         ammoController.UseShotGunAmmo();
 
-        GameObject shotGunBullet0 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Object);
-        GameObject shotGunBullet1 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Object);
-        GameObject shotGunBullet2 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShotGunBullet", E_ResourcesPath.Object);
+        GameObject shotGunBullet0 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
+        GameObject shotGunBullet1 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
+        GameObject shotGunBullet2 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
 
         shotGunBullet0.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
         shotGunBullet1.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
