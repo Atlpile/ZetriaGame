@@ -66,10 +66,11 @@ public class Turret : BaseMonster
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         //TODO:优化
-        PistolBullet pistolBullet = other.gameObject.GetComponent<PistolBullet>();
-        if (pistolBullet != null)
+        // PistolBullet pistolBullet = other.gameObject.GetComponent<PistolBullet>();
+        BaseBullet baseBullet = other.gameObject.GetComponent<BaseBullet>();
+        if (baseBullet is PistolBullet || baseBullet is ShotGunBullet)
         {
-            pistolBullet.Hide();
+            baseBullet.Hide();
         }
     }
 }

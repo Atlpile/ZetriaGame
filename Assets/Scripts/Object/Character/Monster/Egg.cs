@@ -6,6 +6,7 @@ public class Egg : BaseMonster
 {
     [SerializeField] private bool canCreateMonster;
     [SerializeField] private E_SpawnMonsterType spawnType;
+    private Vector3 _spawnOffset = new Vector2(0, 0.5f);
 
 
     protected override void InitCharacter()
@@ -38,15 +39,15 @@ public class Egg : BaseMonster
         switch (spawnType)
         {
             case E_SpawnMonsterType.Null:
-                Debug.Log("Egg不生成怪物");
+                // Debug.Log("Egg不生成怪物");
                 break;
             case E_SpawnMonsterType.Mon1:
-                Debug.Log("Egg生成Horizontal");
+                // Debug.Log("Egg生成Horizontal");
                 GameObject monster = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.Object, "Wolfman");
-                monster.transform.position = this.transform.position;
+                monster.transform.position = this.transform.position + _spawnOffset;
                 break;
             case E_SpawnMonsterType.Mon2:
-                Debug.Log("Egg生成Vertical");
+                // Debug.Log("Egg生成Vertical");
                 break;
         }
     }

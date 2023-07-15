@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PistolBullet : BaseBullet
 {
-
     protected override void InitBullet()
     {
         base.InitBullet();
@@ -26,16 +25,16 @@ public class PistolBullet : BaseBullet
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();
-        if (hurtTarget != null && other.gameObject.name != "Player")
+        damageable = other.gameObject.GetComponent<IDamageable>();
+        if (damageable != null && other.gameObject.name != "Player")
         {
-            hurtTarget.Damage(this.transform.position);
+            damageable.Damage(this.transform.position);
             Hide();
         }
 
         if (other.gameObject.name == "Ground")
         {
-            Debug.Log("子弹撞墙");
+            // Debug.Log("子弹撞墙");
             GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
             Hide();
         }

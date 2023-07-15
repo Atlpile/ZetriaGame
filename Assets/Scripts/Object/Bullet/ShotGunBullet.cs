@@ -38,6 +38,7 @@ public class ShotGunBullet : BaseBullet
         }
     }
 
+    //FIXME:ShortGunBullet子弹总是会穿墙
     protected override void OnTriggerEnter2D(Collider2D other)
     {
         IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();

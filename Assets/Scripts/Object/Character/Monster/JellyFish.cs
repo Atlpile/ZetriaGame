@@ -6,12 +6,14 @@ public class JellyFish : BaseMonster
 {
     [SerializeField] private Vector3 bulletOffset = new Vector2(0, 1);
     private GameObject bullet;
+    private float _distanceY;
 
     protected override void InitCharacter()
     {
         monsterInfo.monsterType = E_MonsterType.Fly;
         monsterInfo.groundSpeed = 0;
-        monsterInfo.airSpeed = 1f;
+        monsterInfo.airSpeed = 0.25f;
+        monsterInfo.attackDistance = 0.5f;
 
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
@@ -22,11 +24,13 @@ public class JellyFish : BaseMonster
 
     public override void UpdateAirMove()
     {
-        //获取Player距离
+        _distanceY = Mathf.Abs(this.transform.position.y - player.position.y);
 
-        //移动至Player同一水平位置
-
-        //到达一定距离时不移动 
+        if (_distanceY > monsterInfo.attackDistance)
+        {
+            //到达一定距离时不移动 
+            this.transform.position = Vector2.Lerp(this.transform.position, player.position, monsterInfo.airSpeed * Time.deltaTime);
+        }
     }
 
     public override void Attack()
@@ -50,6 +54,8 @@ public class JellyFish : BaseMonster
 
         if (isRight == false)
             bullet.transform.localRotation = Quaternion.Euler(0, 180, 0);
+        else
+            bullet.transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     private IEnumerator IE_Attack()

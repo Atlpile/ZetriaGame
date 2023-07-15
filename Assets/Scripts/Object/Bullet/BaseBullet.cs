@@ -11,6 +11,7 @@ public abstract class BaseBullet : MonoBehaviour
     protected Animator anim;
     protected Rigidbody2D rb;
     protected Collider2D coll2d;
+    protected IDamageable damageable;
     [SerializeField] protected float moveSpeed = 20f;
     protected float currentMoveSpeed;
     [SerializeField] protected float explosionTime = 1f;
@@ -72,22 +73,26 @@ public abstract class BaseBullet : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
-        if (damageable != null && (other.gameObject.name == "Player" || other.gameObject.name == "Ground"))
+        damageable = other.gameObject.GetComponent<IDamageable>();
+        if (damageable != null && other.gameObject.name == "Player")
         {
             damageable.Damage(this.transform.position);
+            StartCoroutine(IE_TriggerExplosion());
+        }
+
+        if (other.gameObject.name == "Ground")
+        {
             StartCoroutine(IE_TriggerExplosion());
         }
     }
 
     protected virtual void Explosion()
     {
-        if (_isExplosion == false)
+        if (!_isExplosion)
         {
             _isExplosion = true;
-            //播放爆炸动画，消除Bullet的交互效果
+
             GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_blast");
-            // Debug.Log("爆炸");
             anim.Play("Explosion");
             coll2d.enabled = false;
             SetMoveStatus(true);

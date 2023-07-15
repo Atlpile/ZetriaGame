@@ -15,8 +15,10 @@ public class WolfMan : BaseMonster
         monsterInfo.attackDuration = 1.5f;
         monsterInfo.attackDistance = 1f;
         monsterInfo.checkSize = new Vector2(7, 2);
+        monsterInfo.checkOffset = new Vector2(0, 1);
         monsterInfo.groundSpeed = 3f;
 
+        gizmosType = E_GizmosType.Rect;
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         rb2D.drag = 3f;
