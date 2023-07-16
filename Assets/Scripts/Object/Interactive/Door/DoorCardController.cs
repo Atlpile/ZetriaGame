@@ -6,24 +6,24 @@ public class DoorCardController : MonoBehaviour
 {
     private Door _door;
     private DoorCardMachine _doorCardMachine;
-    private List<GameObject> _SignLights;
-
-    private Transform signLight;
+    private List<GameObject> _SignLights = new List<GameObject>();
+    private Transform _signLight;
 
     private void Awake()
     {
         _door = this.GetComponentInChildren<Door>();
         _doorCardMachine = this.GetComponentInChildren<DoorCardMachine>();
-        signLight = this.transform.GetChild(0);
+        _signLight = this.transform.GetChild(0);
 
-        for (int i = 0; i < signLight.transform.childCount; i++)
-        {
-            _SignLights.Add(signLight.GetChild(i).gameObject);
-        }
     }
 
     private void Start()
     {
+        for (int i = 0; i < _signLight.transform.childCount; i++)
+        {
+            _SignLights.Add(_signLight.GetChild(i).gameObject);
+        }
+
         _doorCardMachine.GetDoor(_door);
         _doorCardMachine.GetSignLights(_SignLights);
     }

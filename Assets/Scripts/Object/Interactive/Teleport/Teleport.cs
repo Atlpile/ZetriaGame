@@ -5,6 +5,7 @@ using UnityEngine;
 public class Teleport : MonoBehaviour
 {
     public GameObject targetPoint;
+    public bool canUse;
 
     private GameObject _highLight;
     private bool _isPlayer;
