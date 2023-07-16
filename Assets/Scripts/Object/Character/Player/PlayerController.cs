@@ -314,22 +314,31 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void Crouch()
     {
-        _isCrouch = true;
-        currentMoveSpeed = zetriaInfo.crouchSpeed;
-        col2D.size = _crouchSize;
-        col2D.offset = _crouchOffset;
-        _status = E_PlayerStatus.Pistol;
-        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
+        if (_isCrouch == false)
+        {
+            _isCrouch = true;
+            currentMoveSpeed = zetriaInfo.crouchSpeed;
+            col2D.size = _crouchSize;
+            col2D.offset = _crouchOffset;
+            _status = E_PlayerStatus.Pistol;
+
+            GamePanel gamePanel = GameManager.Instance.UIManager.GetExistPanel<GamePanel>();
+            if (gamePanel != null)
+                gamePanel.UpdateAmmoPointer(_status == 0);
+        }
     }
 
     private void Stand()
     {
-        _isCrouch = false;
-        col2D.size = _standSize;
-        col2D.offset = _standOffset;
+        if (_isCrouch == true)
+        {
+            _isCrouch = false;
+            col2D.size = _standSize;
+            col2D.offset = _standOffset;
 
-        if (_status != E_PlayerStatus.NPC)
-            currentMoveSpeed = zetriaInfo.standSpeed;
+            if (_status != E_PlayerStatus.NPC)
+                currentMoveSpeed = zetriaInfo.standSpeed;
+        }
     }
 
     private void ChangeWeapon()

@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 7464134552120622106}
   - component: {fileID: 7464134552120622109}
   m_Layer: 0
-  m_Name: PlatformButton (2)
+  m_Name: PlatformButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

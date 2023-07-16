@@ -8,28 +8,27 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-
     public E_DoorType type;
-    private BoxCollider2D boxColl2D;
-    private Animator animator;
+    private BoxCollider2D _boxColl2D;
+    private Animator _animator;
 
     private void Awake()
     {
-        animator = this.GetComponentInChildren<Animator>();
-        boxColl2D = this.GetComponent<BoxCollider2D>();
+        _animator = this.GetComponentInChildren<Animator>();
+        _boxColl2D = this.GetComponent<BoxCollider2D>();
     }
 
     private void Start()
     {
         if (type == E_DoorType.Once)
         {
-            animator.SetBool("IsOpen", true);
-            boxColl2D.offset = new Vector2(-1, 0);
-            boxColl2D.size = new Vector2(1, 2);
+            _animator.SetBool("IsOpen", true);
+            _boxColl2D.offset = new Vector2(-1, 0);
+            _boxColl2D.size = new Vector2(1, 2);
         }
         else if (type == E_DoorType.Condition)
         {
-            boxColl2D.enabled = false;
+            _boxColl2D.enabled = false;
         }
     }
 
@@ -43,7 +42,7 @@ public class Door : MonoBehaviour
         else if (other.gameObject.name == "Player" && type == E_DoorType.Once)
         {
             UpdateDoor(false);
-            boxColl2D.enabled = false;
+            _boxColl2D.enabled = false;
         }
     }
 
@@ -57,7 +56,7 @@ public class Door : MonoBehaviour
 
     public void UpdateDoor(bool isOpen)
     {
-        animator.SetBool("IsOpen", isOpen);
+        _animator.SetBool("IsOpen", isOpen);
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "door_shut");
     }
 }

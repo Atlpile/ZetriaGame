@@ -76,9 +76,4 @@ public abstract class BaseCharacter : MonoBehaviour
 
         return Physics2D.OverlapCircle(groundCheckPos, checkRadius, 0);
     }
-
-    public void PlayAnim(string animName)
-    {
-        anim.Play(animName);
-    }
 }

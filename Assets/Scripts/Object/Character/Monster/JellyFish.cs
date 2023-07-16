@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class JellyFish : BaseMonster
 {
-    [SerializeField] private Vector3 bulletOffset = new Vector2(0, 1);
+    private Vector3 bulletOffset = new Vector2(0, 1);
     private GameObject bullet;
     private float _distanceY;
 

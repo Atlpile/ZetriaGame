@@ -22,6 +22,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     protected bool canAttack;
     [SerializeField] protected bool hasAttackForce = true;
 
+
     public MonsterInfo MonsterInfo => monsterInfo;
     public bool IsFindPlayer => isFindPlayer;
     public bool IsDead => isDead;
@@ -70,16 +71,15 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             fsm.UpdateFSM();
     }
 
-    public virtual void InitComponent()
+    protected virtual void InitComponent()
     {
 
     }
 
-    protected abstract void InitCharacter();
-
-    public abstract void Attack();
-
-    public abstract void Dead();
+    public virtual void UpdateAirMove()
+    {
+        //怪物空中移动由怪物自己决定
+    }
 
     public virtual void Damage(Vector2 attakerPos)
     {
@@ -94,6 +94,42 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             Dead();
         }
     }
+
+    protected virtual void OnDrawGizmos()
+    {
+        if (canDrawGizmos)
+        {
+            if (isFindPlayer)
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+
+            switch (gizmosType)
+            {
+                case E_GizmosType.Rect:
+                    Gizmos.DrawWireCube(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkSize);
+                    break;
+                case E_GizmosType.Circle:
+                    Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
+                    break;
+            }
+        }
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+        IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
+        if (damageable != null && other.gameObject.name == "Player")
+        {
+            damageable.Damage(this.transform.position);
+        }
+    }
+
+    protected abstract void InitCharacter();
+
+    public abstract void Attack();
+
+    public abstract void Dead();
 
 
     public void StopMove()
@@ -118,11 +154,6 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public void UpdateGroundMove()
     {
         this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
-    }
-
-    public virtual void UpdateAirMove()
-    {
-        //怪物空中移动由怪物自己决定
     }
 
     public void UpdateFlip()
@@ -174,6 +205,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             rb2D.velocity = Vector2.left * damageForce;
     }
 
+
     protected IEnumerator IE_BaseAttack()
     {
         isAttack = true;
@@ -198,33 +230,5 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     }
 
 
-    protected virtual void OnDrawGizmos()
-    {
-        if (canDrawGizmos)
-        {
-            if (isFindPlayer)
-                Gizmos.color = Color.red;
-            else
-                Gizmos.color = Color.green;
 
-            switch (gizmosType)
-            {
-                case E_GizmosType.Rect:
-                    Gizmos.DrawWireCube(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkSize);
-                    break;
-                case E_GizmosType.Circle:
-                    Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
-                    break;
-            }
-        }
-    }
-
-    protected virtual void OnTriggerEnter2D(Collider2D other)
-    {
-        IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
-        if (damageable != null && other.gameObject.name == "Player")
-        {
-            damageable.Damage(this.transform.position);
-        }
-    }
 }
