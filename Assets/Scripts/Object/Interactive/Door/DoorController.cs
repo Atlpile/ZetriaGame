@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
-    public Door door;
-    public DoorButton doorButton;
-    public List<GameObject> signLights;
+    private Door _door;
+    private DoorButton _doorButton;
+    private List<GameObject> _SignLights;
 
     private Transform signLight;
 
     private void Awake()
     {
-        door = this.GetComponentInChildren<Door>();
-        doorButton = this.GetComponentInChildren<DoorButton>();
+        _door = this.GetComponentInChildren<Door>();
+        _doorButton = this.GetComponentInChildren<DoorButton>();
         signLight = this.transform.GetChild(2);
 
         for (int i = 0; i < signLight.transform.childCount; i++)
         {
-            signLights.Add(signLight.GetChild(i).gameObject);
+            _SignLights.Add(signLight.GetChild(i).gameObject);
         }
     }
 
     private void Start()
     {
-        doorButton.GetDoor(door);
-        doorButton.GetSignLights(signLights);
+        _doorButton.GetDoor(_door);
+        _doorButton.GetSignLights(_SignLights);
     }
 
 }
