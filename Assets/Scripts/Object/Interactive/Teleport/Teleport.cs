@@ -28,7 +28,7 @@ public class Teleport : MonoBehaviour
     {
         if (targetPoint != null)
         {
-            if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer)
+            if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && canUse)
             {
                 TeleportToTarget();
             }
@@ -37,7 +37,7 @@ public class Teleport : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.name == "Player")
+        if (other.gameObject.name == "Player" && canUse)
         {
             _isPlayer = true;
             _highLight.gameObject.SetActive(true);
