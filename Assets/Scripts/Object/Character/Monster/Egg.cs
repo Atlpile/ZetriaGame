@@ -11,8 +11,8 @@ public class Egg : BaseMonster
 
     protected override void InitCharacter()
     {
-        currentHealth = monsterInfo.maxHealth;
-        currentMoveSpeed = monsterInfo.groundSpeed;
+        monsterInfo = GetInfo("SO_Egg");
+
         destroyTime = 0.3f;
         fsm.ChangeState(E_AIState.Idle);
     }
@@ -41,6 +41,7 @@ public class Egg : BaseMonster
                 // Debug.Log("Egg生成Horizontal");
                 GameObject monster = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.Object, "Wolfman");
                 monster.transform.position = this.transform.position + _spawnOffset;
+                //FIXME：注意生成的Monster初始GizmosType为空
                 break;
             case E_SpawnMonsterType.Mon2:
                 // Debug.Log("Egg生成Vertical");

@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1426262762751888659
 Transform:
   m_ObjectHideFlags: 0
@@ -160,17 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gizmosType: 1
   canDrawGizmos: 1
-  monsterInfo:
-    monsterType: 1
-    maxHealth: 5
-    groundSpeed: 3
-    airSpeed: 0
-    attackDuration: 2
-    attackDamage: 0
-    attackDistance: 1
-    checkSize: {x: 7, y: 2, z: 0}
-    checkOffset: {x: 0, y: 1, z: 0}
-    checkRadius: 1
+  monsterInfo: {fileID: 0}
   hasAttackForce: 1
 --- !u!1 &3612666047262636531
 GameObject:

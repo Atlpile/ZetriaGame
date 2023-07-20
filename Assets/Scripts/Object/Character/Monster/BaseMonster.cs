@@ -10,7 +10,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public bool canDrawGizmos = true;
 
     protected Transform player;
-    protected SO_MonsterInfo monsterInfo;
+    [SerializeField] protected SO_MonsterInfo monsterInfo;
     protected FSM fsm;
     protected float currentHealth;
     protected float destroyTime = 0.5f;
@@ -46,11 +46,12 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         if (GameObject.FindGameObjectWithTag("Player").transform != null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        monsterInfo = GameManager.Instance.ResourcesLoader.Load<SO_MonsterInfo>(E_ResourcesPath.DataSO, "SO_" + this.name);
-        if (monsterInfo == null)
-            monsterInfo = ScriptableObject.CreateInstance<SO_MonsterInfo>();
+        //FIXME：创建克隆预制体时名称会不对
+        // monsterInfo = GetInfo(this.name);
 
         InitCharacter();
+        InitMoveSpeed();
+        currentHealth = monsterInfo.maxHealth;
     }
 
     protected override void OnUpdate()
@@ -207,6 +208,23 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
             rb2D.velocity = Vector2.right * damageForce;
         else
             rb2D.velocity = Vector2.left * damageForce;
+    }
+
+    protected SO_MonsterInfo GetInfo(string name)
+    {
+        SO_MonsterInfo info = GameManager.Instance.ResourcesLoader.Load<SO_MonsterInfo>(E_ResourcesPath.DataSO, name);
+        if (info != null)
+            return info;
+        else
+            return ScriptableObject.CreateInstance<SO_MonsterInfo>();
+    }
+
+    private void InitMoveSpeed()
+    {
+        if (monsterInfo.monsterType == E_MonsterType.Ground)
+            currentMoveSpeed = monsterInfo.groundSpeed;
+        else if (monsterInfo.monsterType == E_MonsterType.Fly)
+            currentMoveSpeed = monsterInfo.airSpeed;
     }
 
 

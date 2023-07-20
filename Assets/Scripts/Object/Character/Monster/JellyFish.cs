@@ -10,8 +10,7 @@ public class JellyFish : BaseMonster
 
     protected override void InitCharacter()
     {
-        currentHealth = monsterInfo.maxHealth;
-        currentMoveSpeed = monsterInfo.airSpeed;
+        monsterInfo = GetInfo("SO_JellyFish");
         rb2D.gravityScale = 0;
 
         fsm.ChangeState(E_AIState.Idle);

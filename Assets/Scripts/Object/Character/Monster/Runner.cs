@@ -7,8 +7,7 @@ public class Runner : BaseMonster
 {
     protected override void InitCharacter()
     {
-        currentHealth = monsterInfo.maxHealth;
-        currentMoveSpeed = monsterInfo.groundSpeed;
+        monsterInfo = GetInfo("SO_Runner");
         rb2D.drag = 3f;
         rb2D.gravityScale = 3f;
         fsm.ChangeState(E_AIState.Idle);

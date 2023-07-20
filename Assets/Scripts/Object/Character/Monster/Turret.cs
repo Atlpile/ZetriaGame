@@ -9,8 +9,7 @@ public class Turret : BaseMonster
 
     protected override void InitCharacter()
     {
-        currentHealth = monsterInfo.maxHealth;
-        currentMoveSpeed = monsterInfo.groundSpeed;
+        monsterInfo = GetInfo("SO_Turret");
         hasAttackForce = false;
         destroyTime = 0.5f;
 

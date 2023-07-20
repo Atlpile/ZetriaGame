@@ -11,9 +11,9 @@ public class WolfMan : BaseMonster
 {
     protected override void InitCharacter()
     {
+        monsterInfo = GetInfo("SO_WolfMan");
+        //TODO:Monster类型决定Gizmos的Type
         gizmosType = E_GizmosType.Rect;
-        currentHealth = monsterInfo.maxHealth;
-        currentMoveSpeed = monsterInfo.groundSpeed;
         rb2D.drag = 3f;
         rb2D.gravityScale = 3f;
         fsm.ChangeState(E_AIState.Idle);

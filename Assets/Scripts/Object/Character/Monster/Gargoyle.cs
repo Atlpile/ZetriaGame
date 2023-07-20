@@ -8,8 +8,7 @@ public class Gargoyle : BaseMonster
 
     protected override void InitCharacter()
     {
-        currentHealth = monsterInfo.maxHealth;
-        currentMoveSpeed = monsterInfo.airSpeed;
+        monsterInfo = GetInfo("SO_Gargoyle");
         rb2D.gravityScale = 0;
 
         fsm.ChangeState(E_AIState.Idle);
