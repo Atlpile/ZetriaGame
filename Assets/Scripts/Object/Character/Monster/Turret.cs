@@ -9,12 +9,6 @@ public class Turret : BaseMonster
 
     protected override void InitCharacter()
     {
-        monsterInfo.monsterType = E_MonsterType.Static;
-        monsterInfo.checkSize = new Vector2(7, 2);
-        monsterInfo.checkOffset = new Vector2(3.5f, 1);
-        monsterInfo.groundSpeed = 0;
-        monsterInfo.maxHealth = 1;
-
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         hasAttackForce = false;

@@ -8,10 +8,6 @@ public class Gargoyle : BaseMonster
 
     protected override void InitCharacter()
     {
-        monsterInfo.monsterType = E_MonsterType.Fly;
-        monsterInfo.groundSpeed = 0;
-        monsterInfo.airSpeed = 2f;
-
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;

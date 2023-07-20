@@ -11,10 +11,6 @@ public class Egg : BaseMonster
 
     protected override void InitCharacter()
     {
-        monsterInfo.monsterType = E_MonsterType.Static;
-        monsterInfo.groundSpeed = 0;
-        monsterInfo.checkRadius = 3;
-
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         destroyTime = 0.3f;

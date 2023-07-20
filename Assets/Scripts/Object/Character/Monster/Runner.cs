@@ -7,13 +7,6 @@ public class Runner : BaseMonster
 {
     protected override void InitCharacter()
     {
-        monsterInfo.monsterType = E_MonsterType.Ground;
-        monsterInfo.attackDuration = 1.5f;
-        monsterInfo.attackDistance = 1f;
-        monsterInfo.checkSize = new Vector2(7, 2);
-        monsterInfo.checkOffset = new Vector2(0, 0.75f);
-        monsterInfo.groundSpeed = 4f;
-
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.groundSpeed;
         rb2D.drag = 3f;

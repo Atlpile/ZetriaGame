@@ -10,11 +10,6 @@ public class JellyFish : BaseMonster
 
     protected override void InitCharacter()
     {
-        monsterInfo.monsterType = E_MonsterType.Fly;
-        monsterInfo.groundSpeed = 0;
-        monsterInfo.airSpeed = 0.25f;
-        monsterInfo.attackDistance = 0.5f;
-
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;

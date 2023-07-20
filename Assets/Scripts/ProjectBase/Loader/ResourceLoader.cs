@@ -11,10 +11,11 @@ public class ResourceLoader
     {
         ResourcePath = new Dictionary<E_ResourcesPath, string>
         {
-            {E_ResourcesPath.Audio,"Audio/"},
-            {E_ResourcesPath.Object,"Object/"},
-            {E_ResourcesPath.UI,"UI/"},
-            {E_ResourcesPath.FX,"FX/"}
+            {E_ResourcesPath.Audio,     "Audio/"},
+            {E_ResourcesPath.Object,    "Object/"},
+            {E_ResourcesPath.UI,        "UI/"},
+            {E_ResourcesPath.FX,        "FX/"},
+            {E_ResourcesPath.DataSO,    "DataSO/"}
         };
     }
 

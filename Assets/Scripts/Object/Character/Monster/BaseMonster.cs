@@ -10,7 +10,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     public bool canDrawGizmos = true;
 
     protected Transform player;
-    [SerializeField] protected MonsterInfo monsterInfo;
+    protected SO_MonsterInfo monsterInfo;
     protected FSM fsm;
     protected float currentHealth;
     protected float destroyTime = 0.5f;
@@ -22,8 +22,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     protected bool canAttack;
     [SerializeField] protected bool hasAttackForce = true;
 
-
-    public MonsterInfo MonsterInfo => monsterInfo;
+    public SO_MonsterInfo MonsterInfo => monsterInfo;
     public bool IsFindPlayer => isFindPlayer;
     public bool IsDead => isDead;
     public bool IsAttack => isAttack;
@@ -46,6 +45,10 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
         if (GameObject.FindGameObjectWithTag("Player").transform != null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        monsterInfo = GameManager.Instance.ResourcesLoader.Load<SO_MonsterInfo>(E_ResourcesPath.DataSO, "SO_" + this.name);
+        if (monsterInfo == null)
+            monsterInfo = ScriptableObject.CreateInstance<SO_MonsterInfo>();
 
         InitCharacter();
     }
@@ -95,9 +98,10 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         }
     }
 
+    //OPTIMIZE:绘制检测功能可分离出来成一个脚本
     protected virtual void OnDrawGizmos()
     {
-        if (canDrawGizmos)
+        if (canDrawGizmos && monsterInfo != null)
         {
             if (isFindPlayer)
                 Gizmos.color = Color.red;

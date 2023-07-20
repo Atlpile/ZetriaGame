@@ -8,11 +8,6 @@ public class Wasp : BaseMonster
 
     protected override void InitCharacter()
     {
-        monsterInfo.monsterType = E_MonsterType.Fly;
-        monsterInfo.groundSpeed = 0;
-        monsterInfo.airSpeed = 3f;
-        monsterInfo.attackDuration = 1;
-
         currentHealth = monsterInfo.maxHealth;
         currentMoveSpeed = monsterInfo.airSpeed;
         rb2D.gravityScale = 0;
