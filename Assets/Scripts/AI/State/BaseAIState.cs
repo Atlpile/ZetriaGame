@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /*
-    TODO:写AI逻辑
-    TODO:使用里氏替换原则为不同的Monster写逻辑
+    写AI逻辑
+    使用里氏替换原则为不同的Monster写逻辑
 */
 
 

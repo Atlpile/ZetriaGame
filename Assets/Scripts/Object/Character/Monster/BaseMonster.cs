@@ -6,11 +6,11 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class BaseMonster : BaseCharacter, IDamageable
 {
-    public E_GizmosType gizmosType = E_GizmosType.Null;
-    public bool canDrawGizmos = true;
+    [SerializeField] protected E_GizmosType gizmosType = E_GizmosType.Null;
+    [SerializeField] protected bool canDrawGizmos = true;
 
     protected Transform player;
-    [SerializeField] protected SO_MonsterInfo monsterInfo;
+    protected SO_MonsterInfo monsterInfo;
     protected FSM fsm;
     protected float currentHealth;
     protected float destroyTime = 0.5f;
@@ -45,6 +45,8 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
         if (GameObject.FindGameObjectWithTag("Player").transform != null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
+        else
+            Debug.LogWarning("Player为空,请检查场景中是否存在Player");
 
         //FIXME：创建克隆预制体时名称会不对
         // monsterInfo = GetInfo(this.name);
