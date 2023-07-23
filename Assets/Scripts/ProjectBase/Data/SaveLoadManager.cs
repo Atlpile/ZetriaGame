@@ -62,4 +62,11 @@ public class SaveLoadManager
         //返回数据对象
         return data;
     }
+
+    public void ClearData<T>(string fileName, JsonType type = JsonType.LitJson) where T : new()
+    {
+        T data = new T();
+        SaveData(data, fileName, type);
+        Debug.Log("清空" + data.ToString() + "数据");
+    }
 }

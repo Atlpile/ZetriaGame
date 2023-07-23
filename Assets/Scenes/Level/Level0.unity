@@ -475,6 +475,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
+      propertyPath: _bounds.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
+      propertyPath: _bounds.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
+      propertyPath: _mouseMoveSpeed
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
 --- !u!4 &839173355 stripped
@@ -38486,6 +38498,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8269594407595764194, guid: 685f9b73088892a488d45c05a4d3fa04, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f7d5975d57525f347bd890ad1f28b53e, type: 2}
     - target: {fileID: 8269594407595764195, guid: 685f9b73088892a488d45c05a4d3fa04, type: 3}
       propertyPath: m_RootOrder
       value: 0

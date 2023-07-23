@@ -16,7 +16,6 @@ public class FSM
     {
         this.monster = monster;
 
-        //OPTIMIZE：自动添加状态
         StateDic.Add(E_AIState.Null, new NullState(this));
         StateDic.Add(E_AIState.Idle, new IdleState(this));
         StateDic.Add(E_AIState.Chase, new ChaseState(this));
@@ -31,11 +30,11 @@ public class FSM
         if (currentState != E_AIState.Null)
             StateDic[currentState].ExitState();
 
+        //切换状态
         if (StateDic.ContainsKey(state))
-        {
             currentState = state;
-        }
-
+        else
+            Debug.LogWarning("未添加该状态,请检查是否添加状态");
 
         //新状态进入
         StateDic[currentState].EnterState();

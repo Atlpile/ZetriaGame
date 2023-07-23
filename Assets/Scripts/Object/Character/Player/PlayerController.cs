@@ -76,7 +76,6 @@ public class PlayerController : BaseCharacter, IDamageable
     }
     public ZetriaInfo ZetriaInfo => zetriaInfo;
     private InputController InputController => GameManager.Instance.InputController;
-
     #endregion
 
 
@@ -95,7 +94,7 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
-        GameManager.Instance.EventManager.AddEventListener(E_EventType.PlayerDead, OnDead);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PlayerDead, OnPlayerDead);
         GameManager.Instance.EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
@@ -106,6 +105,8 @@ public class PlayerController : BaseCharacter, IDamageable
 
         _moveSource.clip = GameManager.Instance.ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.ObjectPoolManager.AddObjectFromResources("ShortGunBullet", E_ResourcesPath.Object, 3);
+        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
+
         InitPlayer();
 
     }
@@ -140,7 +141,7 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
-        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PlayerDead, OnDead);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PlayerDead, OnPlayerDead);
         GameManager.Instance.EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
 
@@ -159,9 +160,10 @@ public class PlayerController : BaseCharacter, IDamageable
         anim.SetBool("IsCrouch", _isCrouch);
         anim.SetInteger("PlayerStatus", (int)_status);
         anim.SetBool("IsDead", _isDead);
+
+        // anim.SetBool("IsMeleeAttack", _isMeleeAttack);
     }
 
-    //FIXME：修复开枪时按下蹲键，动画没有切换下蹲动画
     private void UpdatePlayerState()
     {
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
@@ -225,7 +227,7 @@ public class PlayerController : BaseCharacter, IDamageable
                 Jump();
                 _currentJumpCount--;
             }
-            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC && zetriaInfo.hasShortGun)
             {
                 ChangeWeapon();
                 //OPTIMIZE:在空中时改变切枪动画状态
@@ -298,6 +300,9 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void InitPlayer()
     {
+        zetriaInfo.hasShortGun = GameManager.Instance.SaveLoadManager.LoadData<GameData>(Consts.GameData).hasShotGun;
+
+
         isRight = true;
         currentMoveSpeed = zetriaInfo.standSpeed;
         rb2D.gravityScale = zetriaInfo.jumpGravity;
@@ -343,9 +348,12 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void ChangeWeapon()
     {
-        _status = (int)_status >= 1 ? _status = 0 : ++_status;
-        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
-        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
+        if (zetriaInfo.hasShortGun == true)
+        {
+            _status = (int)_status >= 1 ? _status = 0 : ++_status;
+            GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
+        }
     }
 
     private void PistolFire()
@@ -667,7 +675,11 @@ public class PlayerController : BaseCharacter, IDamageable
 
     public void OnPickUpShortGun()
     {
-        //TODO：拾取到霰弹枪时，才可以使用霰弹枪
+        GameData gameData = new GameData();
+        gameData.hasShotGun = true;
+        zetriaInfo.hasShortGun = true;
+
+        GameManager.Instance.SaveLoadManager.SaveData(gameData, Consts.GameData);
     }
 
     public void OnAddHP()
@@ -685,7 +697,7 @@ public class PlayerController : BaseCharacter, IDamageable
         _moveSource.volume = volume;
     }
 
-    public void OnDead()
+    public void OnPlayerDead()
     {
         _isDead = true;
         Dead();

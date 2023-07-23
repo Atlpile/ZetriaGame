@@ -19,11 +19,13 @@ public class ZetriaInfo
     public float hurtCD;
     public bool hasToken;
     public bool hasDoorCard;
+    public bool hasShortGun;
 
 
     public ZetriaInfo()
     {
-        maxHealth = 10;
+        // maxHealth = 10;
+        maxHealth = 2;
         currentHealth = maxHealth;
         maxJumpCount = 1;
 
@@ -42,6 +44,7 @@ public class ZetriaInfo
 
         hasToken = false;
         hasDoorCard = false;
+        hasShortGun = false;
 
     }
 }

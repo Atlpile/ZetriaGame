@@ -17,9 +17,16 @@ public class PlayerCamera : MonoBehaviour
     private Vector3 _maxSpeed = Vector3.zero;
 
     [Header("鼠标控制设置")]
-    private Vector3 _screenMousePos;
     [SerializeField] private Vector3 _bounds = new Vector2(10, 5);
     [SerializeField] private float _mouseMoveSpeed = 25f;
+
+    private Vector3 _screenMousePos;
+    private Vector3 _limitPos;
+    private float _limitX;
+    private float _limitY;
+
+
+
 
     private void Awake()
     {
@@ -41,7 +48,6 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
-
     private void SmoothFollowPlayer()
     {
         this.transform.position = Vector3.SmoothDamp(this.transform.position, _targetPos, ref _maxSpeed, _smoothTime);
@@ -53,17 +59,18 @@ public class PlayerCamera : MonoBehaviour
         _screenMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         //设置摄像机范围
-        _screenMousePos.x = Mathf.Clamp(_screenMousePos.x, _targetPos.x - _bounds.x, _targetPos.x + _bounds.x);
-        _screenMousePos.y = Mathf.Clamp(_screenMousePos.y, _targetPos.y - _bounds.y, _targetPos.y + _bounds.y);
+        _limitX = Mathf.Clamp(_screenMousePos.x, _targetPos.x - _bounds.x / 2, _targetPos.x + _bounds.x / 2);
+        _limitY = Mathf.Clamp(_screenMousePos.y, _targetPos.y - _bounds.y / 2, _targetPos.y + _bounds.y / 2);
+        _limitPos = new Vector3(_limitX, _limitY, -10);
 
-        //OPTIMIZE：效果不变，移动到鼠标位置时速度降低
-        this.transform.position = Vector3.Lerp(_targetPos, _screenMousePos, _mouseMoveSpeed * Time.deltaTime);
+        this.transform.position = Vector3.MoveTowards(this.transform.position, _limitPos, _mouseMoveSpeed * Time.deltaTime);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(_targetPos, _bounds);
+        Gizmos.DrawWireSphere(_screenMousePos, 0.5f);
     }
 }
 

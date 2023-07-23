@@ -119,6 +119,11 @@ public class GameManager : MonoBehaviour
         // {
         //     m_UIManager.HidePanel<LoadingPanel>();
         // }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            SaveLoadManager.ClearData<GameData>(Consts.GameData);
+        }
     }
 
     private void LoadMainScene()
