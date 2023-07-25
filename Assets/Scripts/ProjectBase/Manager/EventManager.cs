@@ -8,7 +8,6 @@ public interface IEventInfo
 
 }
 
-
 public class EventInfo : IEventInfo
 {
     public UnityAction actions;

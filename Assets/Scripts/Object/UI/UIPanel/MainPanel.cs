@@ -42,7 +42,7 @@ public class MainPanel : BasePanel
         }
     }
 
-    public override void Show(TweenCallback ShowCallBack = null)
+    public override void Show(TweenCallback ShowCallBack)
     {
         base.Show(ShowCallBack);
 
@@ -50,10 +50,8 @@ public class MainPanel : BasePanel
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
     }
 
-    public override void Hide(TweenCallback HideCallback = null)
+    public override void Hide()
     {
-        base.Hide(HideCallback);
-
         GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 
@@ -64,13 +62,14 @@ public class MainPanel : BasePanel
         GameManager.Instance.ClearSceneInfo();
 
         LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>();
-        panel.LoadingToTarget(() =>
+        panel.WaitComplete(() =>
         {
             GameManager.Instance.SceneLoader.LoadSceneAsync("Level0", () =>
             {
                 GameManager.Instance.AudioManager.LoadAudioData();
                 GameManager.Instance.UIManager.HidePanel<LoadingPanel>(true);
                 GameManager.Instance.UIManager.ShowPanel<GamePanel>(true);
+
             });
         });
 

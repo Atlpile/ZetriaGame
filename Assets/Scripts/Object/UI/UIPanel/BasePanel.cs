@@ -27,17 +27,32 @@ public abstract class BasePanel : MonoBehaviour
             canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
     }
 
-    public virtual void Hide(TweenCallback HideCallBack = null)
+    public virtual void Hide()
     {
-        if (HideCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, true, HideCallBack);
+
     }
 
-    public virtual void Show(TweenCallback ShowCallBack = null)
+    public virtual void Hide(TweenCallback HideCallBack)
+    {
+        if (HideCallBack != null)
+            SetTransitionEffect(true, HideCallBack);
+        else
+            Debug.LogWarning("UIManager:未使用过渡效果，请检查过渡效果是否添加动画过渡效果");
+    }
+
+    public virtual void Show()
+    {
+
+    }
+
+    public virtual void Show(TweenCallback ShowCallBack)
     {
         if (ShowCallBack != null)
-            SetTransitionEffect(E_UITransitionType.Fade, false, ShowCallBack);
+            SetTransitionEffect(false, ShowCallBack);
+        else
+            Debug.LogWarning("UIManager:未使用过渡效果，请检查过渡效果是否添加动画过渡效果");
     }
+
 
     protected virtual void OnClick(string buttonName)
     {
@@ -88,56 +103,33 @@ public abstract class BasePanel : MonoBehaviour
         {
             string objName = components[i].gameObject.name;
             if (UIComponentDic.ContainsKey(objName))
-            {
                 UIComponentDic[objName].Add(components[i]);
-            }
             else
-            {
                 UIComponentDic.Add(objName, new List<UIBehaviour>() { components[i] });
-            }
+
 
             if (components[i] is Button)
-            {
-                (components[i] as Button).onClick.AddListener(() =>
-                {
-                    OnClick(objName);
-                });
-            }
+                (components[i] as Button).onClick.AddListener(() => { OnClick(objName); });
             else if (components[i] is Toggle)
-            {
-                (components[i] as Toggle).onValueChanged.AddListener((value) =>
-                {
-                    OnValueChanged(objName, value);
-                });
-            }
+                (components[i] as Toggle).onValueChanged.AddListener((value) => { OnValueChanged(objName, value); });
             else if (components[i] is Slider)
-            {
-                (components[i] as Slider).onValueChanged.AddListener((value) =>
-                {
-                    OnValueChanged(objName, value);
-                });
-            }
+                (components[i] as Slider).onValueChanged.AddListener((value) => { OnValueChanged(objName, value); });
         }
     }
 
-    protected void SetTransitionEffect(E_UITransitionType type, bool isIn, TweenCallback CompleteCallBack = null)
+    protected void SetTransitionEffect(bool isIn, TweenCallback CompleteCallBack)
     {
-        switch (type)
+        if (isIn)
         {
-            case E_UITransitionType.Fade:
-                if (isIn)
-                {
-                    canvasGroup.alpha = 1;
-                    canvasGroup.DOFade(0, fadeDuration).OnComplete(CompleteCallBack);
-                    // Debug.Log("淡入");
-                }
-                else
-                {
-                    // Debug.Log("淡出");
-                    canvasGroup.alpha = 0;
-                    canvasGroup.DOFade(1, fadeDuration).OnComplete(CompleteCallBack);
-                }
-                break;
+            // Debug.Log("淡入");
+            canvasGroup.alpha = 1;
+            canvasGroup.DOFade(0, fadeDuration).OnComplete(CompleteCallBack);
+        }
+        else
+        {
+            // Debug.Log("淡出");
+            canvasGroup.alpha = 0;
+            canvasGroup.DOFade(1, fadeDuration).OnComplete(CompleteCallBack);
         }
     }
 

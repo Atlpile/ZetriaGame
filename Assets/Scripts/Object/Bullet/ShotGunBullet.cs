@@ -16,8 +16,7 @@ public class ShotGunBullet : BaseBullet
         rb.freezeRotation = true;
     }
 
-
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
     }
@@ -27,32 +26,32 @@ public class ShotGunBullet : BaseBullet
         switch (moveType)
         {
             case E_BulletMoveType.Upward:
-                transform.Translate(new Vector2(1, 0 + verticalSpeed) * Time.deltaTime * currentMoveSpeed);
+                transform.Translate(new Vector2(1, 0 + verticalSpeed) * Time.fixedDeltaTime * currentMoveSpeed);
                 break;
             case E_BulletMoveType.Straight:
-                transform.Translate(Vector2.right * Time.deltaTime * currentMoveSpeed);
+                transform.Translate(Vector2.right * Time.fixedDeltaTime * currentMoveSpeed);
                 break;
             case E_BulletMoveType.Downward:
-                transform.Translate(new Vector2(1, 0 - verticalSpeed) * Time.deltaTime * currentMoveSpeed);
+                transform.Translate(new Vector2(1, 0 - verticalSpeed) * Time.fixedDeltaTime * currentMoveSpeed);
                 break;
         }
     }
 
-    //FIXME:ShortGunBullet子弹总是会穿墙
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        IDamageable hurtTarget = other.gameObject.GetComponent<IDamageable>();
-        if (hurtTarget != null && other.gameObject.name != "Player")
+        if (other.CompareTag("Ground"))
         {
-            hurtTarget.Damage(this.transform.position);
-            Hide();
+            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
+            StartCoroutine(IE_TriggerExplosion());
         }
 
-        if (other.gameObject.name == "Ground")
+        damageable = other.gameObject.GetComponent<IDamageable>();
+        if (damageable != null && other.gameObject.name != "Player")
         {
-            Debug.Log("子弹撞墙");
-            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
-            Hide();
+            damageable.Damage(this.transform.position);
+            StartCoroutine(IE_TriggerExplosion());
         }
+
+
     }
 }

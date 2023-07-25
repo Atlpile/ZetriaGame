@@ -22,10 +22,8 @@ public class PlayerController : BaseCharacter, IDamageable
 
 
     [Header("Player Size & Offset")]
-    private Vector2 _crouchSize;
-    private Vector2 _crouchOffset;
-    private Vector2 _standSize;
-    private Vector2 _standOffset;
+    private Vector2 _crouchSize, _crouchOffset;
+    private Vector2 _standSize, _standOffset;
 
     [Header("Ground Check")]
     private Vector2 _groundCheckOffset;
@@ -105,7 +103,6 @@ public class PlayerController : BaseCharacter, IDamageable
 
         _moveSource.clip = GameManager.Instance.ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
         GameManager.Instance.ObjectPoolManager.AddObjectFromResources("ShortGunBullet", E_ResourcesPath.Object, 3);
-        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
 
         InitPlayer();
 
@@ -173,13 +170,10 @@ public class PlayerController : BaseCharacter, IDamageable
             _canStand = CanStand();
 
             if (InputController.GetKey(E_InputType.Crouch) && !_isReload && _status != E_PlayerStatus.NPC)
-            {
                 Crouch();
-            }
             else if (_canStand)
-            {
                 Stand();
-            }
+
 
             if (InputController.GetKeyDown(E_InputType.Jump) && _canStand && !_isReload && !_isMeleeAttack && _status != E_PlayerStatus.NPC)
             {
@@ -252,30 +246,6 @@ public class PlayerController : BaseCharacter, IDamageable
         }
     }
 
-    private void Move()
-    {
-        _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
-        // rb2D.velocity = new Vector2(currentMoveSpeed * _horizontalMove, rb2D.velocity.y);
-        if (_horizontalMove > 0)
-            this.transform.Translate(Vector2.right * _horizontalMove * currentMoveSpeed * Time.deltaTime);
-        else
-            this.transform.Translate(Vector2.left * _horizontalMove * currentMoveSpeed * Time.deltaTime);
-    }
-
-    private void Flip()
-    {
-        if (_horizontalMove > 0)
-        {
-            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-            isRight = true;
-        }
-        else if (_horizontalMove < 0)
-        {
-            transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            isRight = false;
-        }
-    }
-
     private void MoveAndFlip()
     {
         _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
@@ -301,7 +271,6 @@ public class PlayerController : BaseCharacter, IDamageable
     private void InitPlayer()
     {
         zetriaInfo.hasShortGun = GameManager.Instance.SaveLoadManager.LoadData<GameData>(Consts.GameData).hasShotGun;
-
 
         isRight = true;
         currentMoveSpeed = zetriaInfo.standSpeed;
@@ -415,7 +384,7 @@ public class PlayerController : BaseCharacter, IDamageable
     private void StopMove()
     {
         _horizontalMove = 0;
-        rb2D.velocity = new Vector2(0, 0);
+        rb2D.velocity = Vector2.zero;
     }
 
     private void PutDownNPC()
@@ -584,7 +553,6 @@ public class PlayerController : BaseCharacter, IDamageable
         if (_isDead) Dead();
 
         yield return new WaitForSeconds(zetriaInfo.hurtCD);
-        // rb2D.velocity = Vector2.zero;
         GameManager.Instance.InputController.SetInputStatus(true);
 
         _isHurt = false;
@@ -593,12 +561,12 @@ public class PlayerController : BaseCharacter, IDamageable
     private void Dead()
     {
         //TODO:死亡后，重新加载当前场景，初始化人物变量，更新UI
-        // print("死亡时做的事情");
         _moveSource.enabled = false;
         zetriaInfo.currentHealth = 0;
-
         GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
+        // GameManager.Instance.EventManager.EventTrigger(E_EventType.PlayerDead);
         StopMove();
+
 
         StartCoroutine(IE_Dead());
     }
@@ -606,10 +574,24 @@ public class PlayerController : BaseCharacter, IDamageable
     private IEnumerator IE_Dead()
     {
         yield return new WaitForSeconds(1f);
-        GameManager.Instance.UIManager.HidePanel<GamePanel>();
-        GameManager.Instance.ClearSceneInfo();
-        GameManager.Instance.SceneLoader.LoadCurrentScene();
-        GameManager.Instance.UIManager.ShowPanel<GamePanel>();
+        //TODO:UI淡入后执行以下内容
+
+        //显示FadePanel
+        GameManager.Instance.UIManager.ShowPanel<FadePanel>(true, () =>
+        {
+            //过渡完成后执行以下内容
+            GameManager.Instance.UIManager.HidePanel<GamePanel>();
+            GameManager.Instance.ClearSceneInfo();
+            GameManager.Instance.SceneLoader.LoadCurrentScene();
+
+            GameManager.Instance.UIManager.ShowPanel<GamePanel>();
+            GameManager.Instance.UIManager.HidePanel<FadePanel>(true);
+        });
+
+
+
+
+        //TODO:UI淡出
     }
 
     #endregion

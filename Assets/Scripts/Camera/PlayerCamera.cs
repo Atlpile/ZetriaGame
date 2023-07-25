@@ -55,6 +55,8 @@ public class PlayerCamera : MonoBehaviour
 
     private void MoveToMousePosition()
     {
+        //FIXME:移动到鼠标位置时停止移动，而不是继续移动
+
         //获取鼠标在世界位置
         _screenMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 

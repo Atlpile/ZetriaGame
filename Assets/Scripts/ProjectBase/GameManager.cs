@@ -17,8 +17,10 @@ public class GameManager : MonoBehaviour
     private static GameManager s_instance;
     public static GameManager Instance => s_instance;
 
-    public SceneLoader SceneLoader { get; set; }
+
+    //OPTIMIZE:使用列表添加工具类，使用接口标识工具类
     public ResourceLoader ResourcesLoader { get; set; }
+    public SceneLoader SceneLoader { get; set; }
 
     public EventManager EventManager { get; set; }
     public ObjectPoolManager ObjectPoolManager { get; set; }
@@ -29,6 +31,19 @@ public class GameManager : MonoBehaviour
     public InputController InputController { get; set; }
     public GameController GameController { get; set; }
     public ItemManager ItemManager { get; set; }
+
+    public PlayerController Player
+    {
+        get
+        {
+            PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            if (player != null)
+                return player;
+
+            Debug.Log("场景中不存在Player,获取Player失败");
+            return null;
+        }
+    }
 
 
 
@@ -47,8 +62,8 @@ public class GameManager : MonoBehaviour
 
     private void InitTools()
     {
-        SceneLoader = new SceneLoader();
         ResourcesLoader = new ResourceLoader();
+        SceneLoader = new SceneLoader();
 
         EventManager = new EventManager();
         ObjectPoolManager = new ObjectPoolManager();
@@ -85,7 +100,7 @@ public class GameManager : MonoBehaviour
         ObjectPoolManager.Clear();
         AudioManager.Clear();
         EventManager.Clear();
-        UIManager.Clear();
+        // UIManager.Clear();
     }
 
     private void LoadGameUI()
@@ -101,7 +116,7 @@ public class GameManager : MonoBehaviour
                 UIManager.ShowPanel<InputPanel>();
                 break;
             case E_InitPanel.Game:
-                UIManager.ShowPanel<GamePanel>();
+                UIManager.ShowPanel<GamePanel>(true);
                 break;
             case E_InitPanel.Loading:
                 LoadMainScene();
@@ -129,7 +144,7 @@ public class GameManager : MonoBehaviour
     private void LoadMainScene()
     {
         LoadingPanel panel = UIManager.ShowPanel<LoadingPanel>();
-        panel.LoadingToTarget(() =>
+        panel.WaitComplete(() =>
         {
             UIManager.HidePanel<LoadingPanel>(true);
             MainPanel mainPanel = UIManager.ShowPanel<MainPanel>(true, () =>

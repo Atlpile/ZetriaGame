@@ -16,7 +16,7 @@ public class TankBullet : BaseBullet
         currentMoveSpeed = moveSpeed;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
     }

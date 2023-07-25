@@ -12,7 +12,7 @@ public class PistolBullet : BaseBullet
         rb.freezeRotation = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
     }
@@ -29,14 +29,13 @@ public class PistolBullet : BaseBullet
         if (damageable != null && other.gameObject.name != "Player")
         {
             damageable.Damage(this.transform.position);
-            Hide();
+            StartCoroutine(IE_TriggerExplosion());
         }
 
-        if (other.gameObject.name == "Ground")
+        if (other.CompareTag("Ground"))
         {
-            // Debug.Log("子弹撞墙");
             GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_ricochet");
-            Hide();
+            StartCoroutine(IE_TriggerExplosion());
         }
     }
 }

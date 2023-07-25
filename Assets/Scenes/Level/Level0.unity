@@ -476,16 +476,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: _bounds.x
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
-      propertyPath: _bounds.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7191759097302458507, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
       propertyPath: _mouseMoveSpeed
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53452a76c4979ee41b66e4ba2d6abc38, type: 3}
@@ -40101,7 +40093,7 @@ GameObject:
   - component: {fileID: 8457737562146855319}
   m_Layer: 6
   m_Name: Ground_64
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

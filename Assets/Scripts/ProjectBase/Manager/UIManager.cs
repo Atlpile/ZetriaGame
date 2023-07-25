@@ -6,9 +6,8 @@ using UnityEngine.Events;
 public class UIManager
 {
     //TODO：使用栈结构存储面板（作用：按ESC键时隐藏最上面的面板）
-    public Dictionary<string, BasePanel> PanelDic = new Dictionary<string, BasePanel>();
-    public RectTransform rectCanvas;
-
+    private Dictionary<string, BasePanel> PanelDic = new Dictionary<string, BasePanel>();
+    private RectTransform rectCanvas;
     private GameObject canvas;
     private GameObject eventSystem;
 
@@ -28,9 +27,7 @@ public class UIManager
             eventSystem = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
             GameObject.DontDestroyOnLoad(eventSystem);
         }
-
     }
-
 
 
     #region Not Async
@@ -38,11 +35,11 @@ public class UIManager
     /// <summary>
     /// 显示面板
     /// </summary>
-    /// <param name="hasEffect">是否播放显示特效</param>
-    /// <param name="TweenEndFunc">特效显示结束时执行的内容（需配合hasEffect）</param>
-    /// <typeparam name="T">面板类</typeparam>
-    /// <returns></returns>
-    public T ShowPanel<T>(bool hasEffect = false, UnityAction TweenEndFunc = null) where T : BasePanel
+    /// <param name="hasTween">是否启用过渡效果</param>
+    /// <param name="TweenEndFunc">过渡完成后执行的内容（需配合hasEffect）</param>
+    /// <typeparam name="T">面板类对象</typeparam>
+    /// <returns>面板类对象</returns>
+    public T ShowPanel<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (PanelDic.ContainsKey(panelName))
@@ -63,17 +60,10 @@ public class UIManager
             T panel = uiPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
 
-            if (hasEffect)
-            {
-                PanelDic[panelName].Show(() =>
-                {
-                    TweenEndFunc?.Invoke();
-                });
-            }
+            if (hasTween)
+                PanelDic[panelName].Show(() => { TweenEndFunc?.Invoke(); });
             else
-            {
                 PanelDic[panelName].Show();
-            }
 
             return panel;
         }
@@ -82,10 +72,10 @@ public class UIManager
     /// <summary>
     /// 隐藏面板
     /// </summary>
-    /// <param name="hasEffect">是否显示特效</param>
+    /// <param name="hasTween">是否显示特效</param>
     /// <param name="TweenEndFunc">特效显示结束时执行的内容（需配合hasEffect）</param>
     /// <typeparam name="T">面板类</typeparam>
-    public void HidePanel<T>(bool hasEffect = false, UnityAction TweenEndFunc = null) where T : BasePanel
+    public void HidePanel<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (!PanelDic.ContainsKey(panelName))
@@ -95,7 +85,7 @@ public class UIManager
         }
         else
         {
-            if (hasEffect)
+            if (hasTween)
             {
                 PanelDic[panelName].Hide(() =>
                 {
@@ -110,10 +100,6 @@ public class UIManager
                 Object.Destroy(PanelDic[panelName].gameObject);
                 PanelDic.Remove(panelName);
             }
-
-            // PanelDic[panelName].Hide();
-            // Object.Destroy(PanelDic[panelName].gameObject);
-            // PanelDic.Remove(panelName);
         }
     }
 
@@ -211,17 +197,9 @@ public class UIManager
         }
         else
         {
-            Debug.LogWarning("UIManager:场景中不存在该Panel");
+            Debug.LogWarning("UIManager:场景中不存在" + panelName);
             return null;
         }
-    }
-
-    public bool GetExistPanel(string panelName)
-    {
-        if (PanelDic.ContainsKey(panelName))
-            return true;
-        else
-            return false;
     }
 
     public void Clear()

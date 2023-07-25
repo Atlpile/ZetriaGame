@@ -29,7 +29,6 @@ public class EnemyBullet : BaseBullet
     }
 
 
-
     private void Move(E_EnemyBulletType type)
     {
         switch (type)
@@ -37,8 +36,8 @@ public class EnemyBullet : BaseBullet
             case E_EnemyBulletType.Horizontal:
                 HorizontalMove();
                 break;
-            case E_EnemyBulletType.Vertical:
-                VerticalMove();
+            case E_EnemyBulletType.Down:
+                DownMove();
                 break;
             case E_EnemyBulletType.Chase:
                 ChaseMove();
@@ -51,7 +50,7 @@ public class EnemyBullet : BaseBullet
         transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
     }
 
-    private void VerticalMove()
+    private void DownMove()
     {
         transform.Translate(Vector2.down * currentMoveSpeed * Time.deltaTime);
     }

@@ -12,11 +12,13 @@ public abstract class BaseBullet : MonoBehaviour
     protected Rigidbody2D rb;
     protected Collider2D coll2d;
     protected IDamageable damageable;
+
     [SerializeField] protected float moveSpeed = 20f;
     protected float currentMoveSpeed;
     [SerializeField] protected float explosionTime = 1f;
     [SerializeField] protected float disappearTime = 0.5f;
     private bool _isExplosion;
+
 
     private void Awake()
     {
@@ -41,6 +43,7 @@ public abstract class BaseBullet : MonoBehaviour
     {
         InitBullet();
     }
+
 
     protected virtual void InitExtraComponent()
     {
@@ -80,7 +83,7 @@ public abstract class BaseBullet : MonoBehaviour
             StartCoroutine(IE_TriggerExplosion());
         }
 
-        if (other.gameObject.name == "Ground")
+        if (other.CompareTag("Ground"))
         {
             StartCoroutine(IE_TriggerExplosion());
         }
@@ -100,6 +103,7 @@ public abstract class BaseBullet : MonoBehaviour
 
     }
 
+
     protected void SetMoveStatus(bool canStop)
     {
         if (canStop == true)
@@ -112,6 +116,7 @@ public abstract class BaseBullet : MonoBehaviour
     {
         this.transform.position = positon;
     }
+
 
     protected IEnumerator IE_Disappear()
     {

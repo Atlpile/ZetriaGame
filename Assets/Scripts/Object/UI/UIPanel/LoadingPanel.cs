@@ -21,21 +21,21 @@ public class LoadingPanel : BasePanel
         text_Loading = GetUIComponent<Text>("text_Loading");
     }
 
-    public override void Show(TweenCallback ShowCallBack = null)
+    public override void Show(TweenCallback ShowCallBack)
     {
         base.Show(ShowCallBack);
 
         StartCoroutine(IE_LoadingEffect());
     }
 
-    public override void Hide(TweenCallback HideCallBack = null)
+    public override void Hide(TweenCallback HideCallBack)
     {
         base.Hide(HideCallBack);
 
         StopCoroutine(IE_LoadingEffect());
     }
 
-    public void LoadingToTarget(UnityAction LoadCompleteAction)
+    public void WaitComplete(UnityAction LoadCompleteAction)
     {
         StartCoroutine(IE_LoadingToTarget(LoadCompleteAction));
     }
