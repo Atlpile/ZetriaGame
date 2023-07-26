@@ -33,15 +33,14 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         base.OnAwake();
 
         fsm = new FSM(this);
-
-        // GameManager.Instance.EventManager.AddEventListener(E_EventType.PlayerDead, OnPlayerDead);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PlayerDead, OnPlayerDead);
 
         InitComponent();
     }
 
     private void OnDestroy()
     {
-        // GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PlayerDead, OnPlayerDead);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PlayerDead, OnPlayerDead);
     }
 
     protected override void OnStart()
@@ -127,6 +126,8 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
                     break;
                 case E_GizmosType.Circle:
                     Gizmos.DrawWireSphere(this.transform.position + monsterInfo.checkOffset, monsterInfo.checkRadius);
+                    break;
+                case E_GizmosType.Null:
                     break;
             }
         }
@@ -262,12 +263,11 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         Destroy(this.gameObject);
     }
 
-    // private void OnPlayerDead()
-    // {
-    //     //怪物切回Idle状态
-    //     //不进行对Player检测
-    //     gizmosType = E_GizmosType.Null;
-    //     fsm.ChangeState(E_AIState.Idle);
-    // }
+    private void OnPlayerDead()
+    {
+        gizmosType = E_GizmosType.Null;
+        isFindPlayer = false;
+        fsm.ChangeState(E_AIState.Idle);
+    }
 
 }

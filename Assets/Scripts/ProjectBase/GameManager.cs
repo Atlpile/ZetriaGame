@@ -90,9 +90,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         GameController.UpdateInput();
-        EventManager.isActiveWarning = activeEventDebugger;
-
         TestInput();
+
+        // if (!EventManager.isActiveWarning)
+        EventManager.isActiveWarning = activeEventDebugger;
     }
 
     public void ClearSceneInfo()
@@ -100,7 +101,6 @@ public class GameManager : MonoBehaviour
         ObjectPoolManager.Clear();
         AudioManager.Clear();
         EventManager.Clear();
-        // UIManager.Clear();
     }
 
     private void LoadGameUI()
@@ -155,5 +155,40 @@ public class GameManager : MonoBehaviour
         });
     }
 
+    public void LoadCurrentScene()
+    {
+        StartCoroutine(IE_LoadCurrentScene());
+    }
+
+    private IEnumerator IE_LoadCurrentScene()
+    {
+        //UI淡入后执行以下内容
+        yield return new WaitForSeconds(1f);
+        // Debug.Log("显示FadePanel");
+        yield return UIManager.ShowPanel<FadePanel>(true, () =>
+        {
+            //过渡完成后执行以下内容
+            UIManager.HidePanel<GamePanel>();
+            InputController.SetInputStatus(false);
+
+            // Destroy(GameObject.Find("SceneObject"));
+            // ResourcesLoader.Load<GameObject>(E_ResourcesPath.Object, "SceneObject");
+            //FIXME:重新加载当前场景时音效不会消失
+            //解决方案1：不重新加载场景，重新恢复场景属性（加载场景预制体）
+            //解决方案2：使音频在加载场景时不被消除（PoolRoot设为DontDestroyOnLoad）
+            ClearSceneInfo();
+            SceneLoader.LoadCurrentScene();
+            // Debug.Log("显示FadePanel完成");
+        });
+
+        //ATTENTION：等待时间不能超过UI的过渡时间
+        //UI淡出后执行以下内容
+        yield return new WaitForSeconds(1.5f);
+        InputController.SetInputStatus(true);
+        UIManager.ShowPanel<GamePanel>();
+        // Debug.Log("隐藏FadePanel");
+        UIManager.HidePanel<FadePanel>(true);
+
+    }
 
 }

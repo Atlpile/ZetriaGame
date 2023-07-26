@@ -8,7 +8,7 @@ public class PlayerController : BaseCharacter, IDamageable
 
     #region Variable
 
-    private ZetriaInfo zetriaInfo;
+    [SerializeField] private ZetriaInfo zetriaInfo;
     private AmmoController ammoController;
     private E_PlayerStatus _status;
 
@@ -92,7 +92,6 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
-        GameManager.Instance.EventManager.AddEventListener(E_EventType.PlayerDead, OnPlayerDead);
         GameManager.Instance.EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
@@ -138,7 +137,6 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
-        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PlayerDead, OnPlayerDead);
         GameManager.Instance.EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
 
@@ -541,15 +539,15 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         _isHurt = true;
 
+        zetriaInfo.currentHealth = zetriaInfo.currentHealth > 0 ? --zetriaInfo.currentHealth : 0;
+        _isDead = zetriaInfo.currentHealth == 0 ? true : false;
+
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_hurt_1");
         GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
         GameManager.Instance.InputController.SetInputStatus(false);
 
-        zetriaInfo.currentHealth = zetriaInfo.currentHealth > 0 ? --zetriaInfo.currentHealth : 0;
-        _isDead = zetriaInfo.currentHealth == 0 ? true : false;
         anim.SetTrigger("Hurt");
         AddHurtForce(attacker);
-
         if (_isDead) Dead();
 
         yield return new WaitForSeconds(zetriaInfo.hurtCD);
@@ -560,39 +558,17 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void Dead()
     {
-        //TODO:死亡后，重新加载当前场景，初始化人物变量，更新UI
         _moveSource.enabled = false;
         zetriaInfo.currentHealth = 0;
+
+        GameManager.Instance.EventManager.EventTrigger(E_EventType.PlayerDead);
         GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
-        // GameManager.Instance.EventManager.EventTrigger(E_EventType.PlayerDead);
         StopMove();
 
-
-        StartCoroutine(IE_Dead());
+        GameManager.Instance.LoadCurrentScene();
     }
 
-    private IEnumerator IE_Dead()
-    {
-        yield return new WaitForSeconds(1f);
-        //TODO:UI淡入后执行以下内容
 
-        //显示FadePanel
-        GameManager.Instance.UIManager.ShowPanel<FadePanel>(true, () =>
-        {
-            //过渡完成后执行以下内容
-            GameManager.Instance.UIManager.HidePanel<GamePanel>();
-            GameManager.Instance.ClearSceneInfo();
-            GameManager.Instance.SceneLoader.LoadCurrentScene();
-
-            GameManager.Instance.UIManager.ShowPanel<GamePanel>();
-            GameManager.Instance.UIManager.HidePanel<FadePanel>(true);
-        });
-
-
-
-
-        //TODO:UI淡出
-    }
 
     #endregion
 
@@ -677,12 +653,6 @@ public class PlayerController : BaseCharacter, IDamageable
     public void OnUpdateAudioSourceVolume(float volume)
     {
         _moveSource.volume = volume;
-    }
-
-    public void OnPlayerDead()
-    {
-        _isDead = true;
-        Dead();
     }
 
     private void OnDrawGizmos()

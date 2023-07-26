@@ -48,14 +48,12 @@ public class GamePanel : BasePanel
     {
         base.Show(ShowCallBack);
 
-        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
         UpdatePistolAmmoText(0, 0);
         UpdateShortGunAmmoText(0, 0);
         UpdateAmmoPointer(true);
 
-        //FIXME：第二次加载场景时，未得到Player血量
         PlayerController player = GameManager.Instance.Player;
-        Debug.Log(player.ZetriaInfo.currentHealth);
+        // Debug.Log("Player当前血量" + player.ZetriaInfo.currentHealth);
 
         if (player != null)
             UpdateLifeBar(player.ZetriaInfo.currentHealth, player.ZetriaInfo.maxHealth);
@@ -70,9 +68,8 @@ public class GamePanel : BasePanel
         UpdateShortGunAmmoText(0, 0);
         UpdateAmmoPointer(true);
 
-        //FIXME：第二次加载场景时，未得到Player血量
         PlayerController player = GameManager.Instance.Player;
-        Debug.Log(player.ZetriaInfo.currentHealth);
+        // Debug.Log("Player当前血量" + player.ZetriaInfo.currentHealth);
 
         if (player != null)
             UpdateLifeBar(player.ZetriaInfo.currentHealth, player.ZetriaInfo.maxHealth);

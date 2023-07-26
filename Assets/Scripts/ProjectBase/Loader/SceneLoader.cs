@@ -22,6 +22,12 @@ public class SceneLoader
         loadAction();
     }
 
+    public void LoadCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
     public void LoadSceneAsync(string sceneName, UnityAction loadAction)
     {
         GameManager.Instance.StartCoroutine(IE_LoadAsync(sceneName, loadAction));
@@ -32,9 +38,9 @@ public class SceneLoader
         GameManager.Instance.StartCoroutine(IE_LoadAsync(sceneName, loadAction));
     }
 
-    public void LoadCurrentScene()
+    public void LoadCurrentSceneAsync(UnityAction LoadAction)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.Instance.StartCoroutine(IE_LoadAsync(SceneManager.GetActiveScene().name, LoadAction));
     }
 
 
@@ -63,4 +69,5 @@ public class SceneLoader
 
         loadAction();
     }
+
 }

@@ -9,7 +9,7 @@ public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
     private CanvasGroup canvasGroup;
-    private float fadeDuration = 1f;
+    protected float fadeDuration = 1f;
 
 
     protected virtual void Awake()

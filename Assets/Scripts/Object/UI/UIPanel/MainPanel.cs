@@ -67,9 +67,9 @@ public class MainPanel : BasePanel
             GameManager.Instance.SceneLoader.LoadSceneAsync("Level0", () =>
             {
                 GameManager.Instance.AudioManager.LoadAudioData();
+                GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
                 GameManager.Instance.UIManager.HidePanel<LoadingPanel>(true);
                 GameManager.Instance.UIManager.ShowPanel<GamePanel>(true);
-
             });
         });
 

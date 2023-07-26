@@ -101,4 +101,4 @@ MonoBehaviour:
   _offsetY: 1
   _smoothTime: 0.15
   _bounds: {x: 5, y: 5, z: 0}
-  _mouseMoveSpeed: 10
+  _mouseMoveSpeed: 15

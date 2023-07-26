@@ -202,11 +202,6 @@ public class UIManager
         }
     }
 
-    public void Clear()
-    {
-        PanelDic.Clear();
-    }
-
     public void ClearExistPanel<T>() where T : BasePanel
     {
         string panelName = typeof(T).Name;
