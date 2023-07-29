@@ -8,24 +8,28 @@ public class UIManager
     //TODO：使用栈结构存储面板（作用：按ESC键时隐藏最上面的面板）
     private Dictionary<string, BasePanel> PanelDic = new Dictionary<string, BasePanel>();
     private RectTransform rectCanvas;
-    private GameObject canvas;
-    private GameObject eventSystem;
 
     public UIManager()
     {
         //创建Canvas
         if (!GameObject.FindGameObjectWithTag("Canvas"))
         {
-            canvas = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
-            rectCanvas = canvas.transform as RectTransform;
-            GameObject.DontDestroyOnLoad(canvas);
+            // canvas = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "Canvas");
+            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.UI, "Canvas", (canvas) =>
+            {
+                rectCanvas = canvas.transform as RectTransform;
+                GameObject.DontDestroyOnLoad(canvas);
+            });
         }
 
         //创建EventSystem
         if (!GameObject.FindGameObjectWithTag("EventSystem"))
         {
-            eventSystem = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
-            GameObject.DontDestroyOnLoad(eventSystem);
+            // eventSystem = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, "EventSystem");
+            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.UI, "EventSystem", (eventSystem) =>
+            {
+                GameObject.DontDestroyOnLoad(eventSystem);
+            });
         }
     }
 

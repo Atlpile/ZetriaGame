@@ -100,7 +100,10 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         base.OnStart();
 
-        _moveSource.clip = GameManager.Instance.ResourcesLoader.Load<AudioClip>(E_ResourcesPath.Audio, "player_run");
+        GameManager.Instance.ResourcesLoader.LoadAsync<AudioClip>(E_ResourcesPath.Audio, "player_run", (audio) =>
+        {
+            _moveSource.clip = audio;
+        });
         GameManager.Instance.ObjectPoolManager.AddObjectFromResources("ShortGunBullet", E_ResourcesPath.Object, 3);
 
         InitPlayer();

@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour
         ObjectPoolManager.Clear();
         AudioManager.Clear();
         EventManager.Clear();
+        ResourcesLoader.Clear();
     }
 
     private void LoadGameUI()
@@ -139,6 +140,19 @@ public class GameManager : MonoBehaviour
         {
             SaveLoadManager.ClearData<GameData>(Consts.GameData);
         }
+
+        // if (Input.GetKeyDown(KeyCode.Alpha1))
+        // {
+        //     GameManager.Instance.AudioManager.AudioPlay_NoPool(E_AudioType.BGM, "bgm_01");
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Alpha2))
+        // {
+        //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Delete);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Alpha3))
+        // {
+        //     GameManager.Instance.AudioManager.AudioPlay_NoPool(E_AudioType.Effect, "pistol_fire");
+        // }
     }
 
     private void LoadMainScene()

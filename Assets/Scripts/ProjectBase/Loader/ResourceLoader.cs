@@ -46,9 +46,7 @@ public class ResourceLoader
         yield return resources;
 
         if (resources.asset == null)
-        {
             Debug.LogError("ResourcesLoader: 未找到该资源" + name + ", 请检查Resources文件夹中是否有该资源");
-        }
 
         if (resources.asset is GameObject && canCreateGameObject)
             CompleteCallBack(GameObject.Instantiate(resources.asset) as T);
@@ -56,7 +54,7 @@ public class ResourceLoader
             CompleteCallBack(resources.asset as T);
     }
 
-    public void ReleaseResource()
+    public void Clear()
     {
         Resources.UnloadUnusedAssets();
         Debug.Log("已卸载未使用的资源");
