@@ -6,6 +6,8 @@ public class AudioPlayer : MonoBehaviour, IObject
 {
     private AudioSource _audioSource;
 
+    private bool _usePool;
+
     private void Awake()
     {
         _audioSource = this.GetComponent<AudioSource>();
@@ -22,15 +24,15 @@ public class AudioPlayer : MonoBehaviour, IObject
     }
 
 
-    public void Play(bool isLoop, float volume)
+    public void Play(bool isLoop, float volume, bool usePool)
     {
-        SetAudioSourceInfo(isLoop, volume);
+        SetAudioSourceInfo(isLoop, volume, usePool);
         _audioSource.Play();
     }
 
-    public void PlayOnce(bool isLoop, float volume)
+    public void PlayOnce(bool isLoop, float volume, bool usePool)
     {
-        SetAudioSourceInfo(isLoop, volume);
+        SetAudioSourceInfo(isLoop, volume, usePool);
         _audioSource.Play();
 
         if (_audioSource.clip != null)
@@ -39,10 +41,11 @@ public class AudioPlayer : MonoBehaviour, IObject
             Debug.LogError("AudioPlayer中没有音频,不能播放音效");
     }
 
-    public void SetAudioSourceInfo(bool isLoop, float volume)
+    public void SetAudioSourceInfo(bool isLoop, float volume, bool usePool)
     {
         _audioSource.loop = isLoop;
         _audioSource.volume = volume;
+        _usePool = usePool;
     }
 
     private IEnumerator IE_PlayOnceAudio()
@@ -53,13 +56,15 @@ public class AudioPlayer : MonoBehaviour, IObject
 
     public void Create()
     {
-        this.gameObject.SetActive(true);
+
     }
 
     public void Hide()
     {
-        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
-        // Destroy(this.gameObject);
+        if (_usePool)
+            GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
+        else
+            Destroy(this.gameObject);
     }
 
     public void Release()

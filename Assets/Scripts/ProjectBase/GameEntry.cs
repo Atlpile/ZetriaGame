@@ -7,7 +7,6 @@ public class GameEntry : MonoBehaviour
 {
     private void Start()
     {
-        GameObject.Instantiate(Resources.Load(Consts.MANAGER_PATH));
         SceneManager.LoadScene(Consts.MAIN_SCENE_NAME);
     }
 }
