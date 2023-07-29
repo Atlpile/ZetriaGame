@@ -16,21 +16,24 @@ public class AudioManager
     private Dictionary<string, AudioClip> AudioDict = new Dictionary<string, AudioClip>();
     private AudioSource _bgmChannel;
     private AudioSource _effectChannel;
+    private GameObject _audioPlayer;
+    private GameObject _audioPlayerPoolObj;
 
-
+    public AudioManager()
+    {
+        GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.Object, "AudioPlayer", (audioPlayer) =>
+        {
+            _audioPlayer = audioPlayer;
+        }, false);
+    }
 
     #region NoPool
 
-    public void AudioPlay_NoPool(E_AudioType type, string name, bool isLoop = false, float volume = 1f)
+    public void AudioPlay_NoPool(E_AudioType type, string name, bool isLoop = false)
     {
         if (AudioDict.ContainsKey(name))
         {
-            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.Object, "AudioPlayer", (audioPlayer) =>
-            {
-                audioPlayer.name = name;
-                audioPlayer.GetComponent<AudioSource>().clip = AudioDict[name];
-                PlayAudioClip(type, name, audioPlayer, isLoop, volume);
-            });
+            PlayAudioClip(type, name, isLoop);
         }
         else
         {
@@ -45,13 +48,7 @@ public class AudioManager
                 }
                 AudioDict.Add(name, audioClip);
 
-                //创建新AudioPlayer
-                GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.Object, "AudioPlayer", (audioPlayer) =>
-                {
-                    audioPlayer.name = name;
-                    audioPlayer.GetComponent<AudioSource>().clip = audioClip;
-                    PlayAudioClip(type, name, audioPlayer, isLoop, volume);
-                });
+                PlayAudioClip(type, name, isLoop);
             });
         }
     }
@@ -60,12 +57,47 @@ public class AudioManager
 
     #region Pool
 
+    // public void AudioPlay(E_AudioType type, string name, bool isLoop = false)
+    // {
+    //     if (AudioDict.ContainsKey(name))
+    //     {
+    //         GameObject poolObj = GameManager.Instance.ObjectPoolManager.GetObject(name);
+    //         PlayAudioClip(type, name, AudioDict[name], poolObj, isLoop);
+    //     }
+    //     else
+    //     {
+    //         //加载音频
+    //         GameManager.Instance.ResourcesLoader.LoadAsync<AudioClip>(E_ResourcesPath.Audio, name, (audioClip) =>
+    //         {
+    //             if (audioClip == null)
+    //             {
+    //                 Debug.LogError("AudioManager:未找到该名称的音频：" + name + ",请检查Resources文件夹中的音频是否存在");
+    //                 return;
+    //             }
+
+    //             //创建音乐对象
+    //             GameObject soundObj = new GameObject(name);
+    //             AudioSource audioSource = soundObj.AddComponent<AudioSource>();
+    //             audioSource.clip = audioClip;
+
+    //             //记录音乐对象
+    //             AudioDict.Add(name, audioClip);
+    //             GameManager.Instance.ObjectPoolManager.AddObject(soundObj, name);
+    //             GameObject poolObj = GameManager.Instance.ObjectPoolManager.GetObject(name);
+
+    //             //播放音频及设置
+    //             PlayAudioClip(type, name, audioClip, poolObj, isLoop);
+    //         });
+    //     }
+    // }
+
     public void AudioPlay(E_AudioType type, string name, bool isLoop = false)
     {
+        string poolObjName = name + "_p";
+
         if (AudioDict.ContainsKey(name))
         {
-            GameObject poolObj = GameManager.Instance.ObjectPoolManager.GetObject(name);
-            PlayAudioClip(type, name, AudioDict[name], poolObj, isLoop);
+            PlayAudioClip2(type, name, isLoop);
         }
         else
         {
@@ -77,19 +109,9 @@ public class AudioManager
                     Debug.LogError("AudioManager:未找到该名称的音频：" + name + ",请检查Resources文件夹中的音频是否存在");
                     return;
                 }
-
-                //创建音乐对象
-                GameObject soundObj = new GameObject(name);
-                AudioSource audioSource = soundObj.AddComponent<AudioSource>();
-                audioSource.clip = audioClip;
-
-                //记录音乐对象
                 AudioDict.Add(name, audioClip);
-                GameManager.Instance.ObjectPoolManager.AddObject(soundObj, name);
-                GameObject poolObj = GameManager.Instance.ObjectPoolManager.GetObject(name);
 
-                //播放音频及设置
-                PlayAudioClip(type, name, audioClip, poolObj, isLoop);
+                PlayAudioClip2(type, name, isLoop);
             });
         }
     }
@@ -150,6 +172,7 @@ public class AudioManager
         SetVolume(E_AudioType.Effect, settingData.volume_Effect);
     }
 
+
     private void PlayAudioClip(E_AudioType type, string name, AudioClip audioClip, GameObject audioObj, bool isLoop)
     {
         audioObj.transform.SetParent(GameManager.Instance.transform);
@@ -171,19 +194,51 @@ public class AudioManager
         }
     }
 
-    private void PlayAudioClip(E_AudioType type, string name, GameObject audioPlayer, bool isLoop, float volume)
+    private void PlayAudioClip2(E_AudioType type, string name, bool isLoop)
     {
-        audioPlayer.transform.SetParent(GameManager.Instance.transform);
+        // GameObject audioPlayerObj = GameManager.Instance.ObjectPoolManager.GetObject("AudioPlayer");
+        GameObject audioPlayerObj = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("AudioPlayer", E_ResourcesPath.Object);
+        AudioPlayer audioPlayer = audioPlayerObj.GetComponent<AudioPlayer>();
+        AudioSource audioPlayerSource = audioPlayerObj.GetComponent<AudioSource>();
+
+        audioPlayerObj.name = name;
+        audioPlayerObj.transform.SetParent(GameManager.Instance.transform);
+        audioPlayerSource.clip = AudioDict[name];
+
         switch (type)
         {
             case E_AudioType.BGM:
                 if (_bgmChannel != null) BGMSetting(E_AudioSettingType.Stop);
-                audioPlayer.GetComponent<AudioPlayer>().Play(isLoop, volume);
-                _bgmChannel = audioPlayer.GetComponent<AudioSource>();
+                audioPlayer.Play(isLoop, bgmVolume);
+                _bgmChannel = audioPlayerSource;
                 break;
             case E_AudioType.Effect:
-                audioPlayer.GetComponent<AudioPlayer>().PlayOnce(isLoop, effectVolume);
-                _effectChannel = audioPlayer.GetComponent<AudioSource>();
+                audioPlayer.PlayOnce(isLoop, effectVolume);
+                _effectChannel = audioPlayerSource;
+                break;
+        }
+    }
+
+    private void PlayAudioClip(E_AudioType type, string name, bool isLoop)
+    {
+        GameObject audioPlayerObj = GameObject.Instantiate(_audioPlayer);
+        AudioPlayer audioPlayer = audioPlayerObj.GetComponent<AudioPlayer>();
+        AudioSource audioPlayerSource = audioPlayerObj.GetComponent<AudioSource>();
+
+        audioPlayerObj.name = name;
+        audioPlayerObj.transform.SetParent(GameManager.Instance.transform);
+        audioPlayerSource.clip = AudioDict[name];
+
+        switch (type)
+        {
+            case E_AudioType.BGM:
+                if (_bgmChannel != null) BGMSetting(E_AudioSettingType.Stop);
+                audioPlayer.Play(isLoop, bgmVolume);
+                _bgmChannel = audioPlayerSource;
+                break;
+            case E_AudioType.Effect:
+                audioPlayer.PlayOnce(isLoop, effectVolume);
+                _effectChannel = audioPlayerSource;
                 break;
         }
     }

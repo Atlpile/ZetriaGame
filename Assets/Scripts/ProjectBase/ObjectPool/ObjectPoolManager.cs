@@ -122,6 +122,14 @@ public class ObjectPoolManager
         ObjectPoolsDic[name].FillObjectPool(fillCount);
     }
 
+    public bool GetName(string name)
+    {
+        if (ObjectPoolsDic.ContainsKey(name))
+            return true;
+        else
+            return false;
+    }
+
     public void Clear()
     {
         ObjectPoolsDic.Clear();

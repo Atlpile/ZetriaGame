@@ -142,17 +142,11 @@ public class GameManager : MonoBehaviour
         }
 
         // if (Input.GetKeyDown(KeyCode.Alpha1))
-        // {
         //     GameManager.Instance.AudioManager.AudioPlay_NoPool(E_AudioType.BGM, "bgm_01");
-        // }
         // else if (Input.GetKeyDown(KeyCode.Alpha2))
-        // {
-        //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Delete);
-        // }
+        //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Destroy);
         // else if (Input.GetKeyDown(KeyCode.Alpha3))
-        // {
         //     GameManager.Instance.AudioManager.AudioPlay_NoPool(E_AudioType.Effect, "pistol_fire");
-        // }
     }
 
     private void LoadMainScene()

@@ -5,7 +5,6 @@ using UnityEngine;
 public class AudioPlayer : MonoBehaviour, IObject
 {
     private AudioSource _audioSource;
-    private float volume;
 
     private void Awake()
     {
@@ -29,12 +28,6 @@ public class AudioPlayer : MonoBehaviour, IObject
         _audioSource.Play();
     }
 
-    public void SetAudioSourceInfo(bool isLoop, float volume)
-    {
-        _audioSource.loop = isLoop;
-        _audioSource.volume = volume;
-    }
-
     public void PlayOnce(bool isLoop, float volume)
     {
         SetAudioSourceInfo(isLoop, volume);
@@ -46,6 +39,12 @@ public class AudioPlayer : MonoBehaviour, IObject
             Debug.LogError("AudioPlayer中没有音频,不能播放音效");
     }
 
+    public void SetAudioSourceInfo(bool isLoop, float volume)
+    {
+        _audioSource.loop = isLoop;
+        _audioSource.volume = volume;
+    }
+
     private IEnumerator IE_PlayOnceAudio()
     {
         yield return new WaitForSeconds(_audioSource.clip.length);
@@ -54,13 +53,13 @@ public class AudioPlayer : MonoBehaviour, IObject
 
     public void Create()
     {
-
+        this.gameObject.SetActive(true);
     }
 
     public void Hide()
     {
-        // GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
-        Destroy(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
+        // Destroy(this.gameObject);
     }
 
     public void Release()
