@@ -12,6 +12,7 @@ public class SettingPanel : BasePanel
     private Toggle toggle_Bloom;
     private Button button_Close;
 
+
     protected override void Awake()
     {
         base.Awake();
@@ -62,25 +63,25 @@ public class SettingPanel : BasePanel
         }
     }
 
-    public override void Show(TweenCallback ShowCallBack = null)
+    public override void Show()
     {
         LoadSettingData();
     }
 
-    public override void Hide(TweenCallback callback = null)
+    public override void Hide()
     {
         SaveSettingData();
     }
+
 
     private void CloseSettingPanel()
     {
         GameManager.Instance.UIManager.HidePanel<SettingPanel>();
     }
 
-    public void LoadSettingData()
+    private void LoadSettingData()
     {
         SettingData settingData = GameManager.Instance.SaveLoadManager.LoadData<SettingData>("SettingData");
-
         slider_BGM.value = settingData.volume_BGM;
         slider_Effect.value = settingData.volume_Effect;
     }
@@ -88,7 +89,6 @@ public class SettingPanel : BasePanel
     private void SaveSettingData()
     {
         SettingData settingData = new SettingData();
-
         settingData.volume_BGM = slider_BGM.value;
         settingData.volume_Effect = slider_Effect.value;
 

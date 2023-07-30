@@ -25,9 +25,18 @@ public class PoolStack
     public GameObject GetObjectInPool(Transform parent)
     {
         GameObject obj = poolStack.Pop();
-        obj.SetActive(true);
-        obj.transform.SetParent(parent);
-        return obj;
+        if (obj != null)
+        {
+            obj.SetActive(true);
+            obj.transform.SetParent(parent);
+            return obj;
+        }
+        else
+        {
+            Debug.LogError("PoolStack中没有该对象");
+            return null;
+        }
+
     }
 
     public void FillObjectPool()

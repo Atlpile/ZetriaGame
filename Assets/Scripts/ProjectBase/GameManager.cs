@@ -170,6 +170,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator IE_LoadCurrentScene()
     {
+        AudioManager.BGMSetting(E_AudioSettingType.Stop);
         //UI淡入后执行以下内容
         yield return new WaitForSeconds(1f);
         // Debug.Log("显示FadePanel");
@@ -179,8 +180,6 @@ public class GameManager : MonoBehaviour
             UIManager.HidePanel<GamePanel>();
             InputController.SetInputStatus(false);
 
-            // Destroy(GameObject.Find("SceneObject"));
-            // ResourcesLoader.Load<GameObject>(E_ResourcesPath.Object, "SceneObject");
             //FIXME:重新加载当前场景时音效不会消失
             //解决方案1：不重新加载场景，重新恢复场景属性（加载场景预制体）
             //解决方案2：使音频在加载场景时不被消除（PoolRoot设为DontDestroyOnLoad）

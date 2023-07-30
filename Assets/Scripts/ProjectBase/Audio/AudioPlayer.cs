@@ -54,6 +54,7 @@ public class AudioPlayer : MonoBehaviour, IObject
         Hide();
     }
 
+
     public void Create()
     {
 

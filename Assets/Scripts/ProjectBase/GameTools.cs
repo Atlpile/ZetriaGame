@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class GameTools
 {
@@ -23,6 +24,12 @@ public static class GameTools
 
     [MenuItem("GameTool/清空所有数据")]
     public static void ClearAllData()
+    {
+
+    }
+
+    [MenuItem("GameTool/加载主场景")]
+    public static void LoadMainScene()
     {
 
     }

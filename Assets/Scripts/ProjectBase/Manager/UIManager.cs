@@ -107,7 +107,14 @@ public class UIManager
         }
     }
 
-    public T ShowPanelFromPool<T>() where T : BasePanel
+    /// <summary>
+    /// 从对象池显示面板
+    /// </summary>
+    /// <param name="hasTween"></param>
+    /// <param name="TweenEndFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T ShowPanelFromPool<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
 
@@ -131,12 +138,23 @@ public class UIManager
 
             T panel = poolPrefab.GetComponent<T>();
             PanelDic.Add(panelName, panel);
-            panel.Show();
+
+            if (hasTween)
+                PanelDic[panelName].Show(() => { TweenEndFunc?.Invoke(); });
+            else
+                PanelDic[panelName].Show();
+
             return panel;
         }
     }
 
-    public void HidePanelFromPool<T>() where T : BasePanel
+    /// <summary>
+    /// 从对象池隐藏面板
+    /// </summary>
+    /// <param name="hasTween"></param>
+    /// <param name="TweenEndFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    public void HidePanelFromPool<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (!PanelDic.ContainsKey(panelName))
@@ -146,9 +164,21 @@ public class UIManager
         }
         else
         {
-            PanelDic[panelName].Hide();
-            GameManager.Instance.ObjectPoolManager.ReturnObject(PanelDic[panelName].gameObject);
-            PanelDic.Remove(panelName);
+            if (hasTween)
+            {
+                PanelDic[panelName].Hide(() =>
+                {
+                    Object.Destroy(PanelDic[panelName].gameObject);
+                    PanelDic.Remove(panelName);
+                    TweenEndFunc?.Invoke();
+                });
+            }
+            else
+            {
+                PanelDic[panelName].Hide();
+                Object.Destroy(PanelDic[panelName].gameObject);
+                PanelDic.Remove(panelName);
+            }
         }
     }
 
@@ -156,6 +186,8 @@ public class UIManager
 
 
     #region Async
+
+    //TODO:使用异步加载UI面板
 
     public void ShowPanelAsync<T>(UnityAction<T> LoadAction) where T : BasePanel
     {
