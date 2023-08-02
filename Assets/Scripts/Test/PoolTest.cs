@@ -4,17 +4,24 @@ using UnityEngine;
 
 public class PoolTest : MonoBehaviour
 {
-    // private void Start()
-    // {
-    //     GameManager.Instance.ObjectPoolManager.AddObject_New("PistolBullet");
-    // }
+    private void Start()
+    {
 
-    // private void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.Keypad4))
-    //     {
-    //         GameObject obj = GameManager.Instance.ObjectPoolManager.GetObject_New("PistolBullet");
-    //         obj.transform.position = this.transform.position;
-    //     }
-    // }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            GameManager.Instance.ObjectPoolManager.RemovePoolStack("ShortGunBullet", "AudioPlayer");
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            GameManager.Instance.ObjectPoolManager.RemoveExcept("ShortGunBullet");
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            GameManager.Instance.ObjectPoolManager.RemoveExcept("ShortGunBullet", "PistolBullet", "AudioPlayer");
+        }
+    }
 }

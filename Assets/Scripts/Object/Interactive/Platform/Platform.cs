@@ -40,6 +40,7 @@ public class Platform : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
+        //FIXME:退出时，设置父级在Character里
         BaseCharacter character = other.gameObject.GetComponent<BaseCharacter>();
         if (character != null)
         {

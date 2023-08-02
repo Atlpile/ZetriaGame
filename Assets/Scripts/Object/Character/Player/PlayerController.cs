@@ -75,7 +75,6 @@ public class PlayerController : BaseCharacter, IDamageable
         });
 
         GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "PistolBullet");
-        //FIXME：
         GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "ShortGunBullet", 3);
         GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.FX, "FX_Jump");
         GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.FX, "FX_Kick");

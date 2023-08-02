@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-//对象池优化：初始时AddObject，使用时LoadObject
+//对象池优化：初始时AddObject，使用时GetObject
 
 public class ObjectPoolManager
 {
@@ -15,15 +15,15 @@ public class ObjectPoolManager
     public ObjectPoolManager()
     {
         if (poolRoot == null)
+        {
             poolRoot = new GameObject("PoolRoot");
+            GameObject.DontDestroyOnLoad(poolRoot);
+        }
     }
 
 
     public void AddObject(GameObject obj)
     {
-        if (poolRoot == null)
-            poolRoot = new GameObject("PoolRoot");
-
         if (PoolContainer.ContainsKey(obj.name))
         {
             Debug.LogWarning("对象池中已有" + obj.name + "资源");
@@ -34,11 +34,8 @@ public class ObjectPoolManager
         }
     }
 
-    public void AddObject(E_ResourcesPath path, string assetName)
+    public void AddObject(E_ResourcesPath path, string assetName, int count = 0)
     {
-        if (poolRoot == null)
-            poolRoot = new GameObject("PoolRoot");
-
         if (PoolContainer.ContainsKey(assetName))
         {
             Debug.LogWarning("对象池中已有" + assetName + "资源");
@@ -50,29 +47,16 @@ public class ObjectPoolManager
                 resObj.name = assetName;
 
                 PoolContainer.Add(assetName, new PoolStack(resObj, poolRoot));
-                PoolContainer[assetName].PushObj(resObj);
-            });
-        }
-    }
 
-    public void AddObject(E_ResourcesPath path, string assetName, int count)
-    {
-        if (poolRoot == null)
-            poolRoot = new GameObject("PoolRoot");
-
-        if (PoolContainer.ContainsKey(assetName))
-        {
-            Debug.LogWarning("对象池中已有" + assetName + "资源");
-        }
-        else
-        {
-            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(path, assetName, resObj =>
-            {
-                resObj.name = assetName;
-
-                PoolContainer.Add(assetName, new PoolStack(resObj, poolRoot));
-                PoolContainer[assetName].PushObj(resObj);
-                PoolContainer[assetName].FillObj(count);
+                if (count <= 0)
+                {
+                    PoolContainer[assetName].PushObj(resObj);
+                }
+                else
+                {
+                    PoolContainer[assetName].PushObj(resObj);
+                    PoolContainer[assetName].FillObj(count - 1);
+                }
             });
         }
     }
@@ -92,9 +76,6 @@ public class ObjectPoolManager
 
     public void ReturnObject(GameObject obj)
     {
-        if (poolRoot == null)
-            poolRoot = new GameObject("PoolRoot");
-
         if (PoolContainer.ContainsKey(obj.name))
         {
             PoolContainer[obj.name].PushObj(obj);
@@ -102,10 +83,61 @@ public class ObjectPoolManager
         else
         {
             Debug.LogError("对象池中未添加过该对象, 不能返回至对象池");
-            // Debug.LogWarning("对象池中未添加过该对象，已在对象池中记录该对象");
-            // AddObject_New(obj);
         }
     }
+
+    public void RemovePoolStack(params string[] names)
+    {
+        foreach (var name in names)
+        {
+            if (PoolContainer.ContainsKey(name))
+            {
+                PoolContainer.Remove(name);
+                GameObject.Destroy(GameObject.Find(name + "_Pool"));
+            }
+            else
+            {
+                Debug.LogWarning("PoolRoot中未找到" + name + "_Pool, 请检查输入的名称是否正确");
+            }
+        }
+    }
+
+    public void RemoveExcept(params string[] names)
+    {
+        //获取子物体所有名称
+        List<string> childNames = new List<string>();
+        for (int index = 0; index < poolRoot.transform.childCount; index++)
+            childNames.Add(poolRoot.transform.GetChild(index).name);
+
+        //比对所有名称
+        foreach (var name in names)
+        {
+            //检查容器中是否有该名称的对象
+            if (PoolContainer.ContainsKey(name))
+            {
+                //比对单个名称
+                foreach (var childName in childNames)
+                {
+                    if (childName == name + "_Pool")
+                    {
+                        childNames.Remove(childName);
+                        PoolContainer.Remove(name);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("PoolRoot中未找到" + name + "_Pool, 请检查输入的名称是否正确");
+            }
+        }
+
+        foreach (var childName in childNames)
+        {
+            GameObject.Destroy(GameObject.Find(childName));
+        }
+    }
+
 
     public void Clear()
     {

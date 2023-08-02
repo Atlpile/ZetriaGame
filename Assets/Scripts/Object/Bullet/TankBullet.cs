@@ -16,8 +16,6 @@ public class TankBullet : BaseBullet
         anim.Play("Run");
     }
 
-
-
     private void FixedUpdate()
     {
         Move();

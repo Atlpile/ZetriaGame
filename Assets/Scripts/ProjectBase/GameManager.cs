@@ -11,7 +11,9 @@ public enum E_InitPanel
 
 /*
     额外功能
-    1.Debugger控制调试是否显示
+    1.使用DebuggerManager管理Debugger
+    2.添加基建容器，用于添加基建模块
+    3.添加游戏模块容器，用于添加游戏模块
 */
 
 public class GameManager : MonoBehaviour
