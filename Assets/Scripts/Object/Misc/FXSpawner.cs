@@ -7,6 +7,7 @@ public class FXSpawner : MonoBehaviour, IObject
     [SerializeField] private float _destroyTime = 0.5f;
     private Animator animator;
 
+
     private void Awake()
     {
         animator = this.GetComponent<Animator>();
@@ -21,6 +22,7 @@ public class FXSpawner : MonoBehaviour, IObject
     {
         Release();
     }
+
 
     public void Create()
     {
@@ -37,6 +39,7 @@ public class FXSpawner : MonoBehaviour, IObject
     {
         StopCoroutine(IE_Hide());
     }
+
 
     private IEnumerator IE_Hide()
     {

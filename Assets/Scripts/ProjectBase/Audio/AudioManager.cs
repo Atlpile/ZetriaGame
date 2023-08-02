@@ -133,7 +133,9 @@ public class AudioManager
     {
         GameObject audioPlayerObj;
         if (usePool)
-            audioPlayerObj = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("AudioPlayer", E_ResourcesPath.Object);
+        {
+            audioPlayerObj = GameManager.Instance.ObjectPoolManager.GetObject("AudioPlayer");
+        }
         else
             audioPlayerObj = GameObject.Instantiate(_audioPlayer);
 

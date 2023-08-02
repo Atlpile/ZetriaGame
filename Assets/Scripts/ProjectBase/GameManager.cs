@@ -87,6 +87,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "AudioPlayer");
+
         Application.targetFrameRate = 144;
 
         LoadGameUI();

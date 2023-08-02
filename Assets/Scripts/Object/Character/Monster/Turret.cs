@@ -38,7 +38,7 @@ public class Turret : BaseMonster
         isAttack = true;
 
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
-        GameObject bullet = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("TankBullet", E_ResourcesPath.Object);
+        GameObject bullet = GameManager.Instance.ObjectPoolManager.GetObject("TankBullet");
         bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
 
         yield return new WaitForSeconds(monsterInfo.attackDuration);

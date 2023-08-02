@@ -39,7 +39,7 @@ public class Gargoyle : BaseMonster
         isAttack = true;
 
         anim.SetTrigger("Attack");
-        GameObject bullet = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("EnemyBullet", E_ResourcesPath.Object);
+        GameObject bullet = GameManager.Instance.ObjectPoolManager.GetObject("EnemyBullet");
         bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
         bullet.GetComponent<EnemyBullet>().type = E_EnemyBulletType.Down;
 

@@ -121,14 +121,15 @@ public class UIManager
         //有面板
         if (PanelDic.ContainsKey(panelName))
         {
-            GameManager.Instance.ObjectPoolManager.GetObject(panelName, rectCanvas);
+            GameManager.Instance.ObjectPoolManager.GetObject(panelName);
             Debug.LogWarning("UIManager:场景中存在该Panel");
             return PanelDic[panelName] as T;
         }
         //没有面板
         else
         {
-            GameObject poolPrefab = GameManager.Instance.ObjectPoolManager.GetOrLoadObject(panelName, E_ResourcesPath.UI, rectCanvas);
+            GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.UI, panelName);
+            GameObject poolPrefab = GameManager.Instance.ObjectPoolManager.GetObject(panelName);
 
             poolPrefab.transform.SetParent(rectCanvas);
             poolPrefab.transform.localPosition = Vector3.zero;

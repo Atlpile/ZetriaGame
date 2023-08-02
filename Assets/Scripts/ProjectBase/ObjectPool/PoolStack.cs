@@ -18,36 +18,15 @@ public class PoolStack
         childrenObj = obj;
     }
 
-    public PoolStack(GameObject obj)
-    {
-        parentObj = new GameObject(obj.name + "_Pool");
-        childrenObj = obj;
-    }
 
-    public void Push(GameObject obj)
+    public void PushObj(GameObject obj)
     {
         obj.SetActive(false);
         obj.transform.SetParent(parentObj.transform);
         poolStack.Push(obj);
     }
 
-    public GameObject Pop(Transform parent)
-    {
-        GameObject obj = poolStack.Pop();
-        if (obj != null)
-        {
-            obj.SetActive(true);
-            obj.transform.SetParent(parent);
-            return obj;
-        }
-        else
-        {
-            Debug.LogError("PoolStack为空,不能弹出对象");
-            return null;
-        }
-    }
-
-    public GameObject DynamicPop(Transform parent)
+    public GameObject DynamicPopObj(Transform parent)
     {
         if (poolStack.Count > 0)
         {
@@ -58,26 +37,26 @@ public class PoolStack
         }
         else
         {
-            Fill();
-            return DynamicPop(parent);
+            FillObj();
+            return DynamicPopObj(parent);
         }
     }
 
-    public void Fill()
+    public void FillObj()
     {
         GameObject fillObj = GameObject.Instantiate(childrenObj);
         fillObj.name = childrenObj.name;
-        Push(fillObj);
+        PushObj(fillObj);
     }
 
-    public void Fill(int count)
+    public void FillObj(int count)
     {
         GameObject fillObj;
         for (int i = 0; i < count; i++)
         {
             fillObj = GameObject.Instantiate(childrenObj, parentObj.transform);
             fillObj.name = childrenObj.name;
-            Push(fillObj);
+            PushObj(fillObj);
         }
     }
 

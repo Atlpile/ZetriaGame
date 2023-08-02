@@ -73,7 +73,12 @@ public class PlayerController : BaseCharacter, IDamageable
         {
             _moveSource.clip = audio;
         });
-        GameManager.Instance.ObjectPoolManager.AddObjectFromResources("ShortGunBullet", E_ResourcesPath.Object, 3);
+
+        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "PistolBullet");
+        //FIXME：
+        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "ShortGunBullet", 3);
+        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.FX, "FX_Jump");
+        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.FX, "FX_Kick");
 
         InitPlayer();
 
@@ -308,7 +313,7 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_fire");
         _ammoController.UsePistolAmmo();
 
-        GameObject pistolBullet = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("PistolBullet", E_ResourcesPath.Object);
+        GameObject pistolBullet = GameManager.Instance.ObjectPoolManager.GetObject("PistolBullet");
         SetBulletPos(pistolBullet, _zetriaInfo.pistolBulletLeftOffset, _zetriaInfo.pistolBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
     }
 
@@ -317,9 +322,10 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_fire");
         _ammoController.UseShotGunAmmo();
 
-        GameObject bulletUpward = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
-        GameObject bulletStraight = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
-        GameObject bulletDownward = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
+        //TODO:优化
+        GameObject bulletUpward = GameManager.Instance.ObjectPoolManager.GetObject("ShortGunBullet");
+        GameObject bulletStraight = GameManager.Instance.ObjectPoolManager.GetObject("ShortGunBullet");
+        GameObject bulletDownward = GameManager.Instance.ObjectPoolManager.GetObject("ShortGunBullet");
 
         bulletUpward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
         bulletStraight.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
@@ -400,7 +406,7 @@ public class PlayerController : BaseCharacter, IDamageable
         rb2D.velocity = new Vector2(0f, _zetriaInfo.jumpForce);
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_jump");
 
-        GameObject jumpFX = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("FX_Jump", E_ResourcesPath.FX);
+        GameObject jumpFX = GameManager.Instance.ObjectPoolManager.GetObject("FX_Jump");
         SetFXPos(jumpFX, _zetriaInfo.jumpFXOffset, _zetriaInfo.jumpFXOffset);
     }
 
@@ -417,7 +423,7 @@ public class PlayerController : BaseCharacter, IDamageable
         anim.SetTrigger("MeleeAttack");
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
 
-        GameObject kickFX = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("FX_Kick", E_ResourcesPath.FX);
+        GameObject kickFX = GameManager.Instance.ObjectPoolManager.GetObject("FX_Kick");
         SetFXPos(kickFX, _zetriaInfo.kickFXLeftOffset, _zetriaInfo.kickFXRightOffset);
 
         yield return new WaitForSeconds(_zetriaInfo.meleeAttackCD);

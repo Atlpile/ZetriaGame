@@ -65,8 +65,7 @@ public abstract class BaseBullet : MonoBehaviour
 
     public virtual void Hide()
     {
-        // GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
-        GameManager.Instance.ObjectPoolManager.ReturnObject_New(this.gameObject);
+        GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 
     protected virtual void Release()
