@@ -15,7 +15,7 @@ public class AudioManager
     public float effectVolume = 1;
     public float bgmVolume = 1;
 
-    private Dictionary<string, AudioClip> AudioDict = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> _AudioContainer = new Dictionary<string, AudioClip>();
     private AudioSource _bgmChannel;
     private AudioSource _effectChannel;
     private GameObject _audioPlayer;
@@ -32,7 +32,7 @@ public class AudioManager
 
     public void AudioPlay(E_AudioType type, string name, bool isLoop = false, bool usePool = true)
     {
-        if (AudioDict.ContainsKey(name))
+        if (_AudioContainer.ContainsKey(name))
         {
             PlayAudioClip(type, name, isLoop, usePool);
         }
@@ -46,7 +46,7 @@ public class AudioManager
                     Debug.LogError("AudioManager:未找到该名称的音频：" + name + ",请检查Resources文件夹中的音频是否存在");
                     return;
                 }
-                AudioDict.Add(name, audioClip);
+                _AudioContainer.Add(name, audioClip);
 
                 PlayAudioClip(type, name, isLoop, usePool);
             });
@@ -110,7 +110,7 @@ public class AudioManager
 
     public void Clear()
     {
-        AudioDict.Clear();
+        _AudioContainer.Clear();
     }
 
     private void SetBGMVolume(float volume)
@@ -141,7 +141,7 @@ public class AudioManager
         AudioSource audioPlayerSource = audioPlayerObj.GetComponent<AudioSource>();
 
         audioPlayerObj.transform.SetParent(GameManager.Instance.transform);
-        audioPlayerSource.clip = AudioDict[name];
+        audioPlayerSource.clip = _AudioContainer[name];
 
         switch (type)
         {

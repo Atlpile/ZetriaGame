@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 2133771628275159872}
   - component: {fileID: 2133771628275159873}
   m_Layer: 5
-  m_Name: HealthSlider
+  m_Name: img_HealthSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 2133771628466012463}
   - component: {fileID: 2133771628466012448}
   m_Layer: 5
-  m_Name: PistolAmmoPointer
+  m_Name: img_PistolAmmoPointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 2133771628562597815}
   - component: {fileID: 2133771628562597768}
   m_Layer: 5
-  m_Name: ShoutGunAmmo
+  m_Name: ShortGunAmmo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 2133771628806275690}
   - component: {fileID: 2133771628806275691}
   m_Layer: 5
-  m_Name: ShoutGunAmmoCount
+  m_Name: text_ShortGunAmmoCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -617,7 +617,7 @@ GameObject:
   - component: {fileID: 2133771629088761700}
   - component: {fileID: 2133771629088761701}
   m_Layer: 5
-  m_Name: PistolAmmoCount
+  m_Name: text_PistolAmmoCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -774,7 +774,7 @@ GameObject:
   - component: {fileID: 2133771629893450688}
   - component: {fileID: 2133771629893450689}
   m_Layer: 5
-  m_Name: ShoutGunAmmoPointer
+  m_Name: img_ShortGunAmmoPointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -850,7 +850,7 @@ GameObject:
   - component: {fileID: 5158323701933058278}
   - component: {fileID: 3899506366848586419}
   m_Layer: 5
-  m_Name: Token_Obtain
+  m_Name: img_Token_Obtain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,7 +926,7 @@ GameObject:
   - component: {fileID: 8685000878403970807}
   - component: {fileID: 1928894804416920790}
   m_Layer: 5
-  m_Name: DoorCard
+  m_Name: img_DoorCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

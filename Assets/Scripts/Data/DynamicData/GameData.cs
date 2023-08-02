@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class GameData
 {
+    public Dictionary<string, int> TokenContainer = new Dictionary<string, int>();
     public bool hasShotGun;
-    public Dictionary<string, int> TokenDic;
 
     public GameData()
     {
         hasShotGun = false;
-        TokenDic = new Dictionary<string, int>();
     }
 }

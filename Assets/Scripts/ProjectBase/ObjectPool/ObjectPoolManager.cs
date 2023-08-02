@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,8 @@ using UnityEngine.Events;
 
 public class ObjectPoolManager
 {
+    private Dictionary<string, PoolStack> PoolContainer = new Dictionary<string, PoolStack>();
     private GameObject poolRoot;
-    private Dictionary<string, PoolStack> ObjectPoolsDic = new Dictionary<string, PoolStack>();
 
     public ObjectPoolManager()
     {
@@ -18,19 +19,19 @@ public class ObjectPoolManager
 
     public GameObject GetObject(string name, Transform parent = null)
     {
-        if (!ObjectPoolsDic.ContainsKey(name))
+        if (!PoolContainer.ContainsKey(name))
         {
             Debug.LogError("对象池中不存在该名字的对象,请检查名称是否输入正确");
             return null;
         }
-        else if (ObjectPoolsDic[name].poolStack.Count > 0)
+        else if (PoolContainer[name].StackObjCount > 0)
         {
-            return ObjectPoolsDic[name].GetObjectInPool(parent);
+            return PoolContainer[name].Pop(parent);
         }
         else
         {
             //递归填充
-            ObjectPoolsDic[name].FillObjectPool();
+            PoolContainer[name].Fill();
             return GetObject(name, parent);
         }
     }
@@ -40,38 +41,96 @@ public class ObjectPoolManager
         if (poolRoot == null)
             poolRoot = new GameObject("PoolRoot");
 
-        if (!ObjectPoolsDic.ContainsKey(name))
+        if (!PoolContainer.ContainsKey(name))
         {
             GameObject resObj = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name, canCreate);
             resObj.name = name;
-            ObjectPoolsDic.Add(resObj.name, new PoolStack(resObj, poolRoot));
+            PoolContainer.Add(resObj.name, new PoolStack(resObj, poolRoot));
             return resObj;
         }
-        else if (ObjectPoolsDic[name].poolStack.Count > 0)
+        else if (PoolContainer[name].StackObjCount > 0)
         {
-            return ObjectPoolsDic[name].GetObjectInPool(parent);
+            return PoolContainer[name].Pop(parent);
         }
         else
         {
             //递归填充
-            ObjectPoolsDic[name].FillObjectPool();
+            PoolContainer[name].Fill();
             return GetOrLoadObject(name, path, parent);
         }
     }
+
+
+    public GameObject GetObject_New(string name, Transform parent = null)
+    {
+        if (PoolContainer.ContainsKey(name))
+        {
+            return PoolContainer[name].DynamicPop(parent);
+        }
+        else
+        {
+            Debug.LogError("ObjectPoolManager: 对象池中不存在" + name + "的对象,请检查对象池是否添加该对象");
+            return null;
+        }
+    }
+
+    public void AddObject_New(string assetName)
+    {
+        if (poolRoot == null)
+            poolRoot = new GameObject("PoolRoot");
+
+        if (PoolContainer.ContainsKey(assetName))
+        {
+            Debug.LogWarning("对象池中已有" + assetName + "资源");
+        }
+        else
+        {
+            GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.Object, assetName, resObj =>
+            {
+                resObj.name = assetName;
+
+                PoolContainer.Add(assetName, new PoolStack(resObj));
+                PoolContainer[assetName].Push(resObj);
+            });
+        }
+    }
+
+    public void AddObject_New(GameObject obj)
+    {
+        PoolContainer.Add(obj.name, new PoolStack(obj));
+        PoolContainer[obj.name].Push(obj);
+    }
+
+    public void ReturnObject_New(GameObject obj)
+    {
+        if (poolRoot == null)
+            poolRoot = new GameObject("PoolRoot");
+
+        if (PoolContainer.ContainsKey(obj.name))
+        {
+            PoolContainer[obj.name].Push(obj);
+        }
+        else
+        {
+            Debug.LogWarning("对象池中未添加过该对象，已在对象池中记录该对象");
+            AddObject_New(obj);
+        }
+    }
+
 
     public void ReturnObject(GameObject obj)
     {
         if (poolRoot == null)
             poolRoot = new GameObject("PoolRoot");
 
-        if (ObjectPoolsDic.ContainsKey(obj.name))
+        if (PoolContainer.ContainsKey(obj.name))
         {
-            ObjectPoolsDic[obj.name].ReturnToObjectPool(obj);
+            PoolContainer[obj.name].Push(obj);
         }
         else
         {
-            ObjectPoolsDic.Add(obj.name, new PoolStack(obj, poolRoot));
-            ObjectPoolsDic[obj.name].ReturnToObjectPool(obj);
+            PoolContainer.Add(obj.name, new PoolStack(obj, poolRoot));
+            PoolContainer[obj.name].Push(obj);
         }
     }
 
@@ -88,14 +147,14 @@ public class ObjectPoolManager
                 poolRoot = new GameObject("PoolRoot");
 
             obj.name = name;
-            ObjectPoolsDic.Add(name, new PoolStack(obj, poolRoot));
-            ObjectPoolsDic[name].ReturnToObjectPool(obj);
+            PoolContainer.Add(name, new PoolStack(obj, poolRoot));
+            PoolContainer[name].Push(obj);
         }
     }
 
     public void AddObjectFromResources(string name, E_ResourcesPath path, bool canCreate = true)
     {
-        if (ObjectPoolsDic.ContainsKey(name))
+        if (PoolContainer.ContainsKey(name))
         {
             Debug.LogWarning("对象池中存在该名称的对象");
         }
@@ -106,8 +165,8 @@ public class ObjectPoolManager
 
             GameObject resObj = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name, canCreate);
             resObj.name = name;
-            ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
-            ObjectPoolsDic[name].ReturnToObjectPool(resObj);
+            PoolContainer.Add(name, new PoolStack(resObj, poolRoot));
+            PoolContainer[name].Push(resObj);
         }
     }
 
@@ -118,13 +177,13 @@ public class ObjectPoolManager
 
         GameObject resObj = GameManager.Instance.ResourcesLoader.Load<GameObject>(path, name, canCreate);
         resObj.name = name;
-        ObjectPoolsDic.Add(name, new PoolStack(resObj, poolRoot));
-        ObjectPoolsDic[name].FillObjectPool(fillCount);
+        PoolContainer.Add(name, new PoolStack(resObj, poolRoot));
+        PoolContainer[name].Fill(fillCount);
     }
 
     public bool GetName(string name)
     {
-        if (ObjectPoolsDic.ContainsKey(name))
+        if (PoolContainer.ContainsKey(name))
             return true;
         else
             return false;
@@ -132,7 +191,7 @@ public class ObjectPoolManager
 
     public void Clear()
     {
-        ObjectPoolsDic.Clear();
+        PoolContainer.Clear();
         poolRoot = null;
         GameObject.Destroy(GameObject.Find("PoolRoot"));
     }

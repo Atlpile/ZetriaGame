@@ -22,10 +22,10 @@ public class ItemManager
     {
         gameData = GameManager.Instance.SaveLoadManager.LoadData<GameData>("GameData");
 
-        if (!gameData.TokenDic.ContainsKey(id.ToString()))
+        if (!gameData.TokenContainer.ContainsKey(id.ToString()))
         {
             Debug.Log("拾取令牌");
-            gameData.TokenDic.Add(id.ToString(), id);
+            gameData.TokenContainer.Add(id.ToString(), id);
             GameManager.Instance.SaveLoadManager.SaveData(gameData, "GameData");
         }
 

@@ -7,14 +7,13 @@ using UnityEngine.UI;
 
 public class GamePanel : BasePanel
 {
-    private Text PistolAmmoCount;
-    private Text ShoutGunAmmoCount;
-    private Image HealthSlider;
-    private Image PistolAmmoPointer;
-    private Image ShoutGunAmmoPointer;
-    private Image DoorCard;
-    private Image Token_Obtain;
-
+    private Text text_PistolAmmoCount;
+    private Text text_ShortGunAmmoCount;
+    private Image img_HealthSlider;
+    private Image img_PistolAmmoPointer;
+    private Image img_ShortGunAmmoPointer;
+    private Image img_DoorCard;
+    private Image img_Token_Obtain;
 
     protected override void Awake()
     {
@@ -23,13 +22,13 @@ public class GamePanel : BasePanel
         GetChildrenAllUIComponent<Text>();
         GetChildrenAllUIComponent<Image>();
 
-        PistolAmmoCount = GetUIComponent<Text>("PistolAmmoCount");
-        ShoutGunAmmoCount = GetUIComponent<Text>("ShoutGunAmmoCount");
-        HealthSlider = GetUIComponent<Image>("HealthSlider");
-        PistolAmmoPointer = GetUIComponent<Image>("PistolAmmoPointer");
-        ShoutGunAmmoPointer = GetUIComponent<Image>("ShoutGunAmmoPointer");
-        DoorCard = GetUIComponent<Image>("DoorCard");
-        Token_Obtain = GetUIComponent<Image>("Token_Obtain");
+        text_PistolAmmoCount = GetUIComponent<Text>(nameof(text_PistolAmmoCount));
+        text_ShortGunAmmoCount = GetUIComponent<Text>(nameof(text_ShortGunAmmoCount));
+        img_HealthSlider = GetUIComponent<Image>(nameof(img_HealthSlider));
+        img_PistolAmmoPointer = GetUIComponent<Image>(nameof(img_PistolAmmoPointer));
+        img_ShortGunAmmoPointer = GetUIComponent<Image>(nameof(img_ShortGunAmmoPointer));
+        img_DoorCard = GetUIComponent<Image>(nameof(img_DoorCard));
+        img_Token_Obtain = GetUIComponent<Image>(nameof(img_Token_Obtain));
 
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
@@ -92,38 +91,38 @@ public class GamePanel : BasePanel
 
     public void UpdateDoorCard()
     {
-        DoorCard.gameObject.SetActive(true);
+        img_DoorCard.gameObject.SetActive(true);
     }
 
     public void UpdateLifeBar(float currentHP, float maxHP)
     {
-        HealthSlider.fillAmount = currentHP / maxHP;
+        img_HealthSlider.fillAmount = currentHP / maxHP;
     }
 
     public void UpdatePistolAmmoText(int currentCount, int maxCount)
     {
-        PistolAmmoCount.text = currentCount + "/" + maxCount;
+        text_PistolAmmoCount.text = currentCount + "/" + maxCount;
     }
 
     public void UpdateShortGunAmmoText(int currentCount, int maxCount)
     {
-        ShoutGunAmmoCount.text = currentCount + "/" + maxCount;
+        text_ShortGunAmmoCount.text = currentCount + "/" + maxCount;
     }
 
     public void UpdateAmmoPointer(bool isAcitve)
     {
-        PistolAmmoPointer.gameObject.SetActive(isAcitve);
-        ShoutGunAmmoPointer.gameObject.SetActive(!isAcitve);
+        img_PistolAmmoPointer.gameObject.SetActive(isAcitve);
+        img_ShortGunAmmoPointer.gameObject.SetActive(!isAcitve);
     }
 
     private void UpdateAmmoPointer()
     {
-        PistolAmmoPointer.gameObject.SetActive(true);
-        ShoutGunAmmoPointer.gameObject.SetActive(false);
+        img_PistolAmmoPointer.gameObject.SetActive(true);
+        img_ShortGunAmmoPointer.gameObject.SetActive(false);
     }
 
     private void UpdateToken(Token token)
     {
-        Token_Obtain.gameObject.SetActive(true);
+        img_Token_Obtain.gameObject.SetActive(true);
     }
 }

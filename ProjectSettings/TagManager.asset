@@ -44,6 +44,12 @@ TagManager:
   - name: Back
     uniqueID: 920144101
     locked: 0
+  - name: Environment
+    uniqueID: 1289979457
+    locked: 0
+  - name: Ground
+    uniqueID: 1436590633
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

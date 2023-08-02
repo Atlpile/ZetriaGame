@@ -5,6 +5,16 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
+
+/*
+    额外添加功能
+    1.在编辑器中拖出预制体到场景时，自动添加设置好的Canvas
+    
+    功能优化
+    1.组件获取优化：在申明变量或属性完成后，自动根据变量或属性名获取UI名称的组件
+*/
+
+
 public abstract class BasePanel : MonoBehaviour
 {
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();

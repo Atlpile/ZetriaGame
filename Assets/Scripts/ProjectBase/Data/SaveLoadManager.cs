@@ -69,4 +69,6 @@ public class SaveLoadManager
         SaveData(data, fileName, type);
         Debug.Log("清空" + data.ToString() + "数据");
     }
+
+    //TODO:额外功能：加密、解密
 }

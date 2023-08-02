@@ -10,6 +10,8 @@ public class PistolBullet : BaseBullet
 
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.freezeRotation = true;
+
+
     }
 
     private void FixedUpdate()

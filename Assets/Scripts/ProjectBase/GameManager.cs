@@ -9,6 +9,11 @@ public enum E_InitPanel
     None, Main, Game, Input, Loading,
 }
 
+/*
+    额外功能
+    1.Debugger控制调试是否显示
+*/
+
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private E_InitPanel panel;

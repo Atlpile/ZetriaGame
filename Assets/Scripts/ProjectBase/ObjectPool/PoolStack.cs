@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PoolStack
 {
-    public GameObject parentObj;
-    public GameObject childrenObj;
-    public Stack<GameObject> poolStack = new Stack<GameObject>();
+    private GameObject parentObj;
+    private GameObject childrenObj;
+    private Stack<GameObject> poolStack = new Stack<GameObject>();
+
+    public int StackObjCount => poolStack.Count;
+
 
     public PoolStack(GameObject obj, GameObject poolRoot)
     {
@@ -15,14 +18,20 @@ public class PoolStack
         childrenObj = obj;
     }
 
-    public void ReturnToObjectPool(GameObject obj)
+    public PoolStack(GameObject obj)
     {
-        obj.SetActive(false);
-        poolStack.Push(obj);
-        obj.transform.SetParent(parentObj.transform);
+        parentObj = new GameObject(obj.name + "_Pool");
+        childrenObj = obj;
     }
 
-    public GameObject GetObjectInPool(Transform parent)
+    public void Push(GameObject obj)
+    {
+        obj.SetActive(false);
+        obj.transform.SetParent(parentObj.transform);
+        poolStack.Push(obj);
+    }
+
+    public GameObject Pop(Transform parent)
     {
         GameObject obj = poolStack.Pop();
         if (obj != null)
@@ -33,27 +42,42 @@ public class PoolStack
         }
         else
         {
-            Debug.LogError("PoolStack中没有该对象");
+            Debug.LogError("PoolStack为空,不能弹出对象");
             return null;
         }
-
     }
 
-    public void FillObjectPool()
+    public GameObject DynamicPop(Transform parent)
+    {
+        if (poolStack.Count > 0)
+        {
+            GameObject obj = poolStack.Pop();
+            obj.SetActive(true);
+            obj.transform.SetParent(parent);
+            return obj;
+        }
+        else
+        {
+            Fill();
+            return DynamicPop(parent);
+        }
+    }
+
+    public void Fill()
     {
         GameObject fillObj = GameObject.Instantiate(childrenObj);
         fillObj.name = childrenObj.name;
-        ReturnToObjectPool(fillObj);
+        Push(fillObj);
     }
 
-    public void FillObjectPool(int count)
+    public void Fill(int count)
     {
         GameObject fillObj;
         for (int i = 0; i < count; i++)
         {
             fillObj = GameObject.Instantiate(childrenObj, parentObj.transform);
             fillObj.name = childrenObj.name;
-            ReturnToObjectPool(fillObj);
+            Push(fillObj);
         }
     }
 

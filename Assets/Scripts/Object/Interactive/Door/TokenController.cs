@@ -24,7 +24,7 @@ public class TokenController : MonoBehaviour
         if (GameManager.Instance.InputController.GetKeyDown(E_InputType.Interacitve) && _isPlayer && _canUse)
         {
             GameData gameData = GameManager.Instance.SaveLoadManager.LoadData<GameData>("GameData");
-            if (gameData.TokenDic.Count >= needTokenNum)
+            if (gameData.TokenContainer.Count >= needTokenNum)
             {
                 if (door != null && door.type == E_DoorType.Condition)
                 {

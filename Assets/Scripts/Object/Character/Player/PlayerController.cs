@@ -5,56 +5,24 @@ using UnityEngine;
 
 public class PlayerController : BaseCharacter, IDamageable
 {
-
     #region Variable
 
-    [SerializeField] private ZetriaInfo zetriaInfo;
-    private AmmoController ammoController;
     private E_PlayerStatus _status;
+    private ZetriaInfo _zetriaInfo;
+    private AmmoController _ammoController;
+
 
     //移动相关
     private int _horizontalMove;
     private AudioSource _moveSource;
-
-
-    //跳跃相关
-    private int _currentJumpCount;
-
-
-    [Header("Player Size & Offset")]
-    private Vector2 _crouchSize, _crouchOffset;
-    private Vector2 _standSize, _standOffset;
 
     [Header("Ground Check")]
     private Vector2 _groundCheckOffset;
     private float _groundCheckRadius = 0.15f;
 
     [Header("Head Check")]
-    private float _rayLength = 1f;
     private RaycastHit2D _headCheck;
-
-    [Header("BulletOffset")]
-    private Vector3 _pistolBulletLeftOffset = new Vector2(-1f, 1.15f);
-    private Vector3 _pistolBulletRightOffset = new Vector2(1f, 1.15f);
-    private Vector3 _shotGunBulletLeftOffset = new Vector2(-0.5f, 0.75f);
-    private Vector3 _shotGunBulletRightOffset = new Vector2(0.5f, 0.75f);
-    private Vector3 _bulletOffsetWithCrouch = new Vector2(0, -0.5f);
-
-    [Header("FXOffset")]
-    private Vector3 _kickFXRightOffset = new Vector2(0.75f, 1f);
-    private Vector3 _kickFXLeftOffset = new Vector2(-0.75f, 1f);
-    private Vector3 _jumpFXOffset;
-
-    [Header("Status")]
-    private bool _isMeleeAttack;
-    private bool _isPistolAttack;
-    private bool _isShotGunAttack;
-    private bool _isEmptyAttack;
-    private bool _isCrouch;
-    private bool _isReload;
-    private bool _isHurt;
-    private bool _isDead;
-    private bool _canStand;
+    private float _rayLength = 1f;
 
     #endregion
 
@@ -72,8 +40,9 @@ public class PlayerController : BaseCharacter, IDamageable
                 return new Vector2(-this.col2D.offset.x, this.col2D.size.y / 2);
         }
     }
-    public ZetriaInfo ZetriaInfo => zetriaInfo;
+    public ZetriaInfo ZetriaInfo => _zetriaInfo;
     private InputController InputController => GameManager.Instance.InputController;
+
     #endregion
 
 
@@ -83,15 +52,15 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         base.OnAwake();
 
-        zetriaInfo = new ZetriaInfo();
-        ammoController = new AmmoController();
+        _zetriaInfo = new ZetriaInfo();
+        _ammoController = new AmmoController();
         _moveSource = GetComponent<AudioSource>();
 
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
-        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpPistolAmmo, _ammoController.PickUpPistolAmmoPackage);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpShortGunAmmo, _ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.EventManager.AddEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.AddEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
     }
@@ -114,18 +83,18 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         base.OnUpdate();
 
-        if (_isDead) return;
+        if (_zetriaInfo.isDead) return;
 
-        _moveSource.enabled = _isCrouch || _horizontalMove == 0 || !isGround ? false : true;
+        _moveSource.enabled = _zetriaInfo.isCrouch || _horizontalMove == 0 || !isGround ? false : true;
 
         UpdatePlayerState();
     }
 
     protected override void OnFixedUpdate()
     {
-        if (_isDead) return;
+        if (_zetriaInfo.isDead) return;
 
-        if (!_isMeleeAttack && !_isReload)
+        if (!_zetriaInfo.isMeleeAttack && !_zetriaInfo.isReload)
         {
             // Move();
             // Flip();
@@ -138,8 +107,8 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnGetNPC);
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpShortGun, OnPickUpShortGun);
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnGetDoorCard);
-        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, ammoController.PickUpPistolAmmoPackage);
-        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, ammoController.PickUpShotGunAmmoPackage);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpPistolAmmo, _ammoController.PickUpPistolAmmoPackage);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, _ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
 
@@ -155,9 +124,9 @@ public class PlayerController : BaseCharacter, IDamageable
         anim.SetInteger("Horizontal", _horizontalMove);
         anim.SetFloat("Vertical", rb2D.velocity.y);
         anim.SetBool("IsGround", isGround);
-        anim.SetBool("IsCrouch", _isCrouch);
+        anim.SetBool("IsCrouch", _zetriaInfo.isCrouch);
         anim.SetInteger("PlayerStatus", (int)_status);
-        anim.SetBool("IsDead", _isDead);
+        anim.SetBool("IsDead", _zetriaInfo.isDead);
 
         // anim.SetBool("IsMeleeAttack", _isMeleeAttack);
     }
@@ -167,20 +136,20 @@ public class PlayerController : BaseCharacter, IDamageable
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
         if (isGround)
         {
-            _currentJumpCount = zetriaInfo.maxJumpCount;
-            _canStand = CanStand();
+            _zetriaInfo.currentJumpCount = _zetriaInfo.maxJumpCount;
+            _zetriaInfo.canStand = CanStand();
 
-            if (InputController.GetKey(E_InputType.Crouch) && !_isReload && _status != E_PlayerStatus.NPC)
+            if (InputController.GetKey(E_InputType.Crouch) && !_zetriaInfo.isReload && _status != E_PlayerStatus.NPC)
                 Crouch();
-            else if (_canStand)
+            else if (_zetriaInfo.canStand)
                 Stand();
 
 
-            if (InputController.GetKeyDown(E_InputType.Jump) && _canStand && !_isReload && !_isMeleeAttack && _status != E_PlayerStatus.NPC)
+            if (InputController.GetKeyDown(E_InputType.Jump) && _zetriaInfo.canStand && !_zetriaInfo.isReload && !_zetriaInfo.isMeleeAttack && _status != E_PlayerStatus.NPC)
             {
                 Jump();
             }
-            else if (InputController.GetKeyDown(E_InputType.MeleeAttack) && !_isMeleeAttack && !_isCrouch && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.MeleeAttack) && !_zetriaInfo.isMeleeAttack && !_zetriaInfo.isCrouch && _status != E_PlayerStatus.NPC)
             {
                 //OPTIMIZE:换子弹过程中，若攻击只能选择近战攻击或者枪械攻击的其中之一
                 MeleeAttack();
@@ -190,7 +159,14 @@ public class PlayerController : BaseCharacter, IDamageable
             {
                 ChangeWeapon();
             }
-            else if (InputController.GetKeyDown(E_InputType.Reload) && CanReload() && !_isReload && !_isPistolAttack && !_isShotGunAttack && _canStand && _status != E_PlayerStatus.NPC)
+            else if (
+                InputController.GetKeyDown(E_InputType.Reload) &&
+                CanReload() &&
+                !_zetriaInfo.isReload &&
+                !_zetriaInfo.isPistolAttack &&
+                !_zetriaInfo.isShotGunAttack &&
+                _zetriaInfo.canStand &&
+                _status != E_PlayerStatus.NPC)
             {
                 Reload();
                 StopMove();
@@ -200,14 +176,14 @@ public class PlayerController : BaseCharacter, IDamageable
                 PutDownNPC();
             }
 
-            if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+            if (InputController.GetMouseButton(0) && !_zetriaInfo.isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (CanAttack())
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
+            if (InputController.GetMouseButton(0) && !_zetriaInfo.isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
                 if (CanAttack())
                     ShotGunAttack();
@@ -217,25 +193,25 @@ public class PlayerController : BaseCharacter, IDamageable
         }
         else
         {
-            if (InputController.GetKeyDown(E_InputType.Jump) && _currentJumpCount > 0 && _status != E_PlayerStatus.NPC)
+            if (InputController.GetKeyDown(E_InputType.Jump) && _zetriaInfo.currentJumpCount > 0 && _status != E_PlayerStatus.NPC)
             {
                 Jump();
-                _currentJumpCount--;
+                _zetriaInfo.currentJumpCount--;
             }
-            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC && zetriaInfo.hasShortGun)
+            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC && _zetriaInfo.hasShortGun)
             {
                 ChangeWeapon();
                 //OPTIMIZE:在空中时改变切枪动画状态
             }
 
-            if (InputController.GetMouseButton(0) && !_isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+            if (InputController.GetMouseButton(0) && !_zetriaInfo.isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
             {
                 if (CanAttack())
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (InputController.GetMouseButton(0) && !_isShotGunAttack && _status == E_PlayerStatus.ShotGun)
+            if (InputController.GetMouseButton(0) && !_zetriaInfo.isShotGunAttack && _status == E_PlayerStatus.ShotGun)
             {
                 if (CanAttack())
                     ShotGunAttack();
@@ -271,31 +247,32 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void InitPlayer()
     {
-        zetriaInfo.hasShortGun = GameManager.Instance.SaveLoadManager.LoadData<GameData>(Consts.GameData).hasShotGun;
+        GameData gameData = GameManager.Instance.SaveLoadManager.LoadData<GameData>(Consts.GameData);
+        _zetriaInfo.hasShortGun = gameData.hasShotGun;
+
+        _zetriaInfo.standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
+        _zetriaInfo.standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
+        _zetriaInfo.crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
+        _zetriaInfo.crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
 
         isRight = true;
-        currentMoveSpeed = zetriaInfo.standSpeed;
-        rb2D.gravityScale = zetriaInfo.jumpGravity;
-        rb2D.drag = zetriaInfo.drag;
+        currentMoveSpeed = _zetriaInfo.standMoveSpeed;
+
+        rb2D.gravityScale = _zetriaInfo.jumpGravity;
+        rb2D.drag = _zetriaInfo.drag;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb2D.sleepMode = RigidbodySleepMode2D.NeverSleep;
-
-        _standSize = new Vector2(this.col2D.size.x, this.col2D.size.y);
-        _standOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y);
-        _crouchSize = new Vector2(this.col2D.size.x, this.col2D.size.y / 2);
-        _crouchOffset = new Vector2(this.col2D.offset.x, this.col2D.offset.y / 2);
-
     }
 
     private void Crouch()
     {
-        if (_isCrouch == false)
+        if (_zetriaInfo.isCrouch == false)
         {
-            _isCrouch = true;
-            currentMoveSpeed = zetriaInfo.crouchSpeed;
-            col2D.size = _crouchSize;
-            col2D.offset = _crouchOffset;
             _status = E_PlayerStatus.Pistol;
+            _zetriaInfo.isCrouch = true;
+            currentMoveSpeed = _zetriaInfo.crouchMoveSpeed;
+            col2D.size = _zetriaInfo.crouchSize;
+            col2D.offset = _zetriaInfo.crouchOffset;
 
             GamePanel gamePanel = GameManager.Instance.UIManager.GetExistPanel<GamePanel>();
             if (gamePanel != null)
@@ -305,20 +282,20 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void Stand()
     {
-        if (_isCrouch == true)
+        if (_zetriaInfo.isCrouch == true)
         {
-            _isCrouch = false;
-            col2D.size = _standSize;
-            col2D.offset = _standOffset;
+            _zetriaInfo.isCrouch = false;
+            col2D.size = _zetriaInfo.standSize;
+            col2D.offset = _zetriaInfo.standOffset;
 
             if (_status != E_PlayerStatus.NPC)
-                currentMoveSpeed = zetriaInfo.standSpeed;
+                currentMoveSpeed = _zetriaInfo.standMoveSpeed;
         }
     }
 
     private void ChangeWeapon()
     {
-        if (zetriaInfo.hasShortGun == true)
+        if (_zetriaInfo.hasShortGun == true)
         {
             _status = (int)_status >= 1 ? _status = 0 : ++_status;
             GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
@@ -329,42 +306,42 @@ public class PlayerController : BaseCharacter, IDamageable
     private void PistolFire()
     {
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_fire");
-        ammoController.UsePistolAmmo();
+        _ammoController.UsePistolAmmo();
 
         GameObject pistolBullet = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("PistolBullet", E_ResourcesPath.Object);
-        SetBulletPos(pistolBullet, _pistolBulletLeftOffset, _pistolBulletRightOffset, _bulletOffsetWithCrouch);
+        SetBulletPos(pistolBullet, _zetriaInfo.pistolBulletLeftOffset, _zetriaInfo.pistolBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
     }
 
     private void ShotGunFire()
     {
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_fire");
-        ammoController.UseShotGunAmmo();
+        _ammoController.UseShotGunAmmo();
 
-        GameObject shotGunBullet0 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
-        GameObject shotGunBullet1 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
-        GameObject shotGunBullet2 = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
+        GameObject bulletUpward = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
+        GameObject bulletStraight = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
+        GameObject bulletDownward = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("ShortGunBullet", E_ResourcesPath.Object);
 
-        shotGunBullet0.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
-        shotGunBullet1.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
-        shotGunBullet2.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
+        bulletUpward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
+        bulletStraight.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
+        bulletDownward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
 
-        SetBulletPos(shotGunBullet0, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
-        SetBulletPos(shotGunBullet1, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
-        SetBulletPos(shotGunBullet2, _shotGunBulletLeftOffset, _shotGunBulletRightOffset, _bulletOffsetWithCrouch);
+        SetBulletPos(bulletUpward, _zetriaInfo.shortGunBulletLeftOffset, _zetriaInfo.shortGunBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
+        SetBulletPos(bulletStraight, _zetriaInfo.shortGunBulletLeftOffset, _zetriaInfo.shortGunBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
+        SetBulletPos(bulletDownward, _zetriaInfo.shortGunBulletLeftOffset, _zetriaInfo.shortGunBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
     }
 
     private void SetBulletPos(GameObject bullet, Vector3 leftOffset, Vector3 rightOffset, Vector3 crouchOffset)
     {
         if (isRight)
         {
-            if (!_isCrouch)
+            if (!_zetriaInfo.isCrouch)
                 bullet.transform.position = this.transform.position + rightOffset;
             else
                 bullet.transform.position = this.transform.position + rightOffset + crouchOffset;
         }
         else
         {
-            if (!_isCrouch)
+            if (!_zetriaInfo.isCrouch)
                 bullet.transform.position = this.transform.position + leftOffset;
             else
                 bullet.transform.position = this.transform.position + leftOffset + crouchOffset;
@@ -420,42 +397,42 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void Jump()
     {
-        rb2D.velocity = new Vector2(0f, zetriaInfo.jumpForce);
+        rb2D.velocity = new Vector2(0f, _zetriaInfo.jumpForce);
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_jump");
 
         GameObject jumpFX = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("FX_Jump", E_ResourcesPath.FX);
-        SetFXPos(jumpFX, _jumpFXOffset, _jumpFXOffset);
+        SetFXPos(jumpFX, _zetriaInfo.jumpFXOffset, _zetriaInfo.jumpFXOffset);
     }
 
     private void MeleeAttack()
     {
-        if (!_isMeleeAttack)
+        if (!_zetriaInfo.isMeleeAttack)
             StartCoroutine(IE_MeleeAttack());
     }
 
     private IEnumerator IE_MeleeAttack()
     {
-        _isMeleeAttack = true;
+        _zetriaInfo.isMeleeAttack = true;
 
         anim.SetTrigger("MeleeAttack");
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
 
         GameObject kickFX = GameManager.Instance.ObjectPoolManager.GetOrLoadObject("FX_Kick", E_ResourcesPath.FX);
-        SetFXPos(kickFX, _kickFXLeftOffset, _kickFXRightOffset);
+        SetFXPos(kickFX, _zetriaInfo.kickFXLeftOffset, _zetriaInfo.kickFXRightOffset);
 
-        yield return new WaitForSeconds(zetriaInfo.meleeAttackCD);
-        _isMeleeAttack = false;
+        yield return new WaitForSeconds(_zetriaInfo.meleeAttackCD);
+        _zetriaInfo.isMeleeAttack = false;
     }
 
     private void PistolAttack()
     {
-        if (!_isPistolAttack)
+        if (!_zetriaInfo.isPistolAttack)
             StartCoroutine(IE_PistolAttack());
     }
 
     private IEnumerator IE_PistolAttack()
     {
-        _isPistolAttack = true;
+        _zetriaInfo.isPistolAttack = true;
 
         if (_horizontalMove == 0)
             anim.SetTrigger("GunAttack");
@@ -464,19 +441,19 @@ public class PlayerController : BaseCharacter, IDamageable
 
         PistolFire();
 
-        yield return new WaitForSeconds(zetriaInfo.pistolAttackCD);
-        _isPistolAttack = false;
+        yield return new WaitForSeconds(_zetriaInfo.pistolAttackCD);
+        _zetriaInfo.isPistolAttack = false;
     }
 
     private void ShotGunAttack()
     {
-        if (!_isShotGunAttack)
+        if (!_zetriaInfo.isShotGunAttack)
             StartCoroutine(IE_ShotGunAttack());
     }
 
     private IEnumerator IE_ShotGunAttack()
     {
-        _isShotGunAttack = true;
+        _zetriaInfo.isShotGunAttack = true;
 
         if (_horizontalMove == 0)
             anim.SetTrigger("GunAttack");
@@ -485,87 +462,87 @@ public class PlayerController : BaseCharacter, IDamageable
 
         ShotGunFire();
 
-        yield return new WaitForSeconds(zetriaInfo.shotGunAttackCD);
-        _isShotGunAttack = false;
+        yield return new WaitForSeconds(_zetriaInfo.shotGunAttackCD);
+        _zetriaInfo.isShotGunAttack = false;
     }
 
     private void EmptyAttack()
     {
-        if (!_isEmptyAttack)
+        if (!_zetriaInfo.isEmptyAttack)
             StartCoroutine(IE_EmptyAttack());
     }
 
     private IEnumerator IE_EmptyAttack()
     {
-        _isEmptyAttack = true;
+        _zetriaInfo.isEmptyAttack = true;
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "gun_empty");
 
-        yield return new WaitForSeconds(zetriaInfo.emptyAttackCD);
-        _isEmptyAttack = false;
+        yield return new WaitForSeconds(_zetriaInfo.emptyAttackCD);
+        _zetriaInfo.isEmptyAttack = false;
     }
 
     private void Reload()
     {
-        if (!_isReload)
+        if (!_zetriaInfo.isReload)
             StartCoroutine(IE_Reload());
     }
 
     private IEnumerator IE_Reload()
     {
-        _isReload = true;
+        _zetriaInfo.isReload = true;
         anim.SetTrigger("Reload");
 
         switch (_status)
         {
             case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
-                ammoController.ReloadPistolAmmo();
+                _ammoController.ReloadPistolAmmo();
                 GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_reload");
                 break;
             case E_PlayerStatus.ShotGun:
-                ammoController.ReloadShotGunAmmo();
+                _ammoController.ReloadShotGunAmmo();
                 GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_reload");
                 break;
         }
 
-        yield return new WaitForSeconds(zetriaInfo.reloadCD);
-        _isReload = false;
+        yield return new WaitForSeconds(_zetriaInfo.reloadCD);
+        _zetriaInfo.isReload = false;
     }
 
     public void Damage(Vector2 attacker)
     {
-        if (!_isHurt && !_isDead)
+        if (!_zetriaInfo.isHurt && !_zetriaInfo.isDead)
             StartCoroutine(IE_Damage(attacker));
     }
 
     private IEnumerator IE_Damage(Vector2 attacker)
     {
-        _isHurt = true;
+        _zetriaInfo.isHurt = true;
 
-        zetriaInfo.currentHealth = zetriaInfo.currentHealth > 0 ? --zetriaInfo.currentHealth : 0;
-        _isDead = zetriaInfo.currentHealth == 0 ? true : false;
+        _zetriaInfo.currentHealth = _zetriaInfo.currentHealth > 0 ? --_zetriaInfo.currentHealth : 0;
+        _zetriaInfo.isDead = _zetriaInfo.currentHealth == 0 ? true : false;
 
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_hurt_1");
-        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
+        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_zetriaInfo.currentHealth, _zetriaInfo.maxHealth);
         GameManager.Instance.InputController.SetInputStatus(false);
 
         anim.SetTrigger("Hurt");
         AddHurtForce(attacker);
-        if (_isDead) Dead();
+        if (_zetriaInfo.isDead) Dead();
 
-        yield return new WaitForSeconds(zetriaInfo.hurtCD);
+        yield return new WaitForSeconds(_zetriaInfo.hurtCD);
         GameManager.Instance.InputController.SetInputStatus(true);
 
-        _isHurt = false;
+        _zetriaInfo.isHurt = false;
     }
 
     private void Dead()
     {
         _moveSource.enabled = false;
-        zetriaInfo.currentHealth = 0;
+        _zetriaInfo.currentHealth = 0;
 
         GameManager.Instance.EventManager.EventTrigger(E_EventType.PlayerDead);
-        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(zetriaInfo.currentHealth, zetriaInfo.maxHealth);
+        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_zetriaInfo.currentHealth, _zetriaInfo.maxHealth);
         StopMove();
 
         GameManager.Instance.LoadCurrentScene();
@@ -590,11 +567,11 @@ public class PlayerController : BaseCharacter, IDamageable
         {
             case E_PlayerStatus.NPC:
             case E_PlayerStatus.Pistol:
-                if (ammoController.AmmoInfo.currentPistolAmmoCount != 0)
+                if (_ammoController.AmmoInfo.currentPistolAmmoCount != 0)
                     return true;
                 break;
             case E_PlayerStatus.ShotGun:
-                if (ammoController.AmmoInfo.currentShotGunAmmoCount != 0)
+                if (_ammoController.AmmoInfo.currentShotGunAmmoCount != 0)
                     return true;
                 break;
         }
@@ -607,11 +584,11 @@ public class PlayerController : BaseCharacter, IDamageable
         switch (_status)
         {
             case E_PlayerStatus.Pistol:
-                if (ammoController.AmmoInfo.maxPistolAmmoCount > 0 && ammoController.AmmoInfo.currentPistolAmmoCount != ammoController.AmmoInfo.currentPistolAmmoLimit)
+                if (_ammoController.AmmoInfo.maxPistolAmmoCount > 0 && _ammoController.AmmoInfo.currentPistolAmmoCount != _ammoController.AmmoInfo.currentPistolAmmoLimit)
                     return true;
                 break;
             case E_PlayerStatus.ShotGun:
-                if (ammoController.AmmoInfo.maxShotGunAmmoCount > 0 && ammoController.AmmoInfo.currentShotGunAmmoCount != ammoController.AmmoInfo.currentShotGunAmmoLimit)
+                if (_ammoController.AmmoInfo.maxShotGunAmmoCount > 0 && _ammoController.AmmoInfo.currentShotGunAmmoCount != _ammoController.AmmoInfo.currentShotGunAmmoLimit)
                     return true;
                 break;
         }
@@ -626,26 +603,27 @@ public class PlayerController : BaseCharacter, IDamageable
     public void OnGetNPC()
     {
         _status = E_PlayerStatus.NPC;
-        currentMoveSpeed = zetriaInfo.getNPCSpeed;
+        currentMoveSpeed = _zetriaInfo.getNPCMoveSpeed;
     }
 
     public void OnGetDoorCard()
     {
-        zetriaInfo.hasDoorCard = true;
+        _zetriaInfo.hasDoorCard = true;
     }
 
     public void OnPickUpShortGun()
     {
         GameData gameData = new GameData();
         gameData.hasShotGun = true;
-        zetriaInfo.hasShortGun = true;
+
+        _zetriaInfo.hasShortGun = true;
 
         GameManager.Instance.SaveLoadManager.SaveData(gameData, Consts.GameData);
     }
 
     public void OnAddHP()
     {
-        zetriaInfo.currentHealth = zetriaInfo.maxHealth;
+        _zetriaInfo.currentHealth = _zetriaInfo.maxHealth;
     }
 
     public void OnTeleportToTarget(Vector3 target)
