@@ -108,11 +108,6 @@ public class AudioManager
         }
     }
 
-    public void Clear()
-    {
-        _AudioContainer.Clear();
-    }
-
     private void SetBGMVolume(float volume)
     {
         if (_bgmChannel != null)
@@ -162,6 +157,11 @@ public class AudioManager
                 _effectChannel = audioPlayerSource;
                 break;
         }
+    }
+
+    public void Clear()
+    {
+        _AudioContainer.Clear();
     }
 
 }

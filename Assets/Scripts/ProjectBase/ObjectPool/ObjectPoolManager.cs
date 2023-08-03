@@ -14,24 +14,17 @@ public class ObjectPoolManager
 
     public ObjectPoolManager()
     {
-        if (poolRoot == null)
-        {
-            poolRoot = new GameObject("PoolRoot");
-            GameObject.DontDestroyOnLoad(poolRoot);
-        }
+        poolRoot = new GameObject("PoolRoot");
+        GameObject.DontDestroyOnLoad(poolRoot);
     }
 
 
     public void AddObject(GameObject obj)
     {
         if (PoolContainer.ContainsKey(obj.name))
-        {
             Debug.LogWarning("对象池中已有" + obj.name + "资源");
-        }
         else
-        {
             PoolContainer.Add(obj.name, new PoolStack(obj, poolRoot));
-        }
     }
 
     public void AddObject(E_ResourcesPath path, string assetName, int count = 0)
@@ -86,6 +79,14 @@ public class ObjectPoolManager
         }
     }
 
+    public bool GetPool(string name)
+    {
+        if (PoolContainer.ContainsKey(name))
+            return true;
+        else
+            return false;
+    }
+
     public void RemovePoolStack(params string[] names)
     {
         foreach (var name in names)
@@ -137,7 +138,6 @@ public class ObjectPoolManager
             GameObject.Destroy(GameObject.Find(childName));
         }
     }
-
 
     public void Clear()
     {

@@ -59,7 +59,7 @@ public class MainPanel : BasePanel
     private void NewGame()
     {
         GameManager.Instance.UIManager.HidePanel<MainPanel>();
-        GameManager.Instance.ClearSceneInfo();
+        GameManager.Instance.SceneLoader.ClearSceneInfo();
 
         LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>();
         panel.WaitComplete(() =>

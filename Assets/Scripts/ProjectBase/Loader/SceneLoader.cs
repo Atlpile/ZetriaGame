@@ -44,6 +44,16 @@ public class SceneLoader
     }
 
 
+    public void ClearSceneInfo()
+    {
+        // ObjectPoolManager.Clear();
+        // ObjectPoolManager.RemoveExcept("AudioPlayer");
+        // AudioManager.Clear();
+        GameManager.Instance.EventManager.Clear();
+        GameManager.Instance.ResourcesLoader.Clear();
+    }
+
+
     private IEnumerator IE_LoadAsync(string sceneName, UnityAction loadAction)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName);

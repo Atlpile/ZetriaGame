@@ -17,9 +17,11 @@ using DG.Tweening;
 
 public abstract class BasePanel : MonoBehaviour
 {
+    public bool isDuration;
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
     private CanvasGroup canvasGroup;
     protected float fadeDuration = 1f;
+
 
 
     protected virtual void Awake()
@@ -35,6 +37,7 @@ public abstract class BasePanel : MonoBehaviour
         canvasGroup = this.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
+
     }
 
     public virtual void Hide()
@@ -44,10 +47,7 @@ public abstract class BasePanel : MonoBehaviour
 
     public virtual void Hide(TweenCallback HideCallBack)
     {
-        if (HideCallBack != null)
-            SetTransitionEffect(true, HideCallBack);
-        else
-            Debug.LogWarning("UIManager:未使用过渡效果，请检查过渡效果是否添加动画过渡效果");
+        SetTransitionEffect(true, HideCallBack);
     }
 
     public virtual void Show()
@@ -57,10 +57,7 @@ public abstract class BasePanel : MonoBehaviour
 
     public virtual void Show(TweenCallback ShowCallBack)
     {
-        if (ShowCallBack != null)
-            SetTransitionEffect(false, ShowCallBack);
-        else
-            Debug.LogWarning("UIManager:未使用过渡效果，请检查过渡效果是否添加动画过渡效果");
+        SetTransitionEffect(false, ShowCallBack);
     }
 
 

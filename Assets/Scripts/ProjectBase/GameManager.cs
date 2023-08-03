@@ -105,13 +105,7 @@ public class GameManager : MonoBehaviour
         EventManager.isActiveWarning = activeEventDebugger;
     }
 
-    public void ClearSceneInfo()
-    {
-        ObjectPoolManager.Clear();
-        AudioManager.Clear();
-        EventManager.Clear();
-        ResourcesLoader.Clear();
-    }
+
 
     private void LoadGameUI()
     {
@@ -150,12 +144,12 @@ public class GameManager : MonoBehaviour
             SaveLoadManager.ClearData<GameData>(Consts.GameData);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01");
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Destroy);
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_fire");
+        // if (Input.GetKeyDown(KeyCode.Alpha1))
+        //     GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01");
+        // else if (Input.GetKeyDown(KeyCode.Alpha2))
+        //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Destroy);
+        // else if (Input.GetKeyDown(KeyCode.Alpha3))
+        //     GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_fire");
     }
 
     private void LoadMainScene()
@@ -192,7 +186,7 @@ public class GameManager : MonoBehaviour
             //FIXME:重新加载当前场景时音效不会消失
             //解决方案1：不重新加载场景，重新恢复场景属性（加载场景预制体）
             //解决方案2：使音频在加载场景时不被消除（PoolRoot设为DontDestroyOnLoad）
-            ClearSceneInfo();
+            SceneLoader.ClearSceneInfo();
             SceneLoader.LoadCurrentScene();
             // Debug.Log("显示FadePanel完成");
         });

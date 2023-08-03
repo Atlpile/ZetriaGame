@@ -48,7 +48,6 @@ public class SleepWomen : BaseCharacter, IObject
 
     public void Hide()
     {
-        // GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
         GameManager.Instance.ObjectPoolManager.ReturnObject(this.gameObject);
     }
 
