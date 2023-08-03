@@ -63,16 +63,17 @@ public class SettingPanel : BasePanel
         }
     }
 
-    public override void Show()
+    public override void Show(TweenCallback ShowCallBack)
     {
+        base.Show(ShowCallBack);
         LoadSettingData();
     }
 
-    public override void Hide()
+    public override void Hide(TweenCallback HideCallBack)
     {
+        base.Hide(HideCallBack);
         SaveSettingData();
     }
-
 
     private void CloseSettingPanel()
     {

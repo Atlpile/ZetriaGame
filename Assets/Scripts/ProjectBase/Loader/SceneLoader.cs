@@ -46,7 +46,8 @@ public class SceneLoader
 
     public void ClearSceneInfo()
     {
-        GameManager.Instance.ObjectPoolManager.RemoveExcept("AudioPlayer");
+        //BUG:
+        // GameManager.Instance.ObjectPoolManager.RemoveExcept("AudioPlayer");
         GameManager.Instance.EventManager.Clear();
         // GameManager.Instance.ResourcesLoader.Clear();
     }

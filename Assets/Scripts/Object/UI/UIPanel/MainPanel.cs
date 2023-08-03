@@ -50,11 +50,6 @@ public class MainPanel : BasePanel
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
     }
 
-    // public override void Hide()
-    // {
-    //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
-    // }
-
     public override void Hide(TweenCallback HideCallBack)
     {
         base.Hide(HideCallBack);
@@ -65,6 +60,8 @@ public class MainPanel : BasePanel
     private void NewGame()
     {
         GameManager.Instance.UIManager.HidePanel<MainPanel>(true);
+
+
         GameManager.Instance.SceneLoader.ClearSceneInfo();
 
         LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>(true);

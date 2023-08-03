@@ -160,6 +160,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         InputController.SetInputStatus(true);
         UIManager.ShowPanel<GamePanel>();
+        AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
         // Debug.Log("隐藏FadePanel");
         UIManager.HidePanel<FadePanel>(true);
 

@@ -114,7 +114,7 @@ public class UIManager
 
     #region Pool
 
-    public void ShowPanel_Pool_Async<T>(bool hasDuration = false, UnityAction<T> LoadAction = null, UnityAction TweenEndFunc = null) where T : BasePanel
+    public void ShowPanel_Pool_Async<T>(bool hasDuration = false, UnityAction<T> LoadAction = null, UnityAction TweenComplete = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         //场景中有面板
@@ -132,7 +132,7 @@ public class UIManager
                 GameObject panelPrefab = GameManager.Instance.ObjectPoolManager.GetObject(panelName);
 
                 ShowInit(panelName, panelPrefab);
-                ShowPanel<T>(panelName, panelPrefab, hasDuration, TweenEndFunc);
+                Show<T>(panelName, panelPrefab, hasDuration, TweenComplete);
                 LoadAction?.Invoke(panelPrefab as T);
             }
             else
@@ -141,14 +141,14 @@ public class UIManager
                 {
                     ShowInit(panelName, panelPrefab);
                     GameManager.Instance.ObjectPoolManager.AddObject(panelPrefab);
-                    ShowPanel<T>(panelName, panelPrefab, hasDuration, TweenEndFunc);
+                    Show<T>(panelName, panelPrefab, hasDuration, TweenComplete);
                     LoadAction?.Invoke(panelPrefab as T);
                 });
             }
         }
     }
 
-    public T ShowPanel<T>(bool hasDuration = false, UnityAction TweenEndFunc = null) where T : BasePanel
+    public T ShowPanel<T>(bool hasDuration = false, UnityAction TweenComplete = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         //场景中有面板
@@ -166,7 +166,7 @@ public class UIManager
                 GameObject panelPrefab = GameManager.Instance.ObjectPoolManager.GetObject(panelName);
 
                 ShowInit(panelName, panelPrefab);
-                return ShowPanel<T>(panelName, panelPrefab, hasDuration, TweenEndFunc);
+                return Show<T>(panelName, panelPrefab, hasDuration, TweenComplete);
             }
             else
             {
@@ -175,12 +175,12 @@ public class UIManager
                 ShowInit(panelName, panelPrefab);
                 GameManager.Instance.ObjectPoolManager.AddObject(panelPrefab);
 
-                return ShowPanel<T>(panelName, panelPrefab, hasDuration, TweenEndFunc);
+                return Show<T>(panelName, panelPrefab, hasDuration, TweenComplete);
             }
         }
     }
 
-    public void HidePanel<T>(bool hasDuration = false, UnityAction TweenEndFunc = null) where T : BasePanel
+    public void HidePanel<T>(bool hasDuration = false, UnityAction TweenComplete = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (PanelContainer.ContainsKey(panelName))
@@ -193,7 +193,7 @@ public class UIManager
                 //解决方案2：处于过渡状态时，可以执行隐藏UI操作，但需要通过状态控制是否处于过渡状态
                 PanelContainer[panelName].Hide(() =>
                 {
-                    TweenEndFunc?.Invoke();
+                    TweenComplete?.Invoke();
                     GameManager.Instance.ObjectPoolManager.ReturnObject(PanelContainer[panelName].gameObject);
                     PanelContainer.Remove(panelName);
                 });
@@ -202,7 +202,7 @@ public class UIManager
             //无过渡
             else
             {
-                PanelContainer[panelName].Hide();
+                PanelContainer[panelName].Hide(null);
                 GameManager.Instance.ObjectPoolManager.ReturnObject(PanelContainer[panelName].gameObject);
                 PanelContainer.Remove(panelName);
             }
@@ -224,16 +224,16 @@ public class UIManager
         (panelPrefab.transform as RectTransform).offsetMin = Vector2.zero;
     }
 
-    private T ShowPanel<T>(string panelName, GameObject panelPrefab, bool hasDuration, UnityAction TweenEndFunc) where T : BasePanel
+    private T Show<T>(string panelName, GameObject panelPrefab, bool hasDuration, UnityAction TweenComplete) where T : BasePanel
     {
         //记录面板（脚本）
         T panel = panelPrefab.GetComponent<T>();
         PanelContainer.Add(panelName, panel);
 
         if (hasDuration)
-            PanelContainer[panelName].Show(() => { TweenEndFunc?.Invoke(); });          //有过渡
+            PanelContainer[panelName].Show(() => { TweenComplete?.Invoke(); });          //有过渡
         else
-            PanelContainer[panelName].Show();                                           //无过渡
+            PanelContainer[panelName].Show(null);                                           //无过渡
 
         return panel;
     }

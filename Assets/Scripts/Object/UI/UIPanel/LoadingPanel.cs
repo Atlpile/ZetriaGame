@@ -21,16 +21,12 @@ public class LoadingPanel : BasePanel
         text_Loading = GetUIComponent<Text>(nameof(text_Loading));
     }
 
-
-    public override void Show()
-    {
-        StartCoroutine(IE_LoadingEffect());
-    }
-
     public override void Show(TweenCallback ShowCallBack)
     {
         base.Show(ShowCallBack);
         StartCoroutine(IE_LoadingEffect());
+
+        //BUG:未知canvasGroup为何自动变false
         canvasGroup.enabled = true;
     }
 

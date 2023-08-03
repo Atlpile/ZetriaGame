@@ -40,24 +40,16 @@ public abstract class BasePanel : MonoBehaviour
 
     }
 
-    public virtual void Hide()
+    public virtual void Hide(TweenCallback TweenCompleteCallBack)
     {
-
+        if (TweenCompleteCallBack != null)
+            SetTransitionEffect(true, TweenCompleteCallBack);
     }
 
-    public virtual void Hide(TweenCallback HideCallBack)
+    public virtual void Show(TweenCallback TweenCompleteCallBack)
     {
-        SetTransitionEffect(true, HideCallBack);
-    }
-
-    public virtual void Show()
-    {
-
-    }
-
-    public virtual void Show(TweenCallback ShowCallBack)
-    {
-        SetTransitionEffect(false, ShowCallBack);
+        if (TweenCompleteCallBack != null)
+            SetTransitionEffect(false, TweenCompleteCallBack);
     }
 
 

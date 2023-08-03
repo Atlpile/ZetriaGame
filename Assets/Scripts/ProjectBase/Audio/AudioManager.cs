@@ -70,6 +70,7 @@ public class AudioManager
                 case E_AudioSettingType.Stop:
                     _bgmChannel.DOFade(0, 1).OnComplete(() =>
                     {
+                        //BUG:不能返回BGM对象至对象池
                         GameManager.Instance.ObjectPoolManager.AddObject(_bgmChannel.gameObject);
                         GameManager.Instance.ObjectPoolManager.ReturnObject(_bgmChannel.gameObject);
                         _bgmChannel = null;
