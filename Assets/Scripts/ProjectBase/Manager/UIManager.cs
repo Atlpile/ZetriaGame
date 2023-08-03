@@ -39,158 +39,83 @@ public class UIManager
 
     #region Not Async
 
-    /// <summary>
-    /// 显示面板
-    /// </summary>
-    /// <param name="hasTween">是否启用过渡效果</param>
-    /// <param name="TweenEndFunc">过渡完成后执行的内容（需配合hasEffect）</param>
-    /// <typeparam name="T">面板类对象</typeparam>
-    /// <returns>面板类对象</returns>
-    public T ShowPanel<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
-    {
-        string panelName = typeof(T).Name;
-        if (PanelContainer.ContainsKey(panelName))
-        {
-            Debug.LogWarning("UIManager:场景中存在该Panel");
-            return PanelContainer[panelName] as T;
-        }
-        else
-        {
-            GameObject uiPrefab = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
+    // /// <summary>
+    // /// 显示面板
+    // /// </summary>
+    // /// <param name="hasTween">是否启用过渡效果</param>
+    // /// <param name="TweenEndFunc">过渡完成后执行的内容（需配合hasEffect）</param>
+    // /// <typeparam name="T">面板类对象</typeparam>
+    // /// <returns>面板类对象</returns>
+    // public T ShowPanel<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
+    // {
+    //     string panelName = typeof(T).Name;
+    //     if (PanelContainer.ContainsKey(panelName))
+    //     {
+    //         Debug.LogWarning("UIManager:场景中存在该Panel");
+    //         return PanelContainer[panelName] as T;
+    //     }
+    //     else
+    //     {
+    //         GameObject uiPrefab = GameManager.Instance.ResourcesLoader.Load<GameObject>(E_ResourcesPath.UI, panelName);
 
-            uiPrefab.transform.SetParent(rectCanvas);
-            uiPrefab.transform.localPosition = Vector3.zero;
-            uiPrefab.transform.localScale = Vector3.one;
-            (uiPrefab.transform as RectTransform).offsetMax = Vector2.zero;
-            (uiPrefab.transform as RectTransform).offsetMin = Vector2.zero;
+    //         uiPrefab.transform.SetParent(rectCanvas);
+    //         uiPrefab.transform.localPosition = Vector3.zero;
+    //         uiPrefab.transform.localScale = Vector3.one;
+    //         (uiPrefab.transform as RectTransform).offsetMax = Vector2.zero;
+    //         (uiPrefab.transform as RectTransform).offsetMin = Vector2.zero;
 
-            T panel = uiPrefab.GetComponent<T>();
-            PanelContainer.Add(panelName, panel);
+    //         T panel = uiPrefab.GetComponent<T>();
+    //         PanelContainer.Add(panelName, panel);
 
-            if (hasTween)
-                PanelContainer[panelName].Show(() => { TweenEndFunc?.Invoke(); });
-            else
-                PanelContainer[panelName].Show();
+    //         if (hasTween)
+    //             PanelContainer[panelName].Show(() => { TweenEndFunc?.Invoke(); });
+    //         else
+    //             PanelContainer[panelName].Show();
 
-            return panel;
-        }
-    }
+    //         return panel;
+    //     }
+    // }
 
-    /// <summary>
-    /// 隐藏面板
-    /// </summary>
-    /// <param name="hasTween">是否显示特效</param>
-    /// <param name="TweenEndFunc">特效显示结束时执行的内容（需配合hasEffect）</param>
-    /// <typeparam name="T">面板类</typeparam>
-    public void HidePanel<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
-    {
-        string panelName = typeof(T).Name;
-        if (!PanelContainer.ContainsKey(panelName))
-        {
-            Debug.LogWarning("UIManager:场景中不存在该Panel");
-            return;
-        }
-        else
-        {
-            if (hasTween)
-            {
-                PanelContainer[panelName].Hide(() =>
-                {
-                    Object.Destroy(PanelContainer[panelName].gameObject);
-                    PanelContainer.Remove(panelName);
-                    TweenEndFunc?.Invoke();
-                });
-            }
-            else
-            {
-                PanelContainer[panelName].Hide();
-                Object.Destroy(PanelContainer[panelName].gameObject);
-                PanelContainer.Remove(panelName);
-            }
-        }
-    }
-
-    /// <summary>
-    /// 从对象池显示面板
-    /// </summary>
-    /// <param name="hasTween"></param>
-    /// <param name="TweenEndFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T ShowPanelFromPool<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
-    {
-        string panelName = typeof(T).Name;
-
-        //有面板
-        if (PanelContainer.ContainsKey(panelName))
-        {
-            GameManager.Instance.ObjectPoolManager.GetObject(panelName);
-            Debug.LogWarning("UIManager:场景中存在该Panel");
-            return PanelContainer[panelName] as T;
-        }
-        //没有面板
-        else
-        {
-            GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.UI, panelName);
-            GameObject poolPrefab = GameManager.Instance.ObjectPoolManager.GetObject(panelName);
-
-            poolPrefab.transform.SetParent(rectCanvas);
-            poolPrefab.transform.localPosition = Vector3.zero;
-            poolPrefab.transform.localScale = Vector3.one;
-            (poolPrefab.transform as RectTransform).offsetMax = Vector2.zero;
-            (poolPrefab.transform as RectTransform).offsetMin = Vector2.zero;
-
-            T panel = poolPrefab.GetComponent<T>();
-            PanelContainer.Add(panelName, panel);
-
-            if (hasTween)
-                PanelContainer[panelName].Show(() => { TweenEndFunc?.Invoke(); });
-            else
-                PanelContainer[panelName].Show();
-
-            return panel;
-        }
-    }
-
-    /// <summary>
-    /// 从对象池隐藏面板
-    /// </summary>
-    /// <param name="hasTween"></param>
-    /// <param name="TweenEndFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    public void HidePanelFromPool<T>(bool hasTween = false) where T : BasePanel
-    {
-        string panelName = typeof(T).Name;
-        if (!PanelContainer.ContainsKey(panelName))
-        {
-            Debug.LogWarning("UIManager:场景中不存在该Panel");
-            return;
-        }
-        else
-        {
-            if (hasTween)
-            {
-                PanelContainer[panelName].Hide(() =>
-                {
-                    Object.Destroy(PanelContainer[panelName].gameObject);
-                    PanelContainer.Remove(panelName);
-                });
-            }
-            else
-            {
-                PanelContainer[panelName].Hide();
-                Object.Destroy(PanelContainer[panelName].gameObject);
-                PanelContainer.Remove(panelName);
-            }
-        }
-    }
+    // /// <summary>
+    // /// 隐藏面板
+    // /// </summary>
+    // /// <param name="hasTween">是否显示特效</param>
+    // /// <param name="TweenEndFunc">特效显示结束时执行的内容（需配合hasEffect）</param>
+    // /// <typeparam name="T">面板类</typeparam>
+    // public void HidePanel<T>(bool hasTween = false, UnityAction TweenEndFunc = null) where T : BasePanel
+    // {
+    //     string panelName = typeof(T).Name;
+    //     if (!PanelContainer.ContainsKey(panelName))
+    //     {
+    //         Debug.LogWarning("UIManager:场景中不存在该Panel");
+    //         return;
+    //     }
+    //     else
+    //     {
+    //         if (hasTween)
+    //         {
+    //             PanelContainer[panelName].Hide(() =>
+    //             {
+    //                 Object.Destroy(PanelContainer[panelName].gameObject);
+    //                 PanelContainer.Remove(panelName);
+    //                 TweenEndFunc?.Invoke();
+    //             });
+    //         }
+    //         else
+    //         {
+    //             PanelContainer[panelName].Hide();
+    //             Object.Destroy(PanelContainer[panelName].gameObject);
+    //             PanelContainer.Remove(panelName);
+    //         }
+    //     }
+    // }
 
     #endregion
 
 
     #region Pool
 
-    public void ShowPanel_Pool_Async<T>(bool hasDuration, UnityAction<T> LoadAction = null, UnityAction TweenEndFunc = null) where T : BasePanel
+    public void ShowPanel_Pool_Async<T>(bool hasDuration = false, UnityAction<T> LoadAction = null, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         //场景中有面板
@@ -224,7 +149,7 @@ public class UIManager
         }
     }
 
-    public T ShowPanel_Pool<T>(bool hasDuration, UnityAction TweenEndFunc = null) where T : BasePanel
+    public T ShowPanel<T>(bool hasDuration = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         //场景中有面板
@@ -256,7 +181,7 @@ public class UIManager
         }
     }
 
-    public void HidePanel_Pool<T>(bool hasDuration = false) where T : BasePanel
+    public void HidePanel<T>(bool hasDuration = false) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (PanelContainer.ContainsKey(panelName))

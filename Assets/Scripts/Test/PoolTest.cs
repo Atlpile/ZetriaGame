@@ -24,17 +24,17 @@ public class PoolTest : MonoBehaviour
         //     GameManager.Instance.ObjectPoolManager.RemoveExcept("ShortGunBullet", "PistolBullet", "AudioPlayer");
         // }
 
-        if (Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            GameManager.Instance.UIManager.ShowPanel_Pool_Async<FadePanel>(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Keypad5))
-        {
-            GameManager.Instance.UIManager.HidePanel_Pool<FadePanel>(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Keypad6))
-        {
+        // if (Input.GetKeyDown(KeyCode.Keypad4))
+        // {
+        //     GameManager.Instance.UIManager.ShowPanel_Pool_Async<FadePanel>(true);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Keypad5))
+        // {
+        //     GameManager.Instance.UIManager.HidePanel_Pool<FadePanel>(true);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Keypad6))
+        // {
 
-        }
+        // }
     }
 }
