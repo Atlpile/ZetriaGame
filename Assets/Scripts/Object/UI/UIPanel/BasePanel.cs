@@ -19,7 +19,7 @@ public abstract class BasePanel : MonoBehaviour
 {
     public bool isDuration;
     private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
-    private CanvasGroup canvasGroup;
+    protected CanvasGroup canvasGroup;
     protected float fadeDuration = 1f;
 
 

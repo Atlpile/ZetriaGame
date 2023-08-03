@@ -46,11 +46,9 @@ public class SceneLoader
 
     public void ClearSceneInfo()
     {
-        // ObjectPoolManager.Clear();
-        // ObjectPoolManager.RemoveExcept("AudioPlayer");
-        // AudioManager.Clear();
+        GameManager.Instance.ObjectPoolManager.RemoveExcept("AudioPlayer");
         GameManager.Instance.EventManager.Clear();
-        GameManager.Instance.ResourcesLoader.Clear();
+        // GameManager.Instance.ResourcesLoader.Clear();
     }
 
 
@@ -79,5 +77,28 @@ public class SceneLoader
 
         loadAction();
     }
+
+
+
+
+
+
+
+
+    public void LoadMainScene()
+    {
+        LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>(true);
+        panel.WaitComplete(() =>
+        {
+            GameManager.Instance.UIManager.HidePanel<LoadingPanel>(true);
+            MainPanel mainPanel = GameManager.Instance.UIManager.ShowPanel<MainPanel>(true, () =>
+            {
+                GameManager.Instance.UIManager.GetExistPanel<MainPanel>().SetPanelInteractiveStatus(true);
+            });
+            mainPanel.SetPanelInteractiveStatus(false);
+        });
+    }
+
+
 
 }

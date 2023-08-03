@@ -10,7 +10,6 @@ using UnityEngine.Events;
 
 public class UIManager
 {
-
     private Dictionary<string, BasePanel> PanelContainer = new Dictionary<string, BasePanel>();
     private RectTransform rectCanvas;
 
@@ -181,7 +180,7 @@ public class UIManager
         }
     }
 
-    public void HidePanel<T>(bool hasDuration = false) where T : BasePanel
+    public void HidePanel<T>(bool hasDuration = false, UnityAction TweenEndFunc = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (PanelContainer.ContainsKey(panelName))
@@ -194,6 +193,7 @@ public class UIManager
                 //解决方案2：处于过渡状态时，可以执行隐藏UI操作，但需要通过状态控制是否处于过渡状态
                 PanelContainer[panelName].Hide(() =>
                 {
+                    TweenEndFunc?.Invoke();
                     GameManager.Instance.ObjectPoolManager.ReturnObject(PanelContainer[panelName].gameObject);
                     PanelContainer.Remove(panelName);
                 });
@@ -209,7 +209,7 @@ public class UIManager
         }
         else
         {
-            Debug.LogWarning("UIManager:场景中不存在该" + panelName);
+            Debug.LogWarning("UIManager:场景中不存在" + panelName);
         }
     }
 
@@ -230,17 +230,10 @@ public class UIManager
         T panel = panelPrefab.GetComponent<T>();
         PanelContainer.Add(panelName, panel);
 
-        //有过渡
         if (hasDuration)
-        {
-            PanelContainer[panelName].Show(() =>
-            {
-                TweenEndFunc?.Invoke();
-            });
-        }
-        //无过渡
+            PanelContainer[panelName].Show(() => { TweenEndFunc?.Invoke(); });          //有过渡
         else
-            PanelContainer[panelName].Show();
+            PanelContainer[panelName].Show();                                           //无过渡
 
         return panel;
     }
@@ -265,7 +258,10 @@ public class UIManager
     {
         string panelName = typeof(T).Name;
         if (PanelContainer.ContainsKey(panelName))
+        {
             PanelContainer.Remove(panelName);
+            GameManager.Instance.ObjectPoolManager.RemovePoolStack(panelName);
+        }
         else
             Debug.Log("不存在该面板，不能从字典清除");
     }

@@ -23,6 +23,7 @@ public class AudioManager
 
     public AudioManager()
     {
+        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "AudioPlayer");
         GameManager.Instance.ResourcesLoader.LoadAsync<GameObject>(E_ResourcesPath.Object, "AudioPlayer", (audioPlayer) =>
         {
             _audioPlayer = audioPlayer;
@@ -67,14 +68,15 @@ public class AudioManager
             switch (type)
             {
                 case E_AudioSettingType.Stop:
-                    _bgmChannel.DOFade(0, 2).OnComplete(() =>
+                    _bgmChannel.DOFade(0, 1).OnComplete(() =>
                     {
+                        GameManager.Instance.ObjectPoolManager.AddObject(_bgmChannel.gameObject);
                         GameManager.Instance.ObjectPoolManager.ReturnObject(_bgmChannel.gameObject);
                         _bgmChannel = null;
                     });
                     break;
                 case E_AudioSettingType.Destroy:
-                    _bgmChannel.DOFade(0, 2).OnComplete(() =>
+                    _bgmChannel.DOFade(0, 1).OnComplete(() =>
                     {
                         GameObject.Destroy(_bgmChannel.gameObject);
                         _bgmChannel = null;

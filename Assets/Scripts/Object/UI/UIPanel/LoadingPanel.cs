@@ -18,26 +18,32 @@ public class LoadingPanel : BasePanel
 
         GetChildrenAllUIComponent<Text>();
 
-        text_Loading = GetUIComponent<Text>("text_Loading");
+        text_Loading = GetUIComponent<Text>(nameof(text_Loading));
+    }
+
+
+    public override void Show()
+    {
+        StartCoroutine(IE_LoadingEffect());
     }
 
     public override void Show(TweenCallback ShowCallBack)
     {
         base.Show(ShowCallBack);
-
         StartCoroutine(IE_LoadingEffect());
+        canvasGroup.enabled = true;
     }
 
     public override void Hide(TweenCallback HideCallBack)
     {
         base.Hide(HideCallBack);
-
         StopCoroutine(IE_LoadingEffect());
     }
 
+
     public void WaitComplete(UnityAction LoadCompleteAction)
     {
-        StartCoroutine(IE_LoadingToTarget(LoadCompleteAction));
+        StartCoroutine(IE_WaitComplete(LoadCompleteAction));
     }
 
     private void SetLoadingText(string text)
@@ -60,7 +66,7 @@ public class LoadingPanel : BasePanel
         }
     }
 
-    private IEnumerator IE_LoadingToTarget(UnityAction LoadCompleteAction)
+    private IEnumerator IE_WaitComplete(UnityAction LoadCompleteAction)
     {
         yield return new WaitForSeconds(waitTime);
         LoadCompleteAction?.Invoke();

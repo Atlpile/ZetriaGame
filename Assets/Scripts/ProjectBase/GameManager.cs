@@ -89,10 +89,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "AudioPlayer");
-
         Application.targetFrameRate = 144;
-
         LoadGameUI();
     }
 
@@ -123,47 +120,17 @@ public class GameManager : MonoBehaviour
                 UIManager.ShowPanel<GamePanel>(true);
                 break;
             case E_InitPanel.Loading:
-                LoadMainScene();
+                SceneLoader.LoadMainScene();
                 break;
         }
     }
 
     private void TestInput()
     {
-        // if (Input.GetKeyDown(KeyCode.A))
-        // {
-        //     m_UIManager.ShowPanel<LoadingPanel>();
-        // }
-        // else if (Input.GetKeyDown(KeyCode.D))
-        // {
-        //     m_UIManager.HidePanel<LoadingPanel>();
-        // }
-
         if (Input.GetKeyDown(KeyCode.F1))
         {
             SaveLoadManager.ClearData<GameData>(Consts.GameData);
         }
-
-        // if (Input.GetKeyDown(KeyCode.Alpha1))
-        //     GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01");
-        // else if (Input.GetKeyDown(KeyCode.Alpha2))
-        //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Destroy);
-        // else if (Input.GetKeyDown(KeyCode.Alpha3))
-        //     GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_fire");
-    }
-
-    private void LoadMainScene()
-    {
-        LoadingPanel panel = UIManager.ShowPanel<LoadingPanel>();
-        panel.WaitComplete(() =>
-        {
-            UIManager.HidePanel<LoadingPanel>(true);
-            MainPanel mainPanel = UIManager.ShowPanel<MainPanel>(true, () =>
-            {
-                UIManager.GetExistPanel<MainPanel>().SetPanelInteractiveStatus(true);
-            });
-            mainPanel.SetPanelInteractiveStatus(false);
-        });
     }
 
     public void LoadCurrentScene()
@@ -183,9 +150,6 @@ public class GameManager : MonoBehaviour
             UIManager.HidePanel<GamePanel>();
             InputController.SetInputStatus(false);
 
-            //FIXME:重新加载当前场景时音效不会消失
-            //解决方案1：不重新加载场景，重新恢复场景属性（加载场景预制体）
-            //解决方案2：使音频在加载场景时不被消除（PoolRoot设为DontDestroyOnLoad）
             SceneLoader.ClearSceneInfo();
             SceneLoader.LoadCurrentScene();
             // Debug.Log("显示FadePanel完成");

@@ -50,18 +50,24 @@ public class MainPanel : BasePanel
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.BGM, "bgm_01", true);
     }
 
-    public override void Hide()
+    // public override void Hide()
+    // {
+    //     GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
+    // }
+
+    public override void Hide(TweenCallback HideCallBack)
     {
+        base.Hide(HideCallBack);
+
         GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 
-
     private void NewGame()
     {
-        GameManager.Instance.UIManager.HidePanel<MainPanel>();
+        GameManager.Instance.UIManager.HidePanel<MainPanel>(true);
         GameManager.Instance.SceneLoader.ClearSceneInfo();
 
-        LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>();
+        LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>(true);
         panel.WaitComplete(() =>
         {
             GameManager.Instance.SceneLoader.LoadSceneAsync("Level0", () =>
