@@ -12,7 +12,7 @@ public class Tools
     }
 
     //存储大图对应的小图资源信息
-    private Dictionary<string, Dictionary<string, Sprite>> dic = new Dictionary<string, Dictionary<string, Sprite>>();
+    private Dictionary<string, Dictionary<string, Sprite>> dic = new();
 
 
     /// <summary>
@@ -34,7 +34,7 @@ public class Tools
         }
         else
         {
-            Dictionary<string, Sprite> dicTemp = new Dictionary<string, Sprite>();
+            Dictionary<string, Sprite> dicTemp = new();
             Sprite[] sprites = Resources.LoadAll<Sprite>(multipleName);
             for (int i = 0; i < sprites.Length; i++)
             {

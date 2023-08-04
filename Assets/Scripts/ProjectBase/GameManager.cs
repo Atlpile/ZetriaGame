@@ -43,11 +43,13 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-            if (player != null)
+            // PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            // if (player != null)
+            //     return player;
+            if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<PlayerController>(out var player))
                 return player;
 
-            Debug.Log("场景中不存在Player,获取Player失败");
+            DebugTool.Log("场景中不存在Player,获取Player失败");
             return null;
         }
     }
@@ -131,39 +133,6 @@ public class GameManager : MonoBehaviour
         {
             SaveLoadManager.ClearData<GameData>(Consts.GameData);
         }
-    }
-
-    public void LoadCurrentScene()
-    {
-        StartCoroutine(IE_LoadCurrentScene());
-    }
-
-    private IEnumerator IE_LoadCurrentScene()
-    {
-        AudioManager.BGMSetting(E_AudioSettingType.Stop);
-        //UI淡入后执行以下内容
-        yield return new WaitForSeconds(1f);
-        // Debug.Log("显示FadePanel");
-        yield return UIManager.ShowPanel<FadePanel>(true, () =>
-        {
-            //过渡完成后执行以下内容
-            UIManager.HidePanel<GamePanel>();
-            InputController.SetInputStatus(false);
-
-            SceneLoader.ClearSceneInfo();
-            SceneLoader.LoadCurrentScene();
-            // Debug.Log("显示FadePanel完成");
-        });
-
-        //ATTENTION：等待时间不能超过UI的过渡时间
-        //UI淡出后执行以下内容
-        yield return new WaitForSeconds(1.5f);
-        InputController.SetInputStatus(true);
-        UIManager.ShowPanel<GamePanel>();
-        AudioManager.AudioPlay(E_AudioType.BGM, "bgm_02", true);
-        // Debug.Log("隐藏FadePanel");
-        UIManager.HidePanel<FadePanel>(true);
-
     }
 
 }

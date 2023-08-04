@@ -9,8 +9,8 @@ public class LoadingPanel : BasePanel
 {
     private Text text_Loading;
 
-    private float loadingRate = 0.5f;
-    private float waitTime = 2.5f;
+    private readonly float loadingRate = 0.5f;
+    private readonly float waitTime = 2.5f;
 
     protected override void Awake()
     {

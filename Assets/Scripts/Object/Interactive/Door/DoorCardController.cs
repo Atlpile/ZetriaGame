@@ -6,8 +6,8 @@ public class DoorCardController : MonoBehaviour
 {
     private Door _door;
     private DoorCardMachine _doorCardMachine;
-    private List<GameObject> _SignLights = new List<GameObject>();
     private Transform _signLight;
+    private readonly List<GameObject> _SignLights = new();
 
     private void Awake()
     {

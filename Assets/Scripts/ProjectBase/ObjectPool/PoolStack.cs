@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PoolStack
 {
-    private GameObject parentObj;
-    private GameObject childrenObj;
-    private Stack<GameObject> poolStack = new Stack<GameObject>();
+    private readonly GameObject parentObj;
+    private readonly GameObject childrenObj;
+    private readonly Stack<GameObject> poolStack = new();
 
     public int StackObjCount => poolStack.Count;
 

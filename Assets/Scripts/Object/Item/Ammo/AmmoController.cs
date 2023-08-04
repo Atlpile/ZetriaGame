@@ -8,7 +8,7 @@ public class AmmoController
     public AmmoInfo AmmoInfo => ammoInfo;
 
 
-    private GamePanel _GamePanel => GameManager.Instance.UIManager.GetExistPanel<GamePanel>();
+    private GamePanel GamePanel => GameManager.Instance.UIManager.GetExistPanel<GamePanel>();
 
 
     public AmmoController()
@@ -20,14 +20,14 @@ public class AmmoController
     public void PickUpPistolAmmoPackage()
     {
         ammoInfo.maxPistolAmmoCount += ammoInfo.packagePistolAmmoCount;
-        _GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
+        GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
 
     }
 
     public void PickUpShotGunAmmoPackage()
     {
         ammoInfo.maxShotGunAmmoCount += ammoInfo.packageShotGunAmmoCount;
-        _GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
+        GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
     }
 
     public void ReloadPistolAmmo()
@@ -38,7 +38,7 @@ public class AmmoController
             ammoInfo.maxPistolAmmoCount--;
             ammoInfo.currentPistolAmmoCount++;
         }
-        _GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
+        GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
     }
 
     public void ReloadShotGunAmmo()
@@ -49,7 +49,7 @@ public class AmmoController
             ammoInfo.maxShotGunAmmoCount--;
             ammoInfo.currentShotGunAmmoCount++;
         }
-        _GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
+        GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
     }
 
 
@@ -57,19 +57,19 @@ public class AmmoController
     {
         ammoInfo.currentPistolAmmoCount = 0;
         ammoInfo.currentShotGunAmmoCount = 0;
-        _GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
-        _GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
+        GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
+        GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
     }
 
     public void UsePistolAmmo()
     {
         ammoInfo.currentPistolAmmoCount--;
-        _GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
+        GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
     }
 
     public void UseShotGunAmmo()
     {
         ammoInfo.currentShotGunAmmoCount--;
-        _GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
+        GamePanel.UpdateShortGunAmmoText(ammoInfo.currentShotGunAmmoCount, ammoInfo.maxShotGunAmmoCount);
     }
 }

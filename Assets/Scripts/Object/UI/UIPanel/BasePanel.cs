@@ -18,10 +18,11 @@ using DG.Tweening;
 public abstract class BasePanel : MonoBehaviour
 {
     public bool isDuration;
-    private Dictionary<string, List<UIBehaviour>> UIComponentDic = new Dictionary<string, List<UIBehaviour>>();
+
     protected CanvasGroup canvasGroup;
     protected float fadeDuration = 1f;
 
+    private readonly Dictionary<string, List<UIBehaviour>> UIComponentDic = new();
 
 
     protected virtual void Awake()
@@ -34,8 +35,10 @@ public abstract class BasePanel : MonoBehaviour
         // GetChildrenUIComponent<ScrollRect>();
         // GetChildrenUIComponent<InputField>();
 
-        canvasGroup = this.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
+        // canvasGroup = this.GetComponent<CanvasGroup>();
+        // if (canvasGroup == null)
+        //     canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
+        if (!this.TryGetComponent(out canvasGroup))
             canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
 
     }

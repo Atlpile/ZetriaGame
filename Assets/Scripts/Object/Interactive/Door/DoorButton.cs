@@ -42,14 +42,14 @@ public class DoorButton : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             _canOpen = true;
-            _highLight.gameObject.SetActive(true);
+            _highLight.SetActive(true);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         _canOpen = false;
-        _highLight.gameObject.SetActive(false);
+        _highLight.SetActive(false);
     }
 
     private void UpdateSignLights()

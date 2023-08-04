@@ -10,7 +10,7 @@ using UnityEngine.Events;
 
 public class UIManager
 {
-    private Dictionary<string, BasePanel> PanelContainer = new Dictionary<string, BasePanel>();
+    private readonly Dictionary<string, BasePanel> PanelContainer = new();
     private RectTransform rectCanvas;
 
     public UIManager()

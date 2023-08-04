@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class FSM
 {
     private E_AIState currentState = E_AIState.Null;
     public BaseMonster monster;
 
-    private Dictionary<E_AIState, BaseAIState> StateDic = new Dictionary<E_AIState, BaseAIState>();
+    private readonly Dictionary<E_AIState, BaseAIState> StateDic = new();
     private BaseAIState nowState;
 
 

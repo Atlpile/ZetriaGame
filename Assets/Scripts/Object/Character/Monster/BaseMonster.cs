@@ -81,8 +81,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
     {
         base.OnFixedUpdate();
 
-        if (fsm != null)
-            fsm.UpdateFSM();
+        fsm?.UpdateFSM();
     }
 
     protected virtual void InitComponent()
@@ -170,7 +169,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
 
     public void UpdateGroundMove()
     {
-        this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+        this.transform.Translate(currentMoveSpeed * Time.deltaTime * Vector2.right);
     }
 
     public void UpdateFlip()

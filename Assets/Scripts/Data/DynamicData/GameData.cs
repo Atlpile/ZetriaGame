@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameData
 {
-    public Dictionary<string, int> TokenContainer = new Dictionary<string, int>();
+    public Dictionary<string, int> TokenContainer = new();
     public bool hasShotGun;
 
     public GameData()

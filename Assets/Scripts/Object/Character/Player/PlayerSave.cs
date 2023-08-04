@@ -14,10 +14,12 @@ public class PlayerSave : MonoBehaviour
 
     private void SaveData()
     {
-        TestData testData = new TestData();
-        testData.posX = this.transform.position.x;
-        testData.posY = this.transform.position.y;
-        testData.posZ = this.transform.position.z;
+        TestData testData = new()
+        {
+            posX = this.transform.position.x,
+            posY = this.transform.position.y,
+            posZ = this.transform.position.z
+        };
         Debug.Log("存储当前位置：" + new Vector3(testData.posX, testData.posY, testData.posZ));
 
         testData.Container.Add("1", 1);

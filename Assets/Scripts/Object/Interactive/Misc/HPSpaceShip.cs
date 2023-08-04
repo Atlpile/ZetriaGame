@@ -28,7 +28,7 @@ public class HPSpaceShip : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            _keyTip.gameObject.SetActive(true);
+            _keyTip.SetActive(true);
             _isPlayer = true;
         }
     }
@@ -37,7 +37,7 @@ public class HPSpaceShip : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            _keyTip.gameObject.SetActive(false);
+            _keyTip.SetActive(false);
             _isPlayer = false;
         }
     }

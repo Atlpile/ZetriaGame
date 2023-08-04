@@ -40,7 +40,7 @@ public class Teleport : MonoBehaviour
         if (other.gameObject.name == "Player" && canUse)
         {
             _isPlayer = true;
-            _highLight.gameObject.SetActive(true);
+            _highLight.SetActive(true);
         }
     }
 
@@ -49,7 +49,7 @@ public class Teleport : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             _isPlayer = false;
-            _highLight.gameObject.SetActive(false);
+            _highLight.SetActive(false);
         }
     }
 

@@ -6,8 +6,7 @@ public class WaterZone : MonoBehaviour
 {
     private void OnTriggerStay2D(Collider2D other)
     {
-        IDamageable damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
+        if (other.TryGetComponent<IDamageable>(out var damageable))
             damageable.Damage(this.transform.position);
 
     }

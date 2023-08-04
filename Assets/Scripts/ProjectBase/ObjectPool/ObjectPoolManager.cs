@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class ObjectPoolManager
 {
-    private Dictionary<string, PoolStack> PoolContainer = new Dictionary<string, PoolStack>();
+    private readonly Dictionary<string, PoolStack> PoolContainer = new();
     private GameObject poolRoot;
 
 
@@ -106,7 +106,7 @@ public class ObjectPoolManager
     public void RemoveExcept(params string[] names)
     {
         //获取子物体所有名称
-        List<string> childNames = new List<string>();
+        List<string> childNames = new();
         for (int index = 0; index < poolRoot.transform.childCount; index++)
             childNames.Add(poolRoot.transform.GetChild(index).name);
 

@@ -14,18 +14,18 @@ public class WarnRestartPanel : BasePanel
 
         GetChildrenAllUIComponent<Button>();
 
-        button_Yes = GetUIComponent<Button>("button_Yes");
-        button_No = GetUIComponent<Button>("button_No");
+        button_Yes = GetUIComponent<Button>(nameof(button_Yes));
+        button_No = GetUIComponent<Button>(nameof(button_No));
     }
 
     protected override void OnClick(string buttonName)
     {
         switch (buttonName)
         {
-            case "button_Yes":
+            case nameof(button_Yes):
                 RestartCurrentLevel();
                 break;
-            case "button_No":
+            case nameof(button_No):
                 NotRestart();
                 break;
         }

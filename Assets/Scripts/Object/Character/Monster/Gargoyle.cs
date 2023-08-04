@@ -19,7 +19,7 @@ public class Gargoyle : BaseMonster
         //根据Player位置平移移动
         if (Mathf.Abs(this.transform.position.x - player.transform.position.x) > 0.1f)
         {
-            this.transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+            this.transform.Translate(currentMoveSpeed * Time.deltaTime * Vector2.right);
         }
     }
 

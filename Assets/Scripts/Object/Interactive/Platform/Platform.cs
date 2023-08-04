@@ -31,8 +31,7 @@ public class Platform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        BaseCharacter character = other.gameObject.GetComponent<BaseCharacter>();
-        if (character != null)
+        if (other.gameObject.TryGetComponent<BaseCharacter>(out var character))
         {
             other.transform.SetParent(this.transform);
         }
@@ -41,8 +40,7 @@ public class Platform : MonoBehaviour
     private void OnCollisionExit2D(Collision2D other)
     {
         //FIXME:退出时，设置父级在Character里
-        BaseCharacter character = other.gameObject.GetComponent<BaseCharacter>();
-        if (character != null)
+        if (other.gameObject.TryGetComponent<BaseCharacter>(out var character))
         {
             other.transform.SetParent(null);
         }

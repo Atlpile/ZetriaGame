@@ -21,11 +21,11 @@ public class SettingPanel : BasePanel
         GetChildrenAllUIComponent<Toggle>();
         GetChildrenAllUIComponent<Button>();
 
-        slider_BGM = GetUIComponent<Slider>("slider_BGM");
-        slider_Effect = GetUIComponent<Slider>("slider_Effect");
-        toggle_FullScreen = GetUIComponent<Toggle>("toggle_FullScreen");
-        toggle_Bloom = GetUIComponent<Toggle>("toggle_Bloom");
-        button_Close = GetUIComponent<Button>("button_Close");
+        slider_BGM = GetUIComponent<Slider>(nameof(slider_BGM));
+        slider_Effect = GetUIComponent<Slider>(nameof(slider_Effect));
+        toggle_FullScreen = GetUIComponent<Toggle>(nameof(toggle_FullScreen));
+        toggle_Bloom = GetUIComponent<Toggle>(nameof(toggle_Bloom));
+        button_Close = GetUIComponent<Button>(nameof(button_Close));
     }
 
     protected override void OnClick(string buttonName)
@@ -89,9 +89,11 @@ public class SettingPanel : BasePanel
 
     private void SaveSettingData()
     {
-        SettingData settingData = new SettingData();
-        settingData.volume_BGM = slider_BGM.value;
-        settingData.volume_Effect = slider_Effect.value;
+        SettingData settingData = new()
+        {
+            volume_BGM = slider_BGM.value,
+            volume_Effect = slider_Effect.value
+        };
 
         GameManager.Instance.SaveLoadManager.SaveData(settingData, "SettingData");
     }

@@ -46,12 +46,7 @@ public class EventManager
 {
     public bool isActiveWarning = true;
 
-    private Dictionary<string, IEventInfo> EventDic;
-
-    public EventManager()
-    {
-        EventDic = new Dictionary<string, IEventInfo>();
-    }
+    private readonly Dictionary<string, IEventInfo> EventDic = new();
 
     public void AddEventListener(string name, UnityAction action)
     {
@@ -217,16 +212,13 @@ public class EventManager
 
     public bool GetEventExist(string typeName)
     {
-        return false;
+        return EventDic.ContainsKey(typeName);
     }
 
     public bool GetEventExist(E_EventType type)
     {
         string typeName = type.ToString();
-        if (EventDic.ContainsKey(typeName))
-            return true;
-        else
-            return false;
+        return EventDic.ContainsKey(typeName);
     }
 
     public void Clear()

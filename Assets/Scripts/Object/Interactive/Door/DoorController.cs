@@ -6,7 +6,7 @@ public class DoorController : MonoBehaviour
 {
     private Door _door;
     private DoorButton _doorButton;
-    private List<GameObject> _SignLights = new List<GameObject>();
+    private readonly List<GameObject> _SignLights = new();
     private Transform _signLight;
 
     private void Awake()

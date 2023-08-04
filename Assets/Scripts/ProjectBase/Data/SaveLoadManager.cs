@@ -48,7 +48,7 @@ public class SaveLoadManager
         //反序列化
         string jsonStr = File.ReadAllText(path);
         //获取数据对象的类型
-        T data = default(T);
+        T data = default;
         switch (type)
         {
             case JsonType.JsonUtlity:
@@ -65,7 +65,7 @@ public class SaveLoadManager
 
     public void ClearData<T>(string fileName, JsonType type = JsonType.LitJson) where T : new()
     {
-        T data = new T();
+        T data = new();
         SaveData(data, fileName, type);
         Debug.Log("清空" + data.ToString() + "数据");
     }

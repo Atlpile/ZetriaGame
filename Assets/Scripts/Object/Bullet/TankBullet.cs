@@ -23,7 +23,7 @@ public class TankBullet : BaseBullet
 
     private void Move()
     {
-        transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+        transform.Translate(currentMoveSpeed * Time.deltaTime * Vector2.right);
     }
 
 

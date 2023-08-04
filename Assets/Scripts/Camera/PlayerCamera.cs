@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    private Camera _mainCamera;
     private Transform _player;
     private Vector3 _targetPos;            //Player + 摄像机 偏移的位置
 
@@ -30,7 +29,6 @@ public class PlayerCamera : MonoBehaviour
 
     private void Awake()
     {
-        _mainCamera = this.GetComponent<Camera>();
         _player = GameObject.Find("Player").GetComponent<Transform>();
     }
 

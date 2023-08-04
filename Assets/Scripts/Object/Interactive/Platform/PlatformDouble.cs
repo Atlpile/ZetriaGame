@@ -6,12 +6,10 @@ public class PlatformDouble : MonoBehaviour
 {
     private bool isPlayer;
     private PlatformEffector2D platformEffector2D;
-    private BoxCollider2D boxCollider2D;
 
     private void Awake()
     {
         platformEffector2D = this.GetComponent<PlatformEffector2D>();
-        boxCollider2D = this.GetComponent<BoxCollider2D>();
     }
 
     private void Update()

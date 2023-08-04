@@ -15,7 +15,7 @@ public class AudioManager
     public float effectVolume = 1;
     public float bgmVolume = 1;
 
-    private Dictionary<string, AudioClip> _AudioContainer = new Dictionary<string, AudioClip>();
+    private readonly Dictionary<string, AudioClip> _AudioContainer = new();
     private AudioSource _bgmChannel;
     private AudioSource _effectChannel;
     private GameObject _audioPlayer;

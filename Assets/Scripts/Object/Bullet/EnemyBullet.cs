@@ -6,7 +6,7 @@ public class EnemyBullet : BaseBullet
 {
     public E_EnemyBulletType type;
     [SerializeField] private Transform _playerPos;
-    private float _chaseDistance = 3f;
+    private readonly float _chaseDistance = 3f;
 
     protected override void InitBullet()
     {
@@ -47,12 +47,12 @@ public class EnemyBullet : BaseBullet
 
     private void HorizontalMove()
     {
-        transform.Translate(Vector2.right * currentMoveSpeed * Time.deltaTime);
+        transform.Translate(currentMoveSpeed * Time.deltaTime * Vector2.right);
     }
 
     private void DownMove()
     {
-        transform.Translate(Vector2.down * currentMoveSpeed * Time.deltaTime);
+        transform.Translate(currentMoveSpeed * Time.deltaTime * Vector2.down);
     }
 
     private void ChaseMove()

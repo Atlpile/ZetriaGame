@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ResourceLoader
 {
-    private Dictionary<E_ResourcesPath, string> ResourcePath;
+    private readonly Dictionary<E_ResourcesPath, string> ResourcePath;
 
     public ResourceLoader()
     {

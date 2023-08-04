@@ -18,12 +18,12 @@ public class PausePanel : BasePanel
 
         GetChildrenAllUIComponent<Button>();
 
-        btnResume = GetUIComponent<Button>("btnResume");
-        btnRestartLevel = GetUIComponent<Button>("btnRestartLevel");
-        btnOptions = GetUIComponent<Button>("btnOptions");
-        btnTitleScreen = GetUIComponent<Button>("btnTitleScreen");
-        btnBugReport = GetUIComponent<Button>("btnBugReport");
-        btnExit = GetUIComponent<Button>("btnExit");
+        btnResume = GetUIComponent<Button>(nameof(btnResume));
+        btnRestartLevel = GetUIComponent<Button>(nameof(btnRestartLevel));
+        btnOptions = GetUIComponent<Button>(nameof(btnOptions));
+        btnTitleScreen = GetUIComponent<Button>(nameof(btnTitleScreen));
+        btnBugReport = GetUIComponent<Button>(nameof(btnBugReport));
+        btnExit = GetUIComponent<Button>(nameof(btnExit));
     }
 
     protected override void OnClick(string buttonName)

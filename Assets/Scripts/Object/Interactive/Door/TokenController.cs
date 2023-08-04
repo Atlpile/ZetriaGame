@@ -49,7 +49,7 @@ public class TokenController : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            _highLightGreen.gameObject.SetActive(true);
+            _highLightGreen.SetActive(true);
             _isPlayer = true;
 
 
@@ -60,7 +60,7 @@ public class TokenController : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            _highLightGreen.gameObject.SetActive(false);
+            _highLightGreen.SetActive(false);
             _isPlayer = false;
         }
     }

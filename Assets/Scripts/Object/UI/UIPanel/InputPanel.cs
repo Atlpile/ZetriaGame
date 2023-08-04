@@ -7,18 +7,20 @@ using UnityEngine.UI;
 public class InputPanel : BasePanel
 {
     private GameObject changeKeyTip;
+
     private Button btnSwitchWeaponKey;
     private Button btnCrouchKey;
     private Button btnGunAttackKey;
     private Button btnInteractiveKey;
     private Button btnJumpKey;
+
     private Text txtSwitchWeaponKey;
     private Text txtCrouchKey;
     private Text txtGunAttackKey;
     private Text txtInteractiveKey;
     private Text txtJumpKey;
 
-    private bool canChangeKey;
+    // private bool canChangeKey;
 
     protected override void Awake()
     {
@@ -29,17 +31,17 @@ public class InputPanel : BasePanel
 
         changeKeyTip = this.transform.GetChild(0).gameObject;
 
-        btnSwitchWeaponKey = GetUIComponent<Button>("btnSwitchWeaponKey");
-        btnCrouchKey = GetUIComponent<Button>("btnCrouchKey");
-        btnGunAttackKey = GetUIComponent<Button>("btnGunAttackKey");
-        btnInteractiveKey = GetUIComponent<Button>("btnInteractiveKey");
-        btnJumpKey = GetUIComponent<Button>("btnJumpKey");
+        btnSwitchWeaponKey = GetUIComponent<Button>(nameof(btnSwitchWeaponKey));
+        btnCrouchKey = GetUIComponent<Button>(nameof(btnCrouchKey));
+        btnGunAttackKey = GetUIComponent<Button>(nameof(btnGunAttackKey));
+        btnInteractiveKey = GetUIComponent<Button>(nameof(btnInteractiveKey));
+        btnJumpKey = GetUIComponent<Button>(nameof(btnJumpKey));
 
-        txtSwitchWeaponKey = GetUIComponent<Text>("txtSwitchWeaponKey");
-        txtCrouchKey = GetUIComponent<Text>("txtCrouchKey");
-        txtGunAttackKey = GetUIComponent<Text>("txtGunAttackKey");
-        txtInteractiveKey = GetUIComponent<Text>("txtInteractiveKey");
-        txtJumpKey = GetUIComponent<Text>("txtJumpKey");
+        txtSwitchWeaponKey = GetUIComponent<Text>(nameof(txtSwitchWeaponKey));
+        txtCrouchKey = GetUIComponent<Text>(nameof(txtCrouchKey));
+        txtGunAttackKey = GetUIComponent<Text>(nameof(txtGunAttackKey));
+        txtInteractiveKey = GetUIComponent<Text>(nameof(txtInteractiveKey));
+        txtJumpKey = GetUIComponent<Text>(nameof(txtJumpKey));
 
     }
 
@@ -84,7 +86,7 @@ public class InputPanel : BasePanel
     public void ChangeKey(E_InputType inputType)
     {
         //先调出提示面板，再更新按钮文本
-        changeKeyTip.gameObject.SetActive(true);
+        changeKeyTip.SetActive(true);
         GameManager.Instance.StartCoroutine(IE_ChangeKey(inputType));
     }
 

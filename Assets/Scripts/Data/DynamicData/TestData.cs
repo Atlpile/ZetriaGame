@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TestData
 {
-    public Dictionary<string, int> Container = new Dictionary<string, int>();
+    public Dictionary<string, int> Container = new();
     public float posX;
     public float posY;
     public float posZ;

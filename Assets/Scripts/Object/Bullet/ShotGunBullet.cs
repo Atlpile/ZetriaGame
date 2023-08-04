@@ -26,13 +26,13 @@ public class ShotGunBullet : BaseBullet
         switch (moveType)
         {
             case E_BulletMoveType.Upward:
-                transform.Translate(new Vector2(1, 0 + verticalSpeed) * Time.fixedDeltaTime * currentMoveSpeed);
+                transform.Translate(currentMoveSpeed * Time.fixedDeltaTime * new Vector2(1, 0 + verticalSpeed));
                 break;
             case E_BulletMoveType.Straight:
-                transform.Translate(Vector2.right * Time.fixedDeltaTime * currentMoveSpeed);
+                transform.Translate(currentMoveSpeed * Time.fixedDeltaTime * Vector2.right);
                 break;
             case E_BulletMoveType.Downward:
-                transform.Translate(new Vector2(1, 0 - verticalSpeed) * Time.fixedDeltaTime * currentMoveSpeed);
+                transform.Translate(currentMoveSpeed * Time.fixedDeltaTime * new Vector2(1, 0 - verticalSpeed));
                 break;
         }
     }

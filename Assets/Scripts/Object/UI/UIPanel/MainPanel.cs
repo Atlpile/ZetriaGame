@@ -17,10 +17,10 @@ public class MainPanel : BasePanel
 
         GetChildrenAllUIComponent<Button>();
 
-        btnNewGame = GetUIComponent<Button>("btnNewGame");
-        btnContinue = GetUIComponent<Button>("btnContinue");
-        btnOptions = GetUIComponent<Button>("btnOptions");
-        btnExit = GetUIComponent<Button>("btnExit");
+        btnNewGame = GetUIComponent<Button>(nameof(btnNewGame));
+        btnContinue = GetUIComponent<Button>(nameof(btnContinue));
+        btnOptions = GetUIComponent<Button>(nameof(btnOptions));
+        btnExit = GetUIComponent<Button>(nameof(btnExit));
     }
 
     protected override void OnClick(string buttonName)

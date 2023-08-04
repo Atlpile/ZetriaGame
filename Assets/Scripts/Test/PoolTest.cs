@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PoolTest : MonoBehaviour
 {
-    private void Start()
-    {
-
-    }
 
     private void Update()
+    {
+        InputTest();
+    }
+
+    private void InputTest()
     {
         // if (Input.GetKeyDown(KeyCode.Keypad4))
         // {
@@ -24,18 +25,18 @@ public class PoolTest : MonoBehaviour
         //     GameManager.Instance.ObjectPoolManager.RemoveExcept("ShortGunBullet", "PistolBullet", "AudioPlayer");
         // }
 
-        if (Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            GameManager.Instance.UIManager.ShowPanel<FadePanel>(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Keypad5))
-        {
-            GameManager.Instance.UIManager.HidePanel<FadePanel>(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.Keypad6))
-        {
+        // if (Input.GetKeyDown(KeyCode.Keypad4))
+        // {
+        //     GameManager.Instance.UIManager.ShowPanel<FadePanel>(true);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Keypad5))
+        // {
+        //     GameManager.Instance.UIManager.HidePanel<FadePanel>(true);
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Keypad6))
+        // {
 
-        }
+        // }
 
         // if (Input.GetKeyDown(KeyCode.Keypad4))
         // {
@@ -48,6 +49,12 @@ public class PoolTest : MonoBehaviour
         // else if (Input.GetKeyDown(KeyCode.Keypad6))
         // {
 
+        // }
+
+        // if (Input.GetKeyDown(KeyCode.Keypad4))
+        // {
+        //     DebugTool.isActive = false;
+        //     DebugTool.Log("测试");
         // }
     }
 }

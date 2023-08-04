@@ -18,11 +18,11 @@ public class PlayerController : BaseCharacter, IDamageable
 
     [Header("Ground Check")]
     private Vector2 _groundCheckOffset;
-    private float _groundCheckRadius = 0.15f;
+    private readonly float _groundCheckRadius = 0.15f;
 
     [Header("Head Check")]
     private RaycastHit2D _headCheck;
-    private float _rayLength = 1f;
+    private readonly float _rayLength = 1f;
 
     #endregion
 
@@ -89,7 +89,8 @@ public class PlayerController : BaseCharacter, IDamageable
 
         if (_zetriaInfo.isDead) return;
 
-        _moveSource.enabled = _zetriaInfo.isCrouch || _horizontalMove == 0 || !isGround ? false : true;
+        // _moveSource.enabled = _zetriaInfo.isCrouch || _horizontalMove == 0 || !isGround ? false : true;
+        _moveSource.enabled = !_zetriaInfo.isCrouch && _horizontalMove != 0 && isGround;
 
         UpdatePlayerState();
     }
@@ -232,13 +233,13 @@ public class PlayerController : BaseCharacter, IDamageable
         _horizontalMove = (int)InputController.GetAxisRaw("Horizontal");
         if (_horizontalMove > 0)
         {
-            this.transform.Translate(Vector2.right * _horizontalMove * currentMoveSpeed * Time.deltaTime);
+            this.transform.Translate(_horizontalMove * currentMoveSpeed * Time.deltaTime * Vector2.right);
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             isRight = true;
         }
         else if (_horizontalMove < 0)
         {
-            this.transform.Translate(Vector2.left * _horizontalMove * currentMoveSpeed * Time.deltaTime);
+            this.transform.Translate(_horizontalMove * currentMoveSpeed * Time.deltaTime * Vector2.left);
             transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
             isRight = false;
         }
@@ -525,7 +526,7 @@ public class PlayerController : BaseCharacter, IDamageable
         _zetriaInfo.isHurt = true;
 
         _zetriaInfo.currentHealth = _zetriaInfo.currentHealth > 0 ? --_zetriaInfo.currentHealth : 0;
-        _zetriaInfo.isDead = _zetriaInfo.currentHealth == 0 ? true : false;
+        _zetriaInfo.isDead = _zetriaInfo.currentHealth == 0;
 
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_hurt_1");
         GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_zetriaInfo.currentHealth, _zetriaInfo.maxHealth);
@@ -550,7 +551,7 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_zetriaInfo.currentHealth, _zetriaInfo.maxHealth);
         StopMove();
 
-        GameManager.Instance.LoadCurrentScene();
+        GameManager.Instance.SceneLoader.LoadCurrentSceneInGame();
     }
 
 
@@ -618,8 +619,10 @@ public class PlayerController : BaseCharacter, IDamageable
 
     public void OnPickUpShortGun()
     {
-        GameData gameData = new GameData();
-        gameData.hasShotGun = true;
+        GameData gameData = new()
+        {
+            hasShotGun = true
+        };
 
         _zetriaInfo.hasShortGun = true;
 
@@ -648,8 +651,8 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        BaseMonster monster = other.GetComponent<BaseMonster>();
-        if (monster != null)
+        // BaseMonster monster = other.GetComponent<BaseMonster>();
+        if (other.TryGetComponent<BaseMonster>(out var monster))
             monster.Damage(this.transform.position);
     }
 
