@@ -47,12 +47,16 @@ public abstract class BasePanel : MonoBehaviour
     {
         if (TweenCompleteCallBack != null)
             SetTransitionEffect(true, TweenCompleteCallBack);
+        else
+            canvasGroup.alpha = 0f;
     }
 
     public virtual void Show(TweenCallback TweenCompleteCallBack)
     {
         if (TweenCompleteCallBack != null)
             SetTransitionEffect(false, TweenCompleteCallBack);
+        else
+            canvasGroup.alpha = 1f;
     }
 
 

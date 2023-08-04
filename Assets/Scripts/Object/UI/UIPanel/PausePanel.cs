@@ -30,22 +30,22 @@ public class PausePanel : BasePanel
     {
         switch (buttonName)
         {
-            case "btnResume":
+            case nameof(btnResume):
                 ResumeGame();
                 break;
-            case "btnRestartLevel":
+            case nameof(btnRestartLevel):
                 RestartGame();
                 break;
-            case "btnOptions":
+            case nameof(btnOptions):
                 OpenOptionsPanel();
                 break;
-            case "btnTitleScreen":
+            case nameof(btnTitleScreen):
                 BackToTitle();
                 break;
-            case "btnBugReport":
+            case nameof(btnBugReport):
                 BugReport();
                 break;
-            case "btnExit":
+            case nameof(btnExit):
                 ExitGame();
                 break;
 
@@ -69,14 +69,36 @@ public class PausePanel : BasePanel
 
     private void BackToTitle()
     {
-        GameManager.Instance.UIManager.HidePanel<GamePanel>();
-        GameManager.Instance.GameController.UpdateGameStatus();
-        GameManager.Instance.InputController.SetInputStatus(true);
-        GameManager.Instance.SceneLoader.ClearSceneInfo();
+        //停止BGM
+        //停止输入
+        //隐藏SettingPanel
+        //显示FadePanel（过渡）
 
-        GameManager.Instance.SceneLoader.LoadSceneAsync("Main", () =>
+        //过渡结束后
+        //恢复输入 
+        //加载主场景
+        //显示LoadingPanel
+        //隐藏GamePanel
+
+        //效果结束后
+        //隐藏LoadingPanel（过渡）
+        //显示MainPanel
+        //播放BGM
+
+
+        GameManager manager = GameManager.Instance;
+        manager.AudioManager.BGMSetting(E_AudioSettingType.Stop);
+        manager.InputController.SetInputStatus(false);
+        manager.UIManager.HidePanel<PausePanel>();
+        manager.UIManager.ShowPanel<FadePanel>(true, () =>
         {
-            GameManager.Instance.UIManager.ShowPanel<MainPanel>();
+            manager.UIManager.HidePanel<GamePanel>();
+            manager.InputController.SetInputStatus(true);
+            manager.SceneLoader.LoadSceneAsync("Main", () =>
+            {
+                manager.UIManager.HidePanel<FadePanel>();
+                manager.SceneLoader.LoadMainScene();
+            });
         });
     }
 

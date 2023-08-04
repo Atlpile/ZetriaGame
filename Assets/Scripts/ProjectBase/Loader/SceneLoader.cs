@@ -83,7 +83,7 @@ public class SceneLoader
 
     public void LoadMainScene()
     {
-        LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>(true);
+        LoadingPanel panel = GameManager.Instance.UIManager.ShowPanel<LoadingPanel>();
         panel.WaitComplete(() =>
         {
             GameManager.Instance.UIManager.HidePanel<LoadingPanel>(true);
