@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DebugTool
 {
-    public static bool isActive;
+    public static bool isActive = true;
 
     public static void Log(object message)
     {

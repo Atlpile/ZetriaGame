@@ -16,7 +16,7 @@ public static class ExcelTool
 
     public static int START_LOAD = 4;
 
-    [MenuItem("GameTool/生成Excel表中的数据")]
+    [MenuItem("EditorTool/生成Excel表中的数据")]
     private static void GenerateExcelInfo()
     {
         DirectoryInfo directoryInfo = Directory.CreateDirectory(EXCEL_PATH);

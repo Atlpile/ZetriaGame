@@ -58,10 +58,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+
         if (s_instance != null)
             Destroy(this.gameObject);
         else
             s_instance = this;
+
 
         DontDestroyOnLoad(this);
 
@@ -85,7 +87,6 @@ public class GameManager : MonoBehaviour
     {
         InputController = new InputController();
         GameController = new GameController();
-
         ItemManager = new ItemManager();
     }
 

@@ -15,22 +15,4 @@ public static class GameTools
 
         return hitInfo;
     }
-
-    [MenuItem("GameTool/打开数据存储路径")]
-    public static void OpenPersistentDataPath()
-    {
-        EditorUtility.RevealInFinder(Application.persistentDataPath);
-    }
-
-    [MenuItem("GameTool/清空所有数据")]
-    public static void ClearAllData()
-    {
-
-    }
-
-    [MenuItem("GameTool/加载主场景")]
-    public static void LoadMainScene()
-    {
-
-    }
 }
