@@ -1,0 +1,51 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="Root" style="flex-grow: 1; flex-direction: row; width: auto; height: auto; flex-shrink: 1; min-width: auto; min-height: auto;">
+        <ui:VisualElement name="Area_Left" style="flex-shrink: 1; flex-grow: 0.1; max-width: none; min-width: 150px; min-height: 200px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+            <ui:VisualElement name="Area_Left_Top" style="flex-grow: 0.1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; min-width: auto; min-height: 30px; flex-direction: row; justify-content: space-between; max-height: 30px;">
+                <ui:VisualElement name="Area_Left_Top_Left" style="flex-grow: 0.5; min-width: 70px; min-height: auto; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px; border-left-width: 0; border-top-width: 0; border-bottom-width: 0;">
+                    <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveButton" style="flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Area_Left_Top_Right" style="flex-grow: 0.5; min-width: 70px; min-height: auto; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">
+                    <ui:Button text="Save as" display-tooltip-when-elided="true" enable-rich-text="true" name="SaveAsButton" style="flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="Area_Left_Mid" style="flex-grow: 0.8; min-height: 80px;">
+                <ui:ScrollView name="Scroll_FolderData" style="flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Area_Left_Bottom" style="flex-grow: 0.1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-width: 1px; max-height: 30px; flex-direction: row; justify-content: space-between; align-items: auto; min-height: 30px;">
+                <ui:VisualElement name="Area_Left_Bottom_Left" style="flex-grow: 0.5; min-width: 70px; min-height: auto; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 1px; border-top-width: 0; border-bottom-width: 0;">
+                    <ui:Button text="+" display-tooltip-when-elided="true" name="AddData" style="flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; font-size: 20px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Area_Left_Bottom_Right" style="flex-grow: 0.5; min-width: 70px; min-height: auto; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 0; border-left-width: 0; border-top-width: 0; border-bottom-width: 0;">
+                    <ui:Button text="-" display-tooltip-when-elided="true" name="RemoveData" style="flex-grow: 1; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; font-size: 20px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Area_Right" style="flex-shrink: 1; flex-grow: 0.9; max-width: none; min-width: auto; min-height: 200px; width: auto; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 0; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+            <ui:VisualElement name="Area_Right_Top" style="flex-grow: 0.1; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; min-width: auto; min-height: 30px; max-height: 30px; flex-direction: row;">
+                <ui:TextField picking-mode="Ignore" label="Data Name" value="filler text" name="Text_DataName" style="flex-grow: 1; margin-left: 5px; margin-right: 5px; align-items: center;" />
+                <uie:EnumField name="Enum_DataType" include-obsolete-values="true" style="flex-grow: 0; margin-left: 5px; margin-right: 5px; align-items: stretch; flex-direction: row; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; justify-content: flex-start; width: auto; -unity-text-align: upper-left;" />
+                <ui:Button display-tooltip-when-elided="true" text="Load Data" name="Button_LoadData" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Area_Right_Middle" style="flex-grow: 0.9; min-height: 80px; flex-direction: row;">
+                <ui:VisualElement name="Area_Right_Middle_Left" style="flex-grow: 0.5; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-right-width: 1px; min-width: 150px; padding-left: 0; margin-left: 0; margin-top: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; align-items: stretch;">
+                    <ui:Label text="Old Data" display-tooltip-when-elided="true" name="Text_OldData" style="-unity-text-align: middle-center; margin-top: 10px; margin-bottom: 10px; -unity-font: none; align-items: auto; justify-content: flex-start; -unity-font-style: bold; font-size: 15px;" />
+                    <ui:ScrollView name="Scroll_OldData" style="flex-grow: 1; margin-left: 10px; margin-right: 10px; opacity: 1; display: flex; visibility: visible; overflow: visible;">
+                        <ui:GroupBox name="Group_OldData" style="opacity: 0.5; display: flex; overflow: visible;">
+                            <ui:Toggle label="Toggle" style="padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; align-items: center; opacity: 1; overflow: visible;" />
+                            <uie:IntegerField label="Int Field" value="42" style="margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; align-items: center;" />
+                            <uie:FloatField label="Float Field" value="42.2" style="margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; align-items: center;" />
+                            <ui:TextField picking-mode="Ignore" label="Text Field" value="filler text" text="filler text" style="margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; align-items: center;" />
+                        </ui:GroupBox>
+                    </ui:ScrollView>
+                </ui:VisualElement>
+                <ui:VisualElement name="Area_Right_Middle_Right" style="flex-grow: 0.5; min-width: 150px;">
+                    <ui:Label text="New Data" display-tooltip-when-elided="true" name="Text_NewData" style="-unity-text-align: middle-center; margin-top: 10px; margin-bottom: 10px; -unity-font: none; align-items: auto; justify-content: flex-start; -unity-font-style: bold; font-size: 15px;" />
+                    <ui:ScrollView name="Scroll_NewData" style="flex-grow: 1; margin-left: 10px; margin-right: 10px; opacity: 1;">
+                        <ui:GroupBox name="Group_NewData" />
+                    </ui:ScrollView>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

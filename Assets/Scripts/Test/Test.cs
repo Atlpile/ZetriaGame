@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,16 @@ public class Test : MonoBehaviour
 {
     private void Start()
     {
-
+        Type t = Type.GetType("SettingData");
+        Type t2 = Type.GetType("Test");
+        Debug.Log(t.Name);
+        Debug.Log(t.Assembly);
+        Debug.Log(t2.Name);
     }
 
     private void Update()
     {
-        AudioTest();
+        // AudioTest();
     }
 
 
