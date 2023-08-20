@@ -1,15 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class ResourceLoader
+public class ResourceLoader : IResourcesLoader
 {
-    private readonly Dictionary<E_ResourcesPath, string> ResourcePath;
+    private readonly Dictionary<E_ResourcesPath, string> ResourceContainer;
 
     public ResourceLoader()
     {
-        ResourcePath = new Dictionary<E_ResourcesPath, string>
+        ResourceContainer = new Dictionary<E_ResourcesPath, string>
         {
             {E_ResourcesPath.Audio,     "Audio/"},
             {E_ResourcesPath.Object,    "Object/"},
@@ -21,7 +21,7 @@ public class ResourceLoader
 
     public T Load<T>(E_ResourcesPath path, string name, bool canCreateGameObject = true) where T : UnityEngine.Object
     {
-        T resources = Resources.Load<T>(ResourcePath[path] + name);
+        T resources = Resources.Load<T>(ResourceContainer[path] + name);
 
         if (resources == null)
         {
@@ -35,14 +35,20 @@ public class ResourceLoader
             return resources;
     }
 
-    public void LoadAsync<T>(E_ResourcesPath path, string name, UnityAction<T> CompleteCallBack, bool canCreateGameObject = true) where T : UnityEngine.Object
+    public void LoadAsync<T>(E_ResourcesPath path, string name, Action<T> CompleteCallBack, bool canCreateGameObject = true) where T : UnityEngine.Object
     {
         GameManager.Instance.StartCoroutine(IE_LoadAsync(path, name, CompleteCallBack, canCreateGameObject));
     }
 
-    private IEnumerator IE_LoadAsync<T>(E_ResourcesPath path, string name, UnityAction<T> CompleteCallBack, bool canCreateGameObject) where T : UnityEngine.Object
+    public void UnLoad()
     {
-        ResourceRequest resources = Resources.LoadAsync<T>(ResourcePath[path] + name);
+        Resources.UnloadUnusedAssets();
+        Debug.Log("已卸载未使用的资源");
+    }
+
+    private IEnumerator IE_LoadAsync<T>(E_ResourcesPath path, string name, Action<T> CompleteCallBack, bool canCreateGameObject) where T : UnityEngine.Object
+    {
+        ResourceRequest resources = Resources.LoadAsync<T>(ResourceContainer[path] + name);
         yield return resources;
 
         if (resources.asset == null)
@@ -52,11 +58,5 @@ public class ResourceLoader
             CompleteCallBack(GameObject.Instantiate(resources.asset) as T);
         else
             CompleteCallBack(resources.asset as T);
-    }
-
-    public void Clear()
-    {
-        Resources.UnloadUnusedAssets();
-        Debug.Log("已卸载未使用的资源");
     }
 }

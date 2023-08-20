@@ -30,17 +30,17 @@ public class GamePanel : BasePanel
         img_DoorCard = GetUIComponent<Image>(nameof(img_DoorCard));
         img_Token_Obtain = GetUIComponent<Image>(nameof(img_Token_Obtain));
 
-        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
-        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
-        GameManager.Instance.EventManager.AddEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpNPC, OnUpdateAmmoPointer);
+        GameManager.Instance.EventManager.AddEventListener(E_EventType.PickUpDoorCard, OnUpdateDoorCard);
+        GameManager.Instance.EventManager.AddEventListener<Token>(E_EventType.PickUpToken, OnUpdateToken);
 
     }
 
     private void OnDestroy()
     {
-        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpNPC, UpdateAmmoPointer);
-        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, UpdateDoorCard);
-        GameManager.Instance.EventManager.RemoveEventListener<Token>(E_EventType.PickUpToken, UpdateToken);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpNPC, OnUpdateAmmoPointer);
+        GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpDoorCard, OnUpdateDoorCard);
+        GameManager.Instance.EventManager.RemoveEventListener<Token>(E_EventType.PickUpToken, OnUpdateToken);
     }
 
     public override void Show(TweenCallback ShowCallBack)
@@ -67,10 +67,7 @@ public class GamePanel : BasePanel
         GameManager.Instance.AudioManager.BGMSetting(E_AudioSettingType.Stop);
     }
 
-    public void UpdateDoorCard()
-    {
-        img_DoorCard.gameObject.SetActive(true);
-    }
+
 
     public void UpdateLifeBar(float currentHP, float maxHP)
     {
@@ -93,14 +90,19 @@ public class GamePanel : BasePanel
         img_ShortGunAmmoPointer.gameObject.SetActive(!isAcitve);
     }
 
-    private void UpdateAmmoPointer()
+    private void OnUpdateAmmoPointer()
     {
         img_PistolAmmoPointer.gameObject.SetActive(true);
         img_ShortGunAmmoPointer.gameObject.SetActive(false);
     }
 
-    private void UpdateToken(Token token)
+    private void OnUpdateToken(Token token)
     {
         img_Token_Obtain.gameObject.SetActive(true);
+    }
+
+    private void OnUpdateDoorCard()
+    {
+        img_DoorCard.gameObject.SetActive(true);
     }
 }

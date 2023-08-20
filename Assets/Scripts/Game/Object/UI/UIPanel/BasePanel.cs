@@ -22,7 +22,7 @@ public abstract class BasePanel : MonoBehaviour
     protected CanvasGroup canvasGroup;
     protected float fadeDuration = 1f;
 
-    private readonly Dictionary<string, List<UIBehaviour>> UIComponentDic = new();
+    private readonly Dictionary<string, List<UIBehaviour>> UIComponentContainer = new();
 
 
     protected virtual void Awake()
@@ -38,7 +38,7 @@ public abstract class BasePanel : MonoBehaviour
         // canvasGroup = this.GetComponent<CanvasGroup>();
         // if (canvasGroup == null)
         //     canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
-        if (!this.TryGetComponent(out canvasGroup))
+        if (!TryGetComponent(out canvasGroup))
             canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
 
     }
@@ -78,7 +78,7 @@ public abstract class BasePanel : MonoBehaviour
 
     public void ClearUIComponentDic()
     {
-        UIComponentDic.Clear();
+        UIComponentContainer.Clear();
     }
 
     public void SetPanelInteractiveStatus(bool canInteractive)
@@ -89,12 +89,12 @@ public abstract class BasePanel : MonoBehaviour
 
     protected T GetUIComponent<T>(string uiObjName) where T : UIBehaviour
     {
-        if (UIComponentDic.ContainsKey(uiObjName))
+        if (UIComponentContainer.ContainsKey(uiObjName))
         {
-            for (int i = 0; i < UIComponentDic[uiObjName].Count; ++i)
+            for (int i = 0; i < UIComponentContainer[uiObjName].Count; ++i)
             {
-                if (UIComponentDic[uiObjName][i] is T)
-                    return UIComponentDic[uiObjName][i] as T;
+                if (UIComponentContainer[uiObjName][i] is T)
+                    return UIComponentContainer[uiObjName][i] as T;
             }
         }
 
@@ -108,10 +108,10 @@ public abstract class BasePanel : MonoBehaviour
         for (int i = 0; i < components.Length; i++)
         {
             string objName = components[i].gameObject.name;
-            if (UIComponentDic.ContainsKey(objName))
-                UIComponentDic[objName].Add(components[i]);
+            if (UIComponentContainer.ContainsKey(objName))
+                UIComponentContainer[objName].Add(components[i]);
             else
-                UIComponentDic.Add(objName, new List<UIBehaviour>() { components[i] });
+                UIComponentContainer.Add(objName, new List<UIBehaviour>() { components[i] });
 
 
             if (components[i] is Button)

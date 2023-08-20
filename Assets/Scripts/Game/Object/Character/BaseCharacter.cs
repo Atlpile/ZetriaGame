@@ -66,6 +66,7 @@ public abstract class BaseCharacter : MonoBehaviour
 
     }
 
+
     protected bool GetGround(Vector2 groundCheckPos, float checkRadius)
     {
         if (checkRadius == 0)

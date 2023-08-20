@@ -1,4 +1,4 @@
-public enum E_PlayerStatus { Pistol, ShotGun, NPC }
+public enum E_PlayerStatus { Pistol, ShortGun, NPC }
 public enum E_ResourcesPath { Audio, Object, UI, FX, DataSO }
 public enum E_AudioType { BGM, Effect }
 public enum E_AudioSettingType { Stop, Pause, Resume, Destroy }

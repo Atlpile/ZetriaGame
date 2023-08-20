@@ -5,22 +5,26 @@ using UnityEngine.Events;
 
 public class PlatformController : MonoBehaviour
 {
-    public GameObject platform;
+    public GameObject module_platform;
+    public GameObject module_button;
     public float platformMoveSpeed = 5;
+
+    private Platform _platform;
+    private PlatformButton[] _buttons;
 
     private void Awake()
     {
-        platform = this.transform.GetChild(0).gameObject;
+        _platform = module_platform.GetComponent<Platform>();
+        _buttons = module_button.GetComponentsInChildren<PlatformButton>();
+
+        foreach (var button in _buttons)
+        {
+            button.GetPlatform(_platform);
+        }
     }
 
-    public void PlatformMove(Transform targetPoint)
+    private void Start()
     {
-        platform.GetComponent<Platform>().Move(targetPoint, platformMoveSpeed);
-        platform.GetComponent<Platform>().UpdateAudio(true);
-    }
-
-    public void PlatformStop()
-    {
-        platform.GetComponent<Platform>().UpdateAudio(false);
+        _platform.SetMoveSpeed(platformMoveSpeed);
     }
 }

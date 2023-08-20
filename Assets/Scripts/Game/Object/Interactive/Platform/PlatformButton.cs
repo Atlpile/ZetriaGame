@@ -13,9 +13,9 @@ public class PlatformButton : MonoBehaviour
 {
     public Transform targetPoint;
 
-    private PlatformController _platformController;
     private GameObject _buttonLight;
     private GameObject _highLight;
+    private Platform _platform;
     private bool _canUse;
     private bool _isInteractive;
 
@@ -24,8 +24,6 @@ public class PlatformButton : MonoBehaviour
     {
         _buttonLight = this.transform.GetChild(0).gameObject;
         _highLight = this.transform.GetChild(1).gameObject;
-
-        _platformController = this.GetComponentInParent<PlatformController>();
     }
 
     private void Start()
@@ -57,20 +55,38 @@ public class PlatformButton : MonoBehaviour
                 //若到达目标点
                 if (IsArriveTarget())
                 {
-                    _platformController.PlatformStop();
+                    _platform.UpdateAudioPlay(false);
                 }
                 else
                 {
-                    _platformController.PlatformMove(targetPoint);
+                    _platform.Move(targetPoint);
                 }
             }
             //Player在触发范围内，但未按交互
             else if (_canUse && !_isInteractive)
             {
-                _platformController.PlatformStop();
+                // _platform.Move(targetPoint);
+                // _platform.UpdateAudioPlay(true);
             }
-
         }
+    }
+
+    public void UpdateButtonLight()
+    {
+        if (IsArriveTarget())
+            _buttonLight.SetActive(false);
+        else
+            _buttonLight.SetActive(true);
+    }
+
+    private bool IsArriveTarget()
+    {
+        return Vector2.Distance(_platform.transform.position, targetPoint.position) <= 0.1f;
+    }
+
+    public void GetPlatform(Platform platform)
+    {
+        _platform = platform;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -88,26 +104,14 @@ public class PlatformButton : MonoBehaviour
         {
             _highLight.SetActive(false);
             _canUse = false;
+
+            //TODO:可优化为event来解耦合
             //Player离开时仍进行输入，则平台直接停止
-            _platformController.PlatformStop();
+            _platform.UpdateAudioPlay(false);
         }
     }
 
 
-    public void UpdateButtonLight()
-    {
-        if (IsArriveTarget())
-            _buttonLight.SetActive(false);
-        else
-            _buttonLight.SetActive(true);
-    }
 
-    private bool IsArriveTarget()
-    {
-        if (Vector2.Distance(_platformController.platform.transform.position, targetPoint.position) <= 0.1f)
-            return true;
-        else
-            return false;
-    }
 
 }

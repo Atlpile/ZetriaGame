@@ -1,6 +1,7 @@
 using UnityEngine;
 using LitJson;
 using System.IO;
+using System;
 
 public enum JsonType { JsonUtlity, LitJson, }
 
@@ -61,6 +62,13 @@ public class SaveLoadManager
 
         //返回数据对象
         return data;
+    }
+
+    public void UpdateData<T>(string fileName, Action<T> ChangeDataAction) where T : new()
+    {
+        T data = LoadData<T>(fileName);
+        ChangeDataAction?.Invoke(data);
+        SaveData(data, fileName);
     }
 
     public void ClearData<T>(string fileName, JsonType type = JsonType.LitJson) where T : new()

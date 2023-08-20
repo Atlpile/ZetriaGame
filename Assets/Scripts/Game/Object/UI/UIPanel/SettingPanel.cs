@@ -89,12 +89,10 @@ public class SettingPanel : BasePanel
 
     private void SaveSettingData()
     {
-        SettingData settingData = new()
+        GameManager.Instance.SaveLoadManager.UpdateData<SettingData>("SettingData", data =>
         {
-            volume_BGM = slider_BGM.value,
-            volume_Effect = slider_Effect.value
-        };
-
-        GameManager.Instance.SaveLoadManager.SaveData(settingData, "SettingData");
+            data.volume_BGM = slider_BGM.value;
+            data.volume_Effect = slider_Effect.value;
+        });
     }
 }

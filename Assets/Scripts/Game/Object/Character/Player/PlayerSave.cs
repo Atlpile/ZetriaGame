@@ -14,20 +14,17 @@ public class PlayerSave : MonoBehaviour
 
     private void SaveData()
     {
-        TestData testData = new()
+        GameManager.Instance.SaveLoadManager.UpdateData<TestData>("TestData", data =>
         {
-            posX = this.transform.position.x,
-            posY = this.transform.position.y,
-            posZ = this.transform.position.z
-        };
-        Debug.Log("存储当前位置：" + new Vector3(testData.posX, testData.posY, testData.posZ));
+            data.posX = this.transform.position.x;
+            data.posY = this.transform.position.y;
+            data.posZ = this.transform.position.z;
+            Debug.Log("存储当前位置：" + new Vector3(data.posX, data.posY, data.posZ));
 
-        testData.Container.Add("1", 1);
-        print("存储键值" + testData.Container["1"]);
-
-        GameManager.Instance.SaveLoadManager.SaveData(testData, "TestData");
+            data.Container.Add("1", 1);
+            print("存储键值" + data.Container["1"]);
+        });
     }
-
     private void LoadData()
     {
         TestData testData = GameManager.Instance.SaveLoadManager.LoadData<TestData>("TestData");

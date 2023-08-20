@@ -43,6 +43,54 @@ public class PlayerController : BaseCharacter, IDamageable
     public ZetriaInfo ZetriaInfo => _zetriaInfo;
     private InputController InputController => GameManager.Instance.InputController;
 
+    private bool Condition_Crouch
+    {
+        get => _status != E_PlayerStatus.NPC && !_zetriaInfo.isReload;
+    }
+    private bool Condition_Stand
+    {
+        get => _zetriaInfo.canStand;
+    }
+    private bool Condition_GroundJump
+    {
+        get => _status != E_PlayerStatus.NPC && _zetriaInfo.canStand && !_zetriaInfo.isReload && !_zetriaInfo.isMeleeAttack;
+    }
+    private bool Condition_AirJump
+    {
+        get => _status != E_PlayerStatus.NPC && _zetriaInfo.currentJumpCount > 0;
+    }
+    private bool Condition_MeleeAttack
+    {
+        get => _status != E_PlayerStatus.NPC && !_zetriaInfo.isMeleeAttack && !_zetriaInfo.isCrouch;
+    }
+    private bool Condition_PistolAttack
+    {
+        get => (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC) && !_zetriaInfo.isPistolAttack;
+    }
+    private bool Condition_ShortGunAttack
+    {
+        get => _status == E_PlayerStatus.ShortGun && !_zetriaInfo.isShotGunAttack;
+    }
+    private bool Condition_ChangeWeapon
+    {
+        get => _status != E_PlayerStatus.NPC && _zetriaInfo.hasShortGun;
+    }
+    private bool Condition_Reload
+    {
+        get =>
+                _status != E_PlayerStatus.NPC &&
+                CanReload() &&
+                !_zetriaInfo.isReload &&
+                !_zetriaInfo.isPistolAttack &&
+                !_zetriaInfo.isShotGunAttack &&
+                _zetriaInfo.canStand;
+    }
+    private bool Condition_PutDownNPC
+    {
+        get => _status == E_PlayerStatus.NPC;
+    }
+
+
     #endregion
 
 
@@ -101,8 +149,6 @@ public class PlayerController : BaseCharacter, IDamageable
 
         if (!_zetriaInfo.isMeleeAttack && !_zetriaInfo.isReload)
         {
-            // Move();
-            // Flip();
             MoveAndFlip();
         }
     }
@@ -116,7 +162,6 @@ public class PlayerController : BaseCharacter, IDamageable
         GameManager.Instance.EventManager.RemoveEventListener(E_EventType.PickUpShortGunAmmo, _ammoController.PickUpShotGunAmmoPackage);
         GameManager.Instance.EventManager.RemoveEventListener<Vector3>(E_EventType.PlayerTeleport, OnTeleportToTarget);
         GameManager.Instance.EventManager.RemoveEventListener<float>(E_EventType.UpdateAudioSourceVolume, OnUpdateAudioSourceVolume);
-
     }
 
     #endregion
@@ -139,89 +184,86 @@ public class PlayerController : BaseCharacter, IDamageable
     private void UpdatePlayerState()
     {
         isGround = GetGround(GroundCheckPos, _groundCheckRadius);
+
+        //Player在地面上可用的输入操作
         if (isGround)
         {
             _zetriaInfo.currentJumpCount = _zetriaInfo.maxJumpCount;
             _zetriaInfo.canStand = CanStand();
 
-            if (InputController.GetKey(E_InputType.Crouch) && !_zetriaInfo.isReload && _status != E_PlayerStatus.NPC)
+            //触发多次
+            if (InputController.GetKey(E_InputType.Crouch) && Condition_Crouch)
                 Crouch();
-            else if (_zetriaInfo.canStand)
+            else if (Condition_Stand)
                 Stand();
 
+            if (InputController.GetMouseButton(0) && Condition_PistolAttack)
+            {
+                if (CanFireAttack())
+                    PistolAttack();
+                else
+                    EmptyAttack();
+            }
+            if (InputController.GetMouseButton(0) && Condition_ShortGunAttack)
+            {
+                if (CanFireAttack())
+                    ShotGunAttack();
+                else
+                    EmptyAttack();
+            }
 
-            if (InputController.GetKeyDown(E_InputType.Jump) && _zetriaInfo.canStand && !_zetriaInfo.isReload && !_zetriaInfo.isMeleeAttack && _status != E_PlayerStatus.NPC)
+            //触发一次
+            if (InputController.GetKeyDown(E_InputType.Jump) && Condition_GroundJump)
             {
                 Jump();
             }
-            else if (InputController.GetKeyDown(E_InputType.MeleeAttack) && !_zetriaInfo.isMeleeAttack && !_zetriaInfo.isCrouch && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.MeleeAttack) && Condition_MeleeAttack)
             {
                 //OPTIMIZE:换子弹过程中，若攻击只能选择近战攻击或者枪械攻击的其中之一
                 MeleeAttack();
                 StopMove();
             }
-            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && Condition_ChangeWeapon)
             {
                 ChangeWeapon();
             }
-            else if (
-                InputController.GetKeyDown(E_InputType.Reload) &&
-                CanReload() &&
-                !_zetriaInfo.isReload &&
-                !_zetriaInfo.isPistolAttack &&
-                !_zetriaInfo.isShotGunAttack &&
-                _zetriaInfo.canStand &&
-                _status != E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.Reload) && Condition_Reload)
             {
                 Reload();
                 StopMove();
             }
-            else if (InputController.GetKeyDown(E_InputType.PutDownNPC) && _status == E_PlayerStatus.NPC)
+            else if (InputController.GetKeyDown(E_InputType.PutDownNPC) && Condition_PutDownNPC)
             {
                 PutDownNPC();
             }
-
-            if (InputController.GetMouseButton(0) && !_zetriaInfo.isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
+        }
+        //Player在空中时可用的输入操作
+        else
+        {
+            if (InputController.GetMouseButton(0) && Condition_PistolAttack)
             {
-                if (CanAttack())
+                if (CanFireAttack())
                     PistolAttack();
                 else
                     EmptyAttack();
             }
-            if (InputController.GetMouseButton(0) && !_zetriaInfo.isShotGunAttack && _status == E_PlayerStatus.ShotGun)
+            if (InputController.GetMouseButton(0) && Condition_ShortGunAttack)
             {
-                if (CanAttack())
+                if (CanFireAttack())
                     ShotGunAttack();
                 else
                     EmptyAttack();
             }
-        }
-        else
-        {
-            if (InputController.GetKeyDown(E_InputType.Jump) && _zetriaInfo.currentJumpCount > 0 && _status != E_PlayerStatus.NPC)
+
+            if (InputController.GetKeyDown(E_InputType.Jump) && Condition_AirJump)
             {
                 Jump();
                 _zetriaInfo.currentJumpCount--;
             }
-            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && _status != E_PlayerStatus.NPC && _zetriaInfo.hasShortGun)
+            else if (InputController.GetKeyDown(E_InputType.SwitchWeapon) && Condition_ChangeWeapon)
             {
                 ChangeWeapon();
                 //OPTIMIZE:在空中时改变切枪动画状态
-            }
-
-            if (InputController.GetMouseButton(0) && !_zetriaInfo.isPistolAttack && (_status == E_PlayerStatus.Pistol || _status == E_PlayerStatus.NPC))
-            {
-                if (CanAttack())
-                    PistolAttack();
-                else
-                    EmptyAttack();
-            }
-            if (InputController.GetMouseButton(0) && !_zetriaInfo.isShotGunAttack && _status == E_PlayerStatus.ShotGun)
-            {
-                if (CanAttack())
-                    ShotGunAttack();
-                else
-                    EmptyAttack();
             }
 
             Stand();
@@ -271,7 +313,7 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void Crouch()
     {
-        if (_zetriaInfo.isCrouch == false)
+        if (!_zetriaInfo.isCrouch)
         {
             _status = E_PlayerStatus.Pistol;
             _zetriaInfo.isCrouch = true;
@@ -287,7 +329,7 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void Stand()
     {
-        if (_zetriaInfo.isCrouch == true)
+        if (_zetriaInfo.isCrouch)
         {
             _zetriaInfo.isCrouch = false;
             col2D.size = _zetriaInfo.standSize;
@@ -300,12 +342,9 @@ public class PlayerController : BaseCharacter, IDamageable
 
     private void ChangeWeapon()
     {
-        if (_zetriaInfo.hasShortGun == true)
-        {
-            _status = (int)_status >= 1 ? _status = 0 : ++_status;
-            GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
-            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
-        }
+        _status = (int)_status >= 1 ? _status = 0 : ++_status;
+        GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateAmmoPointer(_status == 0);
+        GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_swapWeapon");
     }
 
     private void PistolFire()
@@ -505,7 +544,7 @@ public class PlayerController : BaseCharacter, IDamageable
                 _ammoController.ReloadPistolAmmo();
                 GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_reload");
                 break;
-            case E_PlayerStatus.ShotGun:
+            case E_PlayerStatus.ShortGun:
                 _ammoController.ReloadShotGunAmmo();
                 GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "shotgun_reload");
                 break;
@@ -546,11 +585,10 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         _moveSource.enabled = false;
         _zetriaInfo.currentHealth = 0;
+        StopMove();
 
         GameManager.Instance.EventManager.EventTrigger(E_EventType.PlayerDead);
         GameManager.Instance.UIManager.GetExistPanel<GamePanel>().UpdateLifeBar(_zetriaInfo.currentHealth, _zetriaInfo.maxHealth);
-        StopMove();
-
         GameManager.Instance.SceneLoader.LoadCurrentSceneInGame();
     }
 
@@ -567,7 +605,7 @@ public class PlayerController : BaseCharacter, IDamageable
         return _headCheck ? false : true;
     }
 
-    private bool CanAttack()
+    private bool CanFireAttack()
     {
         switch (_status)
         {
@@ -576,12 +614,11 @@ public class PlayerController : BaseCharacter, IDamageable
                 if (_ammoController.AmmoInfo.currentPistolAmmoCount != 0)
                     return true;
                 break;
-            case E_PlayerStatus.ShotGun:
+            case E_PlayerStatus.ShortGun:
                 if (_ammoController.AmmoInfo.currentShotGunAmmoCount != 0)
                     return true;
                 break;
         }
-
         return false;
     }
 
@@ -593,7 +630,7 @@ public class PlayerController : BaseCharacter, IDamageable
                 if (_ammoController.AmmoInfo.maxPistolAmmoCount > 0 && _ammoController.AmmoInfo.currentPistolAmmoCount != _ammoController.AmmoInfo.currentPistolAmmoLimit)
                     return true;
                 break;
-            case E_PlayerStatus.ShotGun:
+            case E_PlayerStatus.ShortGun:
                 if (_ammoController.AmmoInfo.maxShotGunAmmoCount > 0 && _ammoController.AmmoInfo.currentShotGunAmmoCount != _ammoController.AmmoInfo.currentShotGunAmmoLimit)
                     return true;
                 break;
@@ -619,14 +656,13 @@ public class PlayerController : BaseCharacter, IDamageable
 
     public void OnPickUpShortGun()
     {
-        GameData gameData = new()
+        GameManager.Instance.SaveLoadManager.UpdateData<GameData>(Consts.GameData, data =>
         {
-            hasShotGun = true
-        };
+            data.hasShotGun = true;
+            Debug.Log("存储武器");
+        });
 
         _zetriaInfo.hasShortGun = true;
-
-        GameManager.Instance.SaveLoadManager.SaveData(gameData, Consts.GameData);
     }
 
     public void OnAddHP()
@@ -634,9 +670,9 @@ public class PlayerController : BaseCharacter, IDamageable
         _zetriaInfo.currentHealth = _zetriaInfo.maxHealth;
     }
 
-    public void OnTeleportToTarget(Vector3 target)
+    public void OnTeleportToTarget(Vector3 targetPosition)
     {
-        this.transform.position = target;
+        this.transform.position = targetPosition;
     }
 
     public void OnUpdateAudioSourceVolume(float volume)

@@ -9,24 +9,10 @@ public enum E_SceneName { SampleScene, TestScene };
 
 public class SceneLoader
 {
-
-    public void Load(string sceneName, UnityAction loadAction)
-    {
-        SceneManager.LoadScene(sceneName);
-        loadAction();
-    }
-
-    public void Load(E_SceneName sceneName, UnityAction loadAction)
-    {
-        SceneManager.LoadScene(Enum.GetName(typeof(E_SceneName), sceneName));
-        loadAction();
-    }
-
     public void LoadCurrentScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
 
     public void LoadSceneAsync(string sceneName, UnityAction loadAction)
     {
