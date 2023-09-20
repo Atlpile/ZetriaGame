@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceLoader : IResourcesLoader
+public class ResourceLoader
 {
     private readonly Dictionary<E_ResourcesPath, string> ResourceContainer;
 
@@ -11,6 +11,7 @@ public class ResourceLoader : IResourcesLoader
     {
         ResourceContainer = new Dictionary<E_ResourcesPath, string>
         {
+            {E_ResourcesPath.Null,      ""},
             {E_ResourcesPath.Audio,     "Audio/"},
             {E_ResourcesPath.Object,    "Object/"},
             {E_ResourcesPath.UI,        "UI/"},
@@ -33,6 +34,16 @@ public class ResourceLoader : IResourcesLoader
             return GameObject.Instantiate(resources);
         else
             return resources;
+    }
+
+    public void LoadAsync<T>(string name, Action<T> CompleteCallBack) where T : UnityEngine.Object
+    {
+        LoadAsync<T>(E_ResourcesPath.Null, name, CompleteCallBack, false);
+    }
+
+    public void LoadAsync<T>(E_ResourcesPath path, string name, Action<T> CompleteCallBack) where T : UnityEngine.Object
+    {
+        LoadAsync<T>(path, name, CompleteCallBack, false);
     }
 
     public void LoadAsync<T>(E_ResourcesPath path, string name, Action<T> CompleteCallBack, bool canCreateGameObject = true) where T : UnityEngine.Object

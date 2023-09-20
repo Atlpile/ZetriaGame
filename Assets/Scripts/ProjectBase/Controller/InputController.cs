@@ -148,7 +148,6 @@ public class InputController
     {
         this.canInput = canInput;
     }
-
 }
 
 

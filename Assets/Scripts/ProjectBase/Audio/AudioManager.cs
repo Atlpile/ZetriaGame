@@ -20,7 +20,6 @@ public class AudioManager
     private AudioSource _effectChannel;
     private GameObject _audioPlayer;
 
-
     public AudioManager()
     {
         GameManager.Instance.ObjectPoolManager.AddObject(E_ResourcesPath.Object, "AudioPlayer");
@@ -166,5 +165,6 @@ public class AudioManager
     {
         _AudioContainer.Clear();
     }
+
 
 }

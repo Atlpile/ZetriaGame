@@ -113,4 +113,5 @@ public class SceneLoader
         GameManager.Instance.UIManager.HidePanel<FadePanel>(true);
     }
 
+
 }
