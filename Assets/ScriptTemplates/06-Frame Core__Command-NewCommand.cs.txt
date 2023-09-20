@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using FrameCore;
+
+#ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : BaseCommand
+{
+    protected override void OnExecute()
+    {
+
+    }
+}
+#ROOTNAMESPACEEND#
+
+

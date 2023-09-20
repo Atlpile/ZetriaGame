@@ -1,0 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace FrameCore
+{
+    #ROOTNAMESPACEBEGIN#
+    public class #SCRIPTNAME# : MonoBehaviour
+    {
+
+    }
+    #ROOTNAMESPACEEND#
+}
+
+

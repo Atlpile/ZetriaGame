@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using FrameCore;
+
+#ROOTNAMESPACEBEGIN#
+public interface I#SCRIPTNAME# : ISystem
+{
+
+}
+
+public class #SCRIPTNAME# : BaseSystem, I#SCRIPTNAME#
+{
+    protected override void OnInit()
+    {
+
+    }
+}
+#ROOTNAMESPACEEND#
+
+

@@ -138,6 +138,12 @@
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "file:D:/UnityProject/MyGame/MyGame_2023/PureMVC_Exercises_Demo_StudyProject/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.postprocessing": {
       "version": "3.2.2",
       "depth": 0,
