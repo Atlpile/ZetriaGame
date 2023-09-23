@@ -189,7 +189,7 @@ public class PlayerController : BaseCharacter, IDamageable
         if (isGround)
         {
             _zetriaInfo.currentJumpCount = _zetriaInfo.maxJumpCount;
-            _zetriaInfo.canStand = CanStand();
+            _zetriaInfo.canStand = StandHeadCheck();
 
             //触发多次
             if (InputController.GetKey(E_InputType.Crouch) && Condition_Crouch)
@@ -435,11 +435,6 @@ public class PlayerController : BaseCharacter, IDamageable
         }
     }
 
-    #endregion
-
-
-    #region Coroutine Function
-
     private void Jump()
     {
         rb2D.velocity = new Vector2(0f, _zetriaInfo.jumpForce);
@@ -448,6 +443,13 @@ public class PlayerController : BaseCharacter, IDamageable
         GameObject jumpFX = GameManager.Instance.ObjectPoolManager.GetObject("FX_Jump");
         SetFXPos(jumpFX, _zetriaInfo.jumpFXOffset, _zetriaInfo.jumpFXOffset);
     }
+
+
+    #endregion
+
+
+    #region Coroutine Function
+
 
     private void MeleeAttack()
     {
@@ -599,7 +601,7 @@ public class PlayerController : BaseCharacter, IDamageable
 
     #region Status
 
-    private bool CanStand()
+    private bool StandHeadCheck()
     {
         _headCheck = GameTools.ShowRay(this.transform.position, RayOffset, Vector2.up, _rayLength, 1 << LayerMask.NameToLayer("Ground"));
         return _headCheck ? false : true;

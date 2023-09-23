@@ -58,8 +58,8 @@ public class ZetriaInfo
         // maxHealth = 10;
         maxHealth = 2;
         currentHealth = maxHealth;
-        maxJumpCount = 1;
 
+        maxJumpCount = 1;
         standMoveSpeed = 4f;
         getNPCMoveSpeed = 3.5f;
         crouchMoveSpeed = 2f;

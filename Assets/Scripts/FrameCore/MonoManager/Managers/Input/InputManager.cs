@@ -8,8 +8,8 @@ namespace FrameCore
     public class InputManager : BaseManager, IInputManager
     {
         public bool CanInput { get; set; }
-        private Dictionary<E_InputType, KeyCode> _DefaultInputKeyContainer;
-        private Dictionary<E_InputType, KeyCode> _CustomInputKeyContainer;
+        private Dictionary<E_InputTypes, KeyCode> _DefaultInputKeyContainer;
+        private Dictionary<E_InputTypes, KeyCode> _CustomInputKeyContainer;
 
 
         public InputManager(MonoManager manager) : base(manager) { }
@@ -39,7 +39,7 @@ namespace FrameCore
             return KeyCode.None;
         }
 
-        public void ChangeKey(E_InputType type)
+        public void ChangeKey(E_InputTypes type)
         {
             KeyCode key = GetAnyKeyDown();
             if (key != KeyCode.None)
@@ -48,7 +48,7 @@ namespace FrameCore
                 Debug.Log("Key为空,没有该按键");
         }
 
-        public bool GetKey(E_InputType type)
+        public bool GetKey(E_InputTypes type)
         {
             if (CanInput)
             {
@@ -58,7 +58,7 @@ namespace FrameCore
             return false;
         }
 
-        public bool GetKeyDown(E_InputType type)
+        public bool GetKeyDown(E_InputTypes type)
         {
             if (CanInput)
             {
@@ -68,7 +68,7 @@ namespace FrameCore
             return false;
         }
 
-        public bool GetKeyUp(E_InputType type)
+        public bool GetKeyUp(E_InputTypes type)
         {
             if (CanInput)
             {

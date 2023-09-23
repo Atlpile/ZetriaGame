@@ -9,7 +9,8 @@ namespace Zetria
     {
         protected override void RegisterModule()
         {
-
+            AddModel<IZetriaGameModel>(new ZetriaGameModel());
+            AddModel<IPlayerModel>(new PlayerModel());
         }
     }
 }
