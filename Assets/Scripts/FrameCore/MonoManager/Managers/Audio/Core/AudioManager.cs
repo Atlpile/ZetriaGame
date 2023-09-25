@@ -19,7 +19,7 @@ namespace FrameCore
 
         public AudioManager(MonoManager manager) : base(manager)
         {
-
+            //TODO:在Manager中可以自定义添加AudioMixer
         }
 
         protected override void OnInit()
@@ -32,6 +32,7 @@ namespace FrameCore
                {E_VolumeType.VoiceVolume,   "VoiceVolume"},
             };
 
+            //TODO:提示需加载指定的AudioPlayer和AudioMixer，否则使用默认的或创建新的
             ObjectPoolManager.AddObject_FromResourcesAsync(E_ResourcesPath.PoolObject, "AudioPlayer");
             ResourcesManager.LoadAssetAsync<AudioMixer>(E_ResourcesPath.Misc, "MasterMixer", audioMixer =>
             {
@@ -39,7 +40,7 @@ namespace FrameCore
                 AudioMixerGroup[] audioMixerGroups = audioMixer.FindMatchingGroups("Master");
                 foreach (var group in audioMixerGroups)
                 {
-                    //添加单个Grouop
+                    //容器中添加单个Grouop
                     E_AudioMixerGroupType type = (E_AudioMixerGroupType)Enum.Parse(typeof(E_AudioMixerGroupType), group.name);
                     _GroupContainer.Add(type, group);
                 }

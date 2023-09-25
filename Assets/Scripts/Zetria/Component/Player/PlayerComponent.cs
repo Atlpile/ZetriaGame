@@ -14,13 +14,14 @@ namespace Zetria
         private Rigidbody2D _rigidbody2D;
         private Animator _animator;
 
+        private PlayerBehavior _playerBehavior;
         private PlayerInput _playerInput;
         private PlayerAnimation _playerAnimation;
         private PlayerSettingInfo _playerSettingInfo;
         [SerializeField] private PlayerDynamicInfo _playerDynamicInfo;
 
-        private IInputManager _inputManager;
-        private IObjectPoolManager _objectPoolManager;
+        private IInputManager _InputManager { get; set; }
+        private IObjectPoolManager _ObjectPoolManager { get; set; }
         private IPlayerModel _playerModel;
 
         private Vector2 _RayOffset
@@ -58,11 +59,6 @@ namespace Zetria
             set => _playerDynamicInfo.horizontalMove = value;
         }
 
-        private float _CurrentMoveSpeed
-        {
-            get => _playerDynamicInfo.currentMoveSpeed;
-            set => _playerDynamicInfo.currentMoveSpeed = value;
-        }
 
         private void Awake()
         {
@@ -70,19 +66,32 @@ namespace Zetria
             _rigidbody2D = this.GetComponent<Rigidbody2D>();
             _animator = this.GetComponent<Animator>();
 
-            _inputManager = Manager.GetManager<IInputManager>();
+            _InputManager = Manager.GetManager<IInputManager>();
+            _ObjectPoolManager = Manager.GetManager<IObjectPoolManager>();
             _playerModel = GameStructure.GetModel<IPlayerModel>();
 
             _playerSettingInfo = new PlayerSettingInfo();
             _playerDynamicInfo = new PlayerDynamicInfo();
+
+            _playerBehavior = new PlayerBehavior
+            (
+                this.transform,
+                _rigidbody2D,
+                _animator,
+                _capsuleCollider2D,
+                _playerSettingInfo,
+                _playerDynamicInfo
+            );
             _playerAnimation = new PlayerAnimation(_animator, _rigidbody2D, _playerDynamicInfo);
-            _playerInput = new PlayerInput(_inputManager, _playerDynamicInfo);
+            _playerInput = new PlayerInput(_InputManager, _playerDynamicInfo);
         }
 
         private void Start()
         {
+            RegisterBehaviorAction();
             RegisterInputAction();
 
+            AddPoolObject();
             InitPlayer();
         }
 
@@ -91,7 +100,7 @@ namespace Zetria
             _playerInput.UpdatePlayerInput();
             _playerAnimation.UpdateAnimatorParameter();
 
-            _HorizotalMove = (int)_inputManager.GetAxisRaw("Horizontal");
+            _HorizotalMove = (int)_InputManager.GetAxisRaw("Horizontal");
             _IsGround = UpdateGroundCheck(this.transform.position, 0.15f);
             _CanStand = UpdateStandHeadCheck(_RayOffset, 1f);
 
@@ -107,17 +116,34 @@ namespace Zetria
         private void OnDestroy()
         {
             UnRegisterInputAction();
+            UnRegisterBehaviorAction();
+        }
+
+        private void RegisterBehaviorAction()
+        {
+            _playerBehavior.OnJumpAction = () => GameStructure.SendCommand(new PlayerJumpCommand(
+                fx => SetFXPos(fx, _playerSettingInfo.offsetInfo.jumpFXOffset, _playerSettingInfo.offsetInfo.jumpFXOffset)
+            ));
+            _playerBehavior.OnMeleeAttackAction = () => GameStructure.SendCommand(new PlayerMeleeAttackCommand(
+                fx => SetFXPos(fx, _playerSettingInfo.offsetInfo.kickFXLeftOffset, _playerSettingInfo.offsetInfo.kickFXRightOffset)
+            ));
         }
 
         private void RegisterInputAction()
         {
-            _playerInput.Action_MoveAndFlip = MoveAndFlip;
-            _playerInput.Action_Jump = Jump;
-            _playerInput.Action_AirJump = AirJump;
-            _playerInput.Action_Crouch = Crouch;
-            _playerInput.Action_Stand = Stand;
-            _playerInput.Action_MeleeAttack = MeleeAttack;
+            _playerInput.Action_MoveAndFlip = _playerBehavior.MoveAndFlip;
+            _playerInput.Action_Jump = _playerBehavior.Jump;
+            _playerInput.Action_AirJump = _playerBehavior.AirJump;
+            _playerInput.Action_Crouch = _playerBehavior.Crouch;
+            _playerInput.Action_Stand = _playerBehavior.Stand;
 
+            _playerInput.Action_MeleeAttack = MeleeAttackCoroutine;
+        }
+
+        private void UnRegisterBehaviorAction()
+        {
+            _playerBehavior.OnJumpAction = null;
+            _playerBehavior.OnMeleeAttackAction = null;
         }
 
         private void UnRegisterInputAction()
@@ -149,97 +175,28 @@ namespace Zetria
 
         private void AddPoolObject()
         {
-            _objectPoolManager.AddObjects_FromResourcesAsync
+            _ObjectPoolManager.AddObjects_FromResourcesAsync
             (
-                FrameCore.E_ResourcesPath.GameObject,
-                "FX_Jump"
+                FrameCore.E_ResourcesPath.FX,
+                "FX_Jump",
+                "FX_Kick"
             );
         }
 
-        #region BehaviorAction
 
-        private void MoveAndFlip()
-        {
-            if (_HorizotalMove > 0)
-            {
-                this.transform.Translate(_HorizotalMove * _CurrentMoveSpeed * Time.deltaTime * Vector2.right);
-                transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-                _IsRight = true;
-            }
-            else if (_HorizotalMove < 0)
-            {
-                this.transform.Translate(_HorizotalMove * _CurrentMoveSpeed * Time.deltaTime * Vector2.left);
-                transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-                _IsRight = false;
-            }
-        }
+        #region StartCortine
 
-        private void Jump()
-        {
-            _rigidbody2D.velocity = new Vector2(0f, _playerSettingInfo.controlInfo.jumpForce);
-            // Manager.GetManager<IAudioManager>().AudioPlay(FrameCore.E_AudioType.Effect, "player_jump");
-
-            // GameObject jumpFX = Manager.GetManager<IObjectPoolManager>().GetObject("FX_Jump");
-            // SetFXPos(jumpFX, _playerSettingInfo.offsetInfo.jumpFXOffset, _playerSettingInfo.offsetInfo.jumpFXOffset);
-        }
-
-        private void AirJump()
-        {
-            Jump();
-            _playerDynamicInfo.currentJumpCount--;
-        }
-
-        private void Crouch()
-        {
-            _playerDynamicInfo.stateInfo.isCrouch = true;
-            _playerDynamicInfo.status = E_PlayerStatus.Pistol;
-            _playerDynamicInfo.currentMoveSpeed = _playerSettingInfo.controlInfo.crouchMoveSpeed;
-
-            _capsuleCollider2D.size = _playerSettingInfo.offsetInfo.crouchSize;
-            _capsuleCollider2D.offset = _playerSettingInfo.offsetInfo.crouchOffset;
-
-            // GamePanel gamePanel = GameManager.Instance.UIManager.GetExistPanel<GamePanel>();
-            // if (gamePanel != null)
-            //     gamePanel.UpdateAmmoPointer(_status == 0);
-        }
-
-        private void Stand()
-        {
-            _playerDynamicInfo.stateInfo.isCrouch = false;
-
-            if (_playerDynamicInfo.status != E_PlayerStatus.NPC)
-                _playerDynamicInfo.currentMoveSpeed = _playerSettingInfo.controlInfo.standMoveSpeed;
-
-            _capsuleCollider2D.size = _playerSettingInfo.offsetInfo.standSize;
-            _capsuleCollider2D.offset = _playerSettingInfo.offsetInfo.standOffset;
-        }
-
-
-        private void MeleeAttack()
+        private void MeleeAttackCoroutine()
         {
             if (!_playerDynamicInfo.stateInfo.isMeleeAttack)
-                StartCoroutine(IE_MeleeAttack());
+                StartCoroutine(_playerBehavior.IE_MeleeAttack());
 
             StopMove();
         }
 
-        private IEnumerator IE_MeleeAttack()
-        {
-            _playerDynamicInfo.stateInfo.isMeleeAttack = true;
 
-            _animator.SetTrigger("MeleeAttack");
-            // GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "player_meleeAttack");
-
-            // GameObject kickFX = GameManager.Instance.ObjectPoolManager.GetObject("FX_Kick");
-            // SetFXPos(kickFX, _zetriaInfo.kickFXLeftOffset, _zetriaInfo.kickFXRightOffset);
-
-            yield return new WaitForSeconds(_playerSettingInfo.cdInfo.meleeAttackCD);
-            _playerDynamicInfo.stateInfo.isMeleeAttack = false;
-        }
 
         #endregion
-
-
 
         private bool UpdateGroundCheck(Vector3 groundCheckPos, float checkRadius)
         {
@@ -276,6 +233,25 @@ namespace Zetria
                 fx.transform.position = this.transform.position + leftOffset;
 
             fx.transform.localRotation = this.transform.localRotation;
+        }
+
+        private void SetBulletPos(GameObject bullet, Vector3 leftOffset, Vector3 rightOffset, Vector3 crouchOffset)
+        {
+            if (_IsRight)
+            {
+                if (!_playerDynamicInfo.stateInfo.isCrouch)
+                    bullet.transform.position = this.transform.position + rightOffset;
+                else
+                    bullet.transform.position = this.transform.position + rightOffset + crouchOffset;
+            }
+            else
+            {
+                if (!_playerDynamicInfo.stateInfo.isCrouch)
+                    bullet.transform.position = this.transform.position + leftOffset;
+                else
+                    bullet.transform.position = this.transform.position + leftOffset + crouchOffset;
+            }
+            bullet.transform.localRotation = this.transform.localRotation;
         }
 
         private void StopMove()

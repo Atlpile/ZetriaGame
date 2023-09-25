@@ -19,6 +19,15 @@ namespace Zetria
             _ammoInfo = new AmmoInfo();
         }
 
+        public void PickUpPistolAmmoPackage()
+        {
+
+        }
+
+        public void PickUpShotGunAmmoPackage()
+        {
+
+        }
 
     }
 

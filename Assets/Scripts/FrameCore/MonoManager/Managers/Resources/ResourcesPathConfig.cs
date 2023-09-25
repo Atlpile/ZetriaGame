@@ -14,7 +14,7 @@ namespace FrameCore
             {
                 {E_ResourcesPath.Null,          ""},
                 {E_ResourcesPath.Audio,         "Audio/"},
-                {E_ResourcesPath.GameObject,    "GameObject/"},
+                {E_ResourcesPath.GameObject,    "Object/"},
                 {E_ResourcesPath.PoolObject,    "PoolObject/"},
                 {E_ResourcesPath.UI,            "UI/"},
                 {E_ResourcesPath.FX,            "FX/"},

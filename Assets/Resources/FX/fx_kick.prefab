@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2758280788940669802}
   - component: {fileID: 2758280788940669805}
   - component: {fileID: 2758280788940669804}
-  - component: {fileID: -4039377084030708142}
+  - component: {fileID: 5677079846178795945}
   m_Layer: 0
   m_Name: FX_Kick
   m_TagString: Untagged
@@ -106,7 +106,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-4039377084030708142
+--- !u!114 &5677079846178795945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2758280788940669807}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ec6b38bd503cef4b953c75ce883b0f0, type: 3}
+  m_Script: {fileID: 11500000, guid: f2a812be7882ade4a8126a05221d777d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _destroyTime: 0.3

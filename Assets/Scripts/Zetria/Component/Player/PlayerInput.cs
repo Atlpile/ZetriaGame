@@ -152,11 +152,6 @@ namespace Zetria
             }
         }
 
-        public void UpdatePlayerMove()
-        {
-
-        }
-
         private void MouseInput()
         {
             if (_inputManager.GetMouseButton(0) && Condition_PistolAttack)

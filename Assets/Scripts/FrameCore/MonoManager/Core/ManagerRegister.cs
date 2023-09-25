@@ -12,7 +12,7 @@ namespace FrameCore
             manager.AddManager(new ObjectPoolManager(manager));
             manager.AddManager(new SceneLoader(manager));
             manager.AddManager(new UIManager(manager));
-            // manager.AddManager(new AudioManager(manager));
+            manager.AddManager(new AudioManager(manager));
             manager.AddManager(new InputManager(manager));
         }
     }
