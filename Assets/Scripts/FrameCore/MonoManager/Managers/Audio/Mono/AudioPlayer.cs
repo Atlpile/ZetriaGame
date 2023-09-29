@@ -53,7 +53,7 @@ namespace FrameCore
         public void Stop()
         {
             _audioSource.Stop();
-            OnPush();
+            OnReturn();
         }
 
         public void FadeIn(Action FadeCompleteAction)
@@ -64,7 +64,7 @@ namespace FrameCore
         private IEnumerator IE_PlayOnce()
         {
             yield return new WaitForSeconds(_audioSource.clip.length);
-            OnPush();
+            OnReturn();
         }
 
         private IEnumerator IE_FadeIn(Action FadeCompleteAction)
@@ -72,7 +72,7 @@ namespace FrameCore
             yield return new WaitForSeconds(1f);
             Debug.Log("过渡1s后返回至对象池");
             FadeCompleteAction?.Invoke();
-            OnPush();
+            OnReturn();
         }
 
         public void OnInit()
@@ -80,12 +80,12 @@ namespace FrameCore
 
         }
 
-        public void OnPop()
+        public void OnCreate()
         {
 
         }
 
-        public void OnPush()
+        public void OnReturn()
         {
             Manager.GetManager<IObjectPoolManager>().ReturnObject(this.gameObject);
         }

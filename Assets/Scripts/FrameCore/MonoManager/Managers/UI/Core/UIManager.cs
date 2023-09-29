@@ -14,20 +14,16 @@ namespace FrameCore
 
         public IObjectPoolManager ObjectPoolManager => Manager.GetManager<IObjectPoolManager>();
 
-        public bool AllowRegisteredUIPanel { get; set; }
 
         public UIManager(MonoManager manager) : base(manager)
         {
-            AllowRegisteredUIPanel = manager.allowRegisteredUIPanel;
+
         }
 
         protected override void OnInit()
         {
             Transform canvas = Manager.transform.Find("Canvas");
             _canvasRect = canvas.transform as RectTransform;
-
-            if (AllowRegisteredUIPanel)
-                new UIPanelRegister(this);
         }
 
         public void AddPanel<T>() where T : IPanel

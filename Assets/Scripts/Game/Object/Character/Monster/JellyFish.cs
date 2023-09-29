@@ -44,8 +44,8 @@ public class JellyFish : BaseMonster
     {
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_fire");
         bullet = GameManager.Instance.ObjectPoolManager.GetObject("EnemyBullet");
-        bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
-        bullet.GetComponent<EnemyBullet>().type = E_EnemyBulletType.Horizontal;
+        // bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
+        // bullet.GetComponent<EnemyBullet>().type = E_EnemyBulletType.Horizontal;
 
         if (isRight == false)
             bullet.transform.localRotation = Quaternion.Euler(0, 180, 0);

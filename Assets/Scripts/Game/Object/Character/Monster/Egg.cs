@@ -78,7 +78,7 @@ public class Egg : BaseMonster
         IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
         if (damageable != null && other.gameObject.name == "Player")
         {
-            damageable.Damage(this.transform.position);
+            damageable.OnDamage(this.transform.position);
         }
     }
 

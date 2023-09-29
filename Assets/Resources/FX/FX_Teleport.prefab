@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2563926325759749275}
   - component: {fileID: 2563926325759749274}
   - component: {fileID: 2563926325759749272}
-  - component: {fileID: 2563926325759749273}
+  - component: {fileID: -4866116328216067487}
   m_Layer: 0
   m_Name: FX_Teleport
   m_TagString: Untagged
@@ -106,7 +106,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2563926325759749273
+--- !u!114 &-4866116328216067487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2563926325759749277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ec6b38bd503cef4b953c75ce883b0f0, type: 3}
+  m_Script: {fileID: 11500000, guid: f2a812be7882ade4a8126a05221d777d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyTime: 1
+  _destroyTime: 0.5

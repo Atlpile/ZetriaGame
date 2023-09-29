@@ -23,6 +23,7 @@ namespace Zetria
 
         private IInputManager _inputManager;
         private PlayerDynamicInfo _playerDynamicInfo;
+        private IAmmoModel _ammoModel;
 
         private bool Condition_HorizontalMove
         {
@@ -37,13 +38,11 @@ namespace Zetria
             get =>
             _playerDynamicInfo.status != E_PlayerStatus.NPC &&
             !_playerDynamicInfo.stateInfo.isReload;
-            // && !_playerDynamicInfo.stateInfo.isCrouch;
         }
         private bool Condition_Stand
         {
             get =>
             _playerDynamicInfo.stateInfo.canStand;
-            // && _playerDynamicInfo.stateInfo.isCrouch;
         }
         private bool Condition_GroundJump
         {
@@ -91,8 +90,8 @@ namespace Zetria
             !_playerDynamicInfo.stateInfo.isReload &&
             !_playerDynamicInfo.stateInfo.isPistolAttack &&
             !_playerDynamicInfo.stateInfo.isShotGunAttack &&
-            // CanReload() &&
-            _playerDynamicInfo.stateInfo.canReload &&
+            _ammoModel.CanReload(_playerDynamicInfo.status) &&
+            // _playerDynamicInfo.stateInfo.canReload &&
             _playerDynamicInfo.stateInfo.canStand;
         }
         private bool Condition_PutDownNPC
@@ -103,21 +102,17 @@ namespace Zetria
         {
             get => _playerDynamicInfo.stateInfo.isGround;
         }
-        private bool Condition_CanFireAttack
-        {
-            get => _playerDynamicInfo.stateInfo.canFireAttack;
-        }
 
-        public PlayerInput(IInputManager manager, PlayerDynamicInfo dynamicInfo)
+        public PlayerInput(IInputManager manager, PlayerDynamicInfo dynamicInfo, IAmmoModel ammoModel)
         {
             this._inputManager = manager;
             this._playerDynamicInfo = dynamicInfo;
+            this._ammoModel = ammoModel;
         }
 
         public void UpdatePlayerInput()
         {
-            if (Condition_HorizontalMove)
-                Action_MoveAndFlip?.Invoke();
+
 
             if (Condition_IsGround)
             {
@@ -152,18 +147,24 @@ namespace Zetria
             }
         }
 
+        public void FixedUpdatePlayerInput()
+        {
+            if (Condition_HorizontalMove)
+                Action_MoveAndFlip?.Invoke();
+        }
+
         private void MouseInput()
         {
             if (_inputManager.GetMouseButton(0) && Condition_PistolAttack)
             {
-                if (Condition_CanFireAttack)
+                if (_ammoModel.CanFireAttack(_playerDynamicInfo.status))
                     Action_PistolAttack?.Invoke();
                 else
                     Action_EmptyAttack?.Invoke();
             }
             if (_inputManager.GetMouseButton(0) && Condition_ShortGunAttack)
             {
-                if (Condition_CanFireAttack)
+                if (_ammoModel.CanFireAttack(_playerDynamicInfo.status))
                     Action_ShortGunAttack?.Invoke();
                 else
                     Action_EmptyAttack?.Invoke();

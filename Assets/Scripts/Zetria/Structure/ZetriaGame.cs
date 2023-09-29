@@ -11,6 +11,7 @@ namespace Zetria
         {
             AddModel<IZetriaGameModel>(new ZetriaGameModel());
             AddModel<IPlayerModel>(new PlayerModel());
+            AddModel<IAmmoModel>(new AmmoModel());
         }
     }
 }

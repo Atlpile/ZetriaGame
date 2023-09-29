@@ -366,9 +366,9 @@ public class PlayerController : BaseCharacter, IDamageable
         GameObject bulletStraight = GameManager.Instance.ObjectPoolManager.GetObject("ShortGunBullet");
         GameObject bulletDownward = GameManager.Instance.ObjectPoolManager.GetObject("ShortGunBullet");
 
-        bulletUpward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
-        bulletStraight.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
-        bulletDownward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
+        // bulletUpward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
+        // bulletStraight.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
+        // bulletDownward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
 
         SetBulletPos(bulletUpward, _zetriaInfo.shortGunBulletLeftOffset, _zetriaInfo.shortGunBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
         SetBulletPos(bulletStraight, _zetriaInfo.shortGunBulletLeftOffset, _zetriaInfo.shortGunBulletRightOffset, _zetriaInfo.bulletOffsetWithCrouch);
@@ -556,7 +556,7 @@ public class PlayerController : BaseCharacter, IDamageable
         _zetriaInfo.isReload = false;
     }
 
-    public void Damage(Vector2 attacker)
+    public void OnDamage(Vector2 attacker)
     {
         if (!_zetriaInfo.isHurt && !_zetriaInfo.isDead)
             StartCoroutine(IE_Damage(attacker));
@@ -691,7 +691,7 @@ public class PlayerController : BaseCharacter, IDamageable
     {
         // BaseMonster monster = other.GetComponent<BaseMonster>();
         if (other.TryGetComponent<BaseMonster>(out var monster))
-            monster.Damage(this.transform.position);
+            monster.OnDamage(this.transform.position);
     }
 
     #endregion

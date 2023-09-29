@@ -1,27 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FrameCore;
 
-public class AmmoPackage : MonoBehaviour
+namespace Zetria
 {
-    public E_AmmoType ammoType;
-
-    private void OnTriggerEnter2D(Collider2D other)
+    public class AmmoPackage : BaseComponent
     {
-        if (other.gameObject.name == "Player")
-        {
-            switch (ammoType)
-            {
-                case E_AmmoType.Pistol:
-                    GameManager.Instance.EventManager.EventTrigger(E_EventType.PickUpPistolAmmo);
-                    break;
-                case E_AmmoType.ShotGun:
-                    GameManager.Instance.EventManager.EventTrigger(E_EventType.PickUpShortGunAmmo);
-                    break;
-            }
+        public override IGameStructure GameStructure => ZetriaGame.Instance;
+        public E_AmmoType ammoType;
 
-            GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "pistol_ammo_collect");
-            Destroy(this.gameObject);
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.name == "Player")
+            {
+                GameStructure.SendCommand(new PickUpAmmoPackageCommand(ammoType));
+                Destroy(this.gameObject);
+            }
         }
     }
 }
+
+

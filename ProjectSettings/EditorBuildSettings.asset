@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level/Main.unity
     guid: bfee49ce6060d1c45be69719a55b1af2
+  - enabled: 1
+    path: Assets/Scenes/FrameWorkLevel/FrameWorkTestScene.unity
+    guid: 919875094c4c95c41ba65aaacbc9a5e1
+  - enabled: 1
+    path: Assets/Scenes/FrameWorkLevel/GameEntry.unity
+    guid: b5bc26fd6eb061a47996e186e6cd4c31
   m_configObjects: {}

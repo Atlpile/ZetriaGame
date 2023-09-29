@@ -576,6 +576,7 @@ AnimatorStateMachine:
     - {fileID: -1773463259549639253}
     - {fileID: 5742285191866526441}
     - {fileID: -2134753506350796289}
+    - {fileID: -6304208618133293537}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: 570, z: 0}
   m_EntryPosition: {x: 20, y: 370, z: 0}
@@ -798,6 +799,20 @@ AnimatorTransition:
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 1
+  serializedVersion: 1
+--- !u!1109 &-6304208618133293537
+AnimatorTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -3829010014869888297}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
   serializedVersion: 1
 --- !u!1107 &-6165636964778588852
 AnimatorStateMachine:

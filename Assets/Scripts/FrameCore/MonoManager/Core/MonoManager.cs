@@ -12,11 +12,10 @@ namespace FrameCore
         private static MonoManager s_instance;
         public static MonoManager Instance => s_instance;
 
-        public event Action OnInitManagerEvent;
+        public Action OnInitManagerAction { get; set; }
         private HashSet<IManager> _ManagerContainer = new HashSet<IManager>();
 
         public bool allowRegisteredObjectPool;
-        public bool allowRegisteredUIPanel;
 
         private void Awake()
         {
@@ -39,8 +38,9 @@ namespace FrameCore
                 manager.Init();
             }
 
-            OnInitManagerEvent?.Invoke();
+            OnInitManagerAction?.Invoke();
         }
+
 
         public void AddManager(IManager manager)
         {

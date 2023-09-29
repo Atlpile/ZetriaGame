@@ -21,7 +21,7 @@ public class FirePile : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            other.GetComponent<PlayerController>().Damage(this.transform.position);
+            other.GetComponent<PlayerController>().OnDamage(this.transform.position);
         }
     }
 

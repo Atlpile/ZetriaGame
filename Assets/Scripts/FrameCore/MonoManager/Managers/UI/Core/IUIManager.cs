@@ -6,7 +6,6 @@ namespace FrameCore
 {
     public interface IUIManager : IManager
     {
-        bool AllowRegisteredUIPanel { get; set; }
 
         IResourcesManager ResourcesManager { get; }
         IObjectPoolManager ObjectPoolManager { get; }

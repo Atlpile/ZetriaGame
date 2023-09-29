@@ -48,7 +48,6 @@ public class PausePanel : BasePanel
             case nameof(btnExit):
                 ExitGame();
                 break;
-
         }
     }
 

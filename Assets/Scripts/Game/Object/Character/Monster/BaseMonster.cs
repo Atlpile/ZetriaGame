@@ -94,7 +94,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         //怪物空中移动由怪物自己决定
     }
 
-    public virtual void Damage(Vector2 attakerPos)
+    public virtual void OnDamage(Vector2 attakerPos)
     {
         if (hasAttackForce)
             AddDamageForce(attakerPos);
@@ -137,7 +137,7 @@ public abstract class BaseMonster : BaseCharacter, IDamageable
         IDamageable damageable = other.gameObject.GetComponent<IDamageable>();
         if (damageable != null && other.gameObject.name == "Player")
         {
-            damageable.Damage(this.transform.position);
+            damageable.OnDamage(this.transform.position);
         }
     }
 

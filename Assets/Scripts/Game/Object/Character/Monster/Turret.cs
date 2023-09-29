@@ -40,7 +40,7 @@ public class Turret : BaseMonster
 
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "tank_attack");
         GameObject bullet = GameManager.Instance.ObjectPoolManager.GetObject("TankBullet");
-        bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
+        // bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
 
         yield return new WaitForSeconds(monsterInfo.attackDuration);
         isAttack = false;
@@ -59,10 +59,10 @@ public class Turret : BaseMonster
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        BaseBullet baseBullet = other.gameObject.GetComponent<BaseBullet>();
-        if (baseBullet is PistolBullet || baseBullet is ShotGunBullet)
-        {
-            baseBullet.Hide();
-        }
+        // BaseBullet baseBullet = other.gameObject.GetComponent<BaseBullet>();
+        // if (baseBullet is PistolBullet || baseBullet is ShotGunBullet)
+        // {
+        //     baseBullet.Hide();
+        // }
     }
 }

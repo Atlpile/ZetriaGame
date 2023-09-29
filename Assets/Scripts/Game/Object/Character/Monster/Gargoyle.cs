@@ -42,8 +42,8 @@ public class Gargoyle : BaseMonster
         anim.SetTrigger("Attack");
         GameManager.Instance.AudioManager.AudioPlay(E_AudioType.Effect, "bullet_fire");
         GameObject bullet = GameManager.Instance.ObjectPoolManager.GetObject("EnemyBullet");
-        bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
-        bullet.GetComponent<EnemyBullet>().type = E_EnemyBulletType.Down;
+        // bullet.GetComponent<BaseBullet>().InitBulletPostion(this.transform.position + bulletOffset);
+        // bullet.GetComponent<EnemyBullet>().type = E_EnemyBulletType.Down;
 
         yield return new WaitForSeconds(monsterInfo.attackDuration);
         isAttack = false;

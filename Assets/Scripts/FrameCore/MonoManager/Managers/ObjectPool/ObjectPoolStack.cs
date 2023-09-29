@@ -76,7 +76,7 @@ namespace FrameCore
             {
                 GameObject obj = _PoolStackContainer.Pop();
                 obj.SetActive(true);
-                obj.GetComponent<IPoolObject>().OnPop();
+                obj.GetComponent<IPoolObject>().OnCreate();
                 return obj;
             }
             else

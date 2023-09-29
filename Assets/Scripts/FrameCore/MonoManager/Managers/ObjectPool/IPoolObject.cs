@@ -13,7 +13,7 @@ namespace FrameCore
         /// <summary>
         /// 池对象激活后调用
         /// </summary>
-        void OnPop();
+        void OnCreate();
         /// <summary>
         /// 池对象失活前调用
         /// </summary>
@@ -21,7 +21,7 @@ namespace FrameCore
         /// <summary>
         /// 返回对象池前调用
         /// </summary>
-        void OnPush();
+        void OnReturn();
     }
 }
 

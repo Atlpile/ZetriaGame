@@ -21,7 +21,6 @@ public class AmmoController
     {
         ammoInfo.maxPistolAmmoCount += ammoInfo.packagePistolAmmoCount;
         GamePanel.UpdatePistolAmmoText(ammoInfo.currentPistolAmmoCount, ammoInfo.maxPistolAmmoCount);
-
     }
 
     public void PickUpShotGunAmmoPackage()
