@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FrameCore;
 
 namespace Zetria
 {
-    public class ShotGunBullet : BaseBullet
+    public class ShotGunBullet : PlayerBullet
     {
         public E_BulletMoveType moveType;
         public float verticalSpeed;
@@ -20,6 +21,27 @@ namespace Zetria
         {
             Move();
         }
+
+        public override void SetBulletTransform(bool isRight, bool isCrouch, Transform playerTransform)
+        {
+            base.SetBulletTransform(isRight, isCrouch, playerTransform);
+
+            if (isRight)
+            {
+                if (isCrouch)
+                    this.transform.position = playerTransform.position + info.shortGunBulletRightOffset + info.bulletOffsetWithCrouch;
+                else
+                    this.transform.position = playerTransform.position + info.shortGunBulletRightOffset;
+            }
+            else
+            {
+                if (isCrouch)
+                    this.transform.position = playerTransform.position + info.shortGunBulletLeftOffset + info.bulletOffsetWithCrouch;
+                else
+                    this.transform.position = playerTransform.position + info.shortGunBulletLeftOffset;
+            }
+        }
+
 
         private void Move()
         {

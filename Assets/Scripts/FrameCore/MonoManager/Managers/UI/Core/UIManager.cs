@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace FrameCore
 {
+    /*
+        UIManager额外功能
+            1.查看已注册的UI面板
+            2.注册或注销面板
+            3.是否启用注册注销功能
+    */
+
     public class UIManager : BaseManager, IUIManager
     {
         private readonly Dictionary<string, IPanel> _PanelContainer = new();

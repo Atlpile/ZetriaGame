@@ -10,6 +10,8 @@ namespace FrameCore
         private GameObject _subObj;
         private readonly Stack<GameObject> _PoolStackContainer = new();
 
+        public GameObject SubObj => _subObj;
+
         public int StackObjCount => _PoolStackContainer.Count;
 
         public ObjectPoolStack(GameObject obj, GameObject poolRoot)
@@ -91,19 +93,53 @@ namespace FrameCore
         /// </summary>
         /// <param name="count">取出数量</param>
         /// <returns>取出多个对象的列表集合</returns>
-        public List<GameObject> PopObjs(int count)
+        // public List<GameObject> PopObjs(int count)
+        // {
+        //     if (count > 0)
+        //     {
+        //         List<GameObject> gameObjects = new();
+        //         //数量足够
+        //         if (_PoolStackContainer.Count > count)
+        //         {
+        //             foreach (var item in _PoolStackContainer)
+        //             {
+        //                 GameObject obj = _PoolStackContainer.Pop();
+        //                 obj.SetActive(true);
+        //                 gameObjects.Add(obj);
+        //             }
+        //             return gameObjects;
+        //         }
+        //         //数量不够
+        //         else
+        //         {
+        //             FillObj(count);
+        //             return PopObjs(count);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         return PopObjs(1);
+        //     }
+        // }
+
+        /// <summary>
+        /// 从对象池中取出多个对象
+        /// </summary>
+        /// <param name="count">取出数量</param>
+        /// <returns>取出多个对象的集合</returns>
+        public GameObject[] PopObjs(int count)
         {
             if (count > 0)
             {
-                List<GameObject> gameObjects = new();
+                GameObject[] gameObjects = new GameObject[count];
                 //数量足够
                 if (_PoolStackContainer.Count > count)
                 {
-                    foreach (var item in _PoolStackContainer)
+                    for (int i = 0; i < gameObjects.Length; i++)
                     {
                         GameObject obj = _PoolStackContainer.Pop();
                         obj.SetActive(true);
-                        gameObjects.Add(obj);
+                        gameObjects[i] = obj;
                     }
                     return gameObjects;
                 }

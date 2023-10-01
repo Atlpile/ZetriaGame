@@ -36,7 +36,7 @@ namespace Zetria
                     GameStructure.SendCommand(new ContinueGameCommand());
                     break;
                 case nameof(btnOptions):
-
+                    GameStructure.SendCommand(new OpenSettingPanelCommand());
                     break;
                 case nameof(btnExit):
 

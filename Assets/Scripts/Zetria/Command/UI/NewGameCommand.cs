@@ -9,13 +9,15 @@ namespace Zetria
     {
         protected override void OnExecute()
         {
-            Debug.Log("开始新游戏");
-            var UIManager = Manager.GetManager<IUIManager>();
+            var uiManager = Manager.GetManager<IUIManager>();
+            var sceneLoader = Manager.GetManager<ISceneLoader>();
+            var audioManager = Manager.GetManager<IAudioManager>();
 
-            UIManager.HidePanel<MainUIPanel>();
-            Manager.GetManager<ISceneLoader>().LoadSceneAsync("FrameWorkTestScene", () =>
+            uiManager.HidePanel<MainUIPanel>();
+            sceneLoader.LoadSceneAsync("FrameWorkTestScene", () =>
             {
-                UIManager.ShowPanel<GameUIPanel>();
+                uiManager.ShowPanel<GameUIPanel>();
+                audioManager.AudioPlay(FrameCore.E_AudioType.BGM, "bgm_02", true);
             });
 
             //清除场景信息

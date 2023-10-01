@@ -399,14 +399,8 @@ namespace Zetria
             var panel = Manager.GetManager<IUIManager>().GetExistPanel<GameUIPanel>();
             panel?.UpdatePistolAmmoText(_AmmoModel.PistlAmmoInfo.currentCount, _AmmoModel.PistlAmmoInfo.maxCount);
 
-            var bullet = _ObjectPoolManager.GetObject("PistolBullet");
-
-            SetBulletPos(
-                bullet,
-                _playerSettingInfo.offsetInfo.pistolBulletLeftOffset,
-                _playerSettingInfo.offsetInfo.pistolBulletRightOffset,
-                _playerSettingInfo.offsetInfo.crouchOffset
-            );
+            var bullet = _ObjectPoolManager.GetObject("PistolBullet").GetComponent<PlayerBullet>();
+            bullet.SetBulletTransform(_IsRight, _IsCrouch, this.transform);
         }
 
         private void OnShortGunAttackAction()
@@ -414,32 +408,40 @@ namespace Zetria
             _AudioManager.AudioPlay(FrameCore.E_AudioType.Effect, "shotgun_fire");
             _AmmoModel.ShortGunAmmoInfo.currentCount--;
 
-            GameObject bulletUpward = _ObjectPoolManager.GetObject("ShortGunBullet");
-            GameObject bulletStraight = _ObjectPoolManager.GetObject("ShortGunBullet");
-            GameObject bulletDownward = _ObjectPoolManager.GetObject("ShortGunBullet");
+            GameObject[] bulletObjs = _ObjectPoolManager.GetObjects("ShortGunBullet", 3);
+            foreach (var obj in bulletObjs)
+            {
+                obj.GetComponent<PlayerBullet>().SetBulletTransform(_IsRight, _IsCrouch, this.transform);
+            }
+
+            // var bulletUpward = _ObjectPoolManager.GetObject("ShortGunBullet").GetComponent<PlayerBullet>();
+            // var bulletStraight = _ObjectPoolManager.GetObject("ShortGunBullet").GetComponent<PlayerBullet>();
+            // var bulletDownward = _ObjectPoolManager.GetObject("ShortGunBullet").GetComponent<PlayerBullet>();
 
             // bulletUpward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Upward;
             // bulletStraight.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Straight;
             // bulletDownward.GetComponent<ShotGunBullet>().moveType = E_BulletMoveType.Downward;
 
-            SetBulletPos(
-                bulletUpward,
-                _playerSettingInfo.offsetInfo.shortGunBulletLeftOffset,
-                _playerSettingInfo.offsetInfo.shortGunBulletRightOffset,
-                _playerSettingInfo.offsetInfo.bulletOffsetWithCrouch
-            );
-            SetBulletPos(
-                bulletStraight,
-                _playerSettingInfo.offsetInfo.shortGunBulletLeftOffset,
-                _playerSettingInfo.offsetInfo.shortGunBulletRightOffset,
-                _playerSettingInfo.offsetInfo.bulletOffsetWithCrouch
-            );
-            SetBulletPos(
-                bulletDownward,
-                _playerSettingInfo.offsetInfo.shortGunBulletLeftOffset,
-                _playerSettingInfo.offsetInfo.shortGunBulletRightOffset,
-                _playerSettingInfo.offsetInfo.bulletOffsetWithCrouch
-            );
+            // SetBulletPos(
+            //     bulletUpward,
+            //     _playerSettingInfo.offsetInfo.shortGunBulletLeftOffset,
+            //     _playerSettingInfo.offsetInfo.shortGunBulletRightOffset,
+            //     _playerSettingInfo.offsetInfo.bulletOffsetWithCrouch
+            // );
+            // SetBulletPos(
+            //     bulletStraight,
+            //     _playerSettingInfo.offsetInfo.shortGunBulletLeftOffset,
+            //     _playerSettingInfo.offsetInfo.shortGunBulletRightOffset,
+            //     _playerSettingInfo.offsetInfo.bulletOffsetWithCrouch
+            // );
+            // SetBulletPos(
+            //     bulletDownward,
+            //     _playerSettingInfo.offsetInfo.shortGunBulletLeftOffset,
+            //     _playerSettingInfo.offsetInfo.shortGunBulletRightOffset,
+            //     _playerSettingInfo.offsetInfo.bulletOffsetWithCrouch
+            // );
+
+
         }
 
         private void OnEmptyAttackAction()
@@ -449,23 +451,7 @@ namespace Zetria
 
         private void OnReloadAction()
         {
-            var model = GameStructure.GetModel<IAmmoModel>();
-            var panel = Manager.GetManager<IUIManager>().GetExistPanel<GameUIPanel>();
-
-            switch (_playerDynamicInfo.status)
-            {
-                case E_PlayerStatus.NPC:
-                case E_PlayerStatus.Pistol:
-                    _AudioManager.AudioPlay(FrameCore.E_AudioType.Effect, "pistol_reload");
-                    model.ReloadPistolAmmo();
-                    panel?.UpdatePistolAmmoText(model.PistlAmmoInfo.currentCount, model.PistlAmmoInfo.maxCount);
-                    break;
-                case E_PlayerStatus.ShortGun:
-                    _AudioManager.AudioPlay(FrameCore.E_AudioType.Effect, "shotgun_reload");
-                    model.ReloadShotGunAmmo();
-                    panel?.UpdateShortGunAmmoText(model.ShortGunAmmoInfo.currentCount, model.ShortGunAmmoInfo.maxCount);
-                    break;
-            }
+            GameStructure.SendCommand(new PlayerReloadCommand(_playerDynamicInfo.status));
         }
 
         private void OnDamageAction()

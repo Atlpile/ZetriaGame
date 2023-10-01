@@ -8,7 +8,6 @@ namespace Zetria
     public interface IPlayerModel : IModel
     {
         bool IsInLevel { get; set; }
-
         float CurrentHealth { get; set; }
         float MaxHealth { get; set; }
     }

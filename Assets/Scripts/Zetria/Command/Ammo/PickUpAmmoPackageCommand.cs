@@ -30,7 +30,7 @@ namespace Zetria
                     break;
                 case E_AmmoType.ShotGun:
                     model.ShortGunAmmoInfo.maxCount += model.ShortGunAmmoInfo.packageCount;
-                    panel?.UpdatePistolAmmoText(
+                    panel?.UpdateShortGunAmmoText(
                         model.ShortGunAmmoInfo.currentCount,
                         model.ShortGunAmmoInfo.maxCount
                     );

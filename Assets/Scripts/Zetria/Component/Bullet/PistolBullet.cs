@@ -5,18 +5,31 @@ using FrameCore;
 
 namespace Zetria
 {
-    public class PistolBullet : BaseBullet
+    public class PistolBullet : PlayerBullet
     {
-        public override void OnInit()
-        {
-            base.OnInit();
-            rb2d.bodyType = RigidbodyType2D.Kinematic;
-            rb2d.freezeRotation = true;
-        }
-
         private void FixedUpdate()
         {
             Move();
+        }
+
+        public override void SetBulletTransform(bool isRight, bool isCrouch, Transform playerTransform)
+        {
+            base.SetBulletTransform(isRight, isCrouch, playerTransform);
+
+            if (isRight)
+            {
+                if (isCrouch)
+                    this.transform.position = playerTransform.position + info.pistolBulletRightOffset + info.bulletOffsetWithCrouch;
+                else
+                    this.transform.position = playerTransform.position + info.pistolBulletRightOffset;
+            }
+            else
+            {
+                if (isCrouch)
+                    this.transform.position = playerTransform.position + info.pistolBulletLeftOffset + info.bulletOffsetWithCrouch;
+                else
+                    this.transform.position = playerTransform.position + info.pistolBulletLeftOffset;
+            }
         }
 
         private void Move()

@@ -38,6 +38,7 @@ namespace Zetria
                 case nameof(btnRestartLevel):
                     break;
                 case nameof(btnOptions):
+                    Manager.GetManager<IUIManager>().ShowPanel<SettingUIPanel>();
                     break;
                 case nameof(btnTitleScreen):
                     break;

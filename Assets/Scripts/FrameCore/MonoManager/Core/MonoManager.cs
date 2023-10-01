@@ -12,10 +12,9 @@ namespace FrameCore
         private static MonoManager s_instance;
         public static MonoManager Instance => s_instance;
 
+        // [SerializeField] private BaseGameEntry gameEntry;
         public Action OnInitManagerAction { get; set; }
         private HashSet<IManager> _ManagerContainer = new HashSet<IManager>();
-
-        public bool allowRegisteredObjectPool;
 
         private void Awake()
         {
@@ -39,6 +38,8 @@ namespace FrameCore
             }
 
             OnInitManagerAction?.Invoke();
+
+            // gameEntry.Execute();
         }
 
 

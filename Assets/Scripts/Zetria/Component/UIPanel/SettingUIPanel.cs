@@ -16,6 +16,8 @@ namespace Zetria
         private Toggle toggle_Bloom;
         private Button button_Close;
 
+
+
         protected override void OnGetUIComponent()
         {
             GetChildAllUIComponent<Slider>();
@@ -33,7 +35,7 @@ namespace Zetria
         {
             switch (buttonName)
             {
-                case "button_Close":
+                case nameof(button_Close):
                     Manager.GetManager<IUIManager>().HidePanel<SettingUIPanel>();
                     break;
             }
@@ -53,13 +55,16 @@ namespace Zetria
 
         protected override void OnValueChanged(string sliderName, float value)
         {
+            var AudioManager = Manager.GetManager<IAudioManager>();
             switch (sliderName)
             {
-                case "slider_BGM":
-                    GameManager.Instance.AudioManager.SetVolume(E_AudioType.BGM, value);
+                case nameof(slider_BGM):
+                    AudioManager.SetAudioGroupVolume(E_VolumeType.BGMVolume, value);
+                    // GameManager.Instance.AudioManager.SetVolume(E_AudioType.BGM, value);
                     break;
-                case "slider_Effect":
-                    GameManager.Instance.AudioManager.SetVolume(E_AudioType.Effect, value);
+                case nameof(slider_Effect):
+                    AudioManager.SetAudioGroupVolume(E_VolumeType.EffectVolume, value);
+                    // GameManager.Instance.AudioManager.SetVolume(E_AudioType.Effect, value);
                     break;
             }
         }

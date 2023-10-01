@@ -1,6 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
+
+
 
 namespace FrameCore
 {
@@ -10,14 +15,12 @@ namespace FrameCore
         private Dictionary<string, ObjectPoolStack> _ObjectPoolContainer = new();
         private Queue<IPoolObject> _PopContainer = new();
 
-
+        public event Action OnUpdateObjectEvent;
         public IResourcesManager ResourcesManager => Manager.GetManager<IResourcesManager>();
-        public bool AllowRegisteredObjectPool { get; set; }
-
 
         public ObjectPoolManager(MonoManager manager) : base(manager)
         {
-            AllowRegisteredObjectPool = manager.allowRegisteredObjectPool;
+
         }
 
         protected override void OnInit()
@@ -25,9 +28,6 @@ namespace FrameCore
             _poolRoot = new GameObject("PoolRoot");
             GameObject.DontDestroyOnLoad(_poolRoot);
             _poolRoot.transform.SetParent(Manager.transform);
-
-            if (AllowRegisteredObjectPool)
-                new ObjectPoolRegister(this);
         }
 
         /// <summary>
@@ -47,6 +47,8 @@ namespace FrameCore
                     _ObjectPoolContainer.Add(obj.name, new ObjectPoolStack(obj, _poolRoot, count));
                 else
                     _ObjectPoolContainer.Add(obj.name, new ObjectPoolStack(obj, _poolRoot));
+
+                OnUpdateObjectEvent?.Invoke();
             }
         }
 
@@ -64,6 +66,26 @@ namespace FrameCore
                 // _PopContainer.Enqueue(popObj.GetComponent<IPoolObject>());
                 popObj.transform.SetParent(parent);
                 return popObj;
+            }
+            else
+            {
+                Debug.LogError("ObjectPoolManager: 对象池中不存在" + name + "的对象,请检查对象池是否添加该对象");
+                return null;
+            }
+        }
+
+        public GameObject[] GetObjects(string name, int count, Transform parent = null)
+        {
+            if (_ObjectPoolContainer.ContainsKey(name))
+            {
+                GameObject[] popObjs = _ObjectPoolContainer[name].PopObjs(count);
+                // _PopContainer.Enqueue(popObj.GetComponent<IPoolObject>());
+
+                foreach (var obj in popObjs)
+                {
+                    obj.transform.SetParent(parent);
+                }
+                return popObjs;
             }
             else
             {
@@ -114,6 +136,8 @@ namespace FrameCore
                     Debug.LogWarning("PoolRoot中未找到" + name + "_Pool, 请检查输入的名称是否正确");
                 }
             }
+
+            OnUpdateObjectEvent?.Invoke();
         }
 
         /// <summary>
@@ -152,6 +176,8 @@ namespace FrameCore
                 }
             }
 
+            OnUpdateObjectEvent?.Invoke();
+
             foreach (var subRoot in subRootContainer)
             {
                 GameObject.Destroy(subRoot);
@@ -177,6 +203,15 @@ namespace FrameCore
             }
         }
 
+        public List<GameObject> GetAllPoolStackObject()
+        {
+            List<GameObject> stackObjList = new();
+            foreach (var stack in _ObjectPoolContainer.Values)
+            {
+                stackObjList.Add(stack.SubObj);
+            }
+            return stackObjList;
+        }
     }
 }
 
