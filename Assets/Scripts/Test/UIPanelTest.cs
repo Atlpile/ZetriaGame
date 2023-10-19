@@ -36,6 +36,21 @@ namespace Zetria
                 // Manager.GetManager<IUIManager>().HidePanel<WarnQuitUIPanel>();
                 // Manager.GetManager<IUIManager>().HidePanel<WarnRestartUIPanel>();
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+
+            }
+        }
+
+        private void OnDeadEvent(PlayerDeadEvent e)
+        {
+            Debug.Log("触发Player死亡事件");
+            Debug.Log("Int信息" + e.testEventInt);
+            Debug.Log("String信息" + e.testEventString);
         }
     }
 }

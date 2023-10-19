@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FrameCore
 {
-    public class InputManager : BaseManager, IInputManager
+    public sealed class InputManager : BaseManager, IInputManager
     {
         public bool CanInput { get; set; }
         private Dictionary<E_InputTypes, KeyCode> _DefaultInputKeyContainer;

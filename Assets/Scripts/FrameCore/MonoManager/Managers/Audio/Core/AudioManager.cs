@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 
 namespace FrameCore
 {
-    public class AudioManager : BaseManager, IAudioManager
+    public sealed class AudioManager : BaseManager, IAudioManager
     {
         private Dictionary<E_VolumeType, string> _ExposedParamterDic;
         private Dictionary<E_AudioMixerGroupType, AudioMixerGroup> _GroupContainer = new();

@@ -7,32 +7,15 @@ namespace Zetria
 {
     public class PistolBullet : PlayerBullet
     {
-        private void FixedUpdate()
+        public override void OnInit()
         {
-            Move();
+            base.OnInit();
+
+            bulletLeftOffset = new Vector2(-1f, 1.15f);
+            bulletRightOffset = new Vector2(1f, 1.15f);
         }
 
-        public override void SetBulletTransform(bool isRight, bool isCrouch, Transform playerTransform)
-        {
-            base.SetBulletTransform(isRight, isCrouch, playerTransform);
-
-            if (isRight)
-            {
-                if (isCrouch)
-                    this.transform.position = playerTransform.position + info.pistolBulletRightOffset + info.bulletOffsetWithCrouch;
-                else
-                    this.transform.position = playerTransform.position + info.pistolBulletRightOffset;
-            }
-            else
-            {
-                if (isCrouch)
-                    this.transform.position = playerTransform.position + info.pistolBulletLeftOffset + info.bulletOffsetWithCrouch;
-                else
-                    this.transform.position = playerTransform.position + info.pistolBulletLeftOffset;
-            }
-        }
-
-        private void Move()
+        protected override void Move()
         {
             transform.Translate(currentMoveSpeed * Time.deltaTime * Vector2.right);
         }

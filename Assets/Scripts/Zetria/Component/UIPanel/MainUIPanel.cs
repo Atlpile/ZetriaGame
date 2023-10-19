@@ -15,6 +15,18 @@ namespace Zetria
         private Button btnOptions;
         private Button btnExit;
 
+        private ICommand[] commands;
+
+        public override void OnInit()
+        {
+            commands = new ICommand[]
+            {
+                new NewGameCommand(),
+                new ContinueGameCommand(),
+                new OpenSettingPanelCommand()
+            };
+        }
+
         protected override void OnGetUIComponent()
         {
             GetChildAllUIComponent<Button>();
@@ -30,13 +42,13 @@ namespace Zetria
             switch (buttonName)
             {
                 case nameof(btnNewGame):
-                    GameStructure.SendCommand(new NewGameCommand());
+                    GameStructure.SendCommand(commands[0]);
                     break;
                 case nameof(btnContinue):
-                    GameStructure.SendCommand(new ContinueGameCommand());
+                    GameStructure.SendCommand(commands[1]);
                     break;
                 case nameof(btnOptions):
-                    GameStructure.SendCommand(new OpenSettingPanelCommand());
+                    GameStructure.SendCommand(commands[2]);
                     break;
                 case nameof(btnExit):
 

@@ -11,15 +11,14 @@ namespace FrameCore
             3.是否启用注册注销功能
     */
 
-    public class UIManager : BaseManager, IUIManager
+    public sealed class UIManager : BaseManager, IUIManager
     {
         private readonly Dictionary<string, IPanel> _PanelContainer = new();
         private readonly Stack<IPanel> _PanelStack = new();
         private RectTransform _canvasRect;
 
-        public IResourcesManager ResourcesManager => Manager.GetManager<IResourcesManager>();
-
-        public IObjectPoolManager ObjectPoolManager => Manager.GetManager<IObjectPoolManager>();
+        public IResourcesManager ResourcesManager { get; private set; }
+        public IObjectPoolManager ObjectPoolManager { get; private set; }
 
 
         public UIManager(MonoManager manager) : base(manager)
@@ -29,6 +28,9 @@ namespace FrameCore
 
         protected override void OnInit()
         {
+            ResourcesManager = Manager.GetManager<IResourcesManager>();
+            ObjectPoolManager = Manager.GetManager<IObjectPoolManager>();
+
             Transform canvas = Manager.transform.Find("Canvas");
             _canvasRect = canvas.transform as RectTransform;
         }

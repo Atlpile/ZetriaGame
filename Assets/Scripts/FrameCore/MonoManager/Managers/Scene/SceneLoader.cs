@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace FrameCore
 {
-    public class SceneLoader : BaseManager, ISceneLoader
+    public sealed class SceneLoader : BaseManager, ISceneLoader
     {
         private bool _isLoading;
 

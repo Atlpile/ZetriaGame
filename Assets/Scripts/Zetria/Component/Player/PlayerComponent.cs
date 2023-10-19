@@ -392,27 +392,12 @@ namespace Zetria
 
         private void OnPistolAttackAction()
         {
-            _AudioManager.AudioPlay(FrameCore.E_AudioType.Effect, "pistol_fire");
-
-            _AmmoModel.PistlAmmoInfo.currentCount--;
-
-            var panel = Manager.GetManager<IUIManager>().GetExistPanel<GameUIPanel>();
-            panel?.UpdatePistolAmmoText(_AmmoModel.PistlAmmoInfo.currentCount, _AmmoModel.PistlAmmoInfo.maxCount);
-
-            var bullet = _ObjectPoolManager.GetObject("PistolBullet").GetComponent<PlayerBullet>();
-            bullet.SetBulletTransform(_IsRight, _IsCrouch, this.transform);
+            GameStructure.SendCommand(new PlayerPistolAttackCommand(_IsRight, _IsCrouch, this.transform));
         }
 
         private void OnShortGunAttackAction()
         {
-            _AudioManager.AudioPlay(FrameCore.E_AudioType.Effect, "shotgun_fire");
-            _AmmoModel.ShortGunAmmoInfo.currentCount--;
-
-            GameObject[] bulletObjs = _ObjectPoolManager.GetObjects("ShortGunBullet", 3);
-            foreach (var obj in bulletObjs)
-            {
-                obj.GetComponent<PlayerBullet>().SetBulletTransform(_IsRight, _IsCrouch, this.transform);
-            }
+            GameStructure.SendCommand(new PlayerShortGunAttackCommand(_IsRight, _IsCrouch, this.transform));
 
             // var bulletUpward = _ObjectPoolManager.GetObject("ShortGunBullet").GetComponent<PlayerBullet>();
             // var bulletStraight = _ObjectPoolManager.GetObject("ShortGunBullet").GetComponent<PlayerBullet>();

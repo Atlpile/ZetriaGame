@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace FrameCore
 {
-    public class ObjectPoolManager : BaseManager, IObjectPoolManager
+    public sealed class ObjectPoolManager : BaseManager, IObjectPoolManager
     {
         private GameObject _poolRoot;
         private Dictionary<string, ObjectPoolStack> _ObjectPoolContainer = new();

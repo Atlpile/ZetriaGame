@@ -45,10 +45,10 @@ namespace Zetria
         {
             switch (toggleName)
             {
-                case "toggle_FullScreen":
+                case nameof(toggle_FullScreen):
                     Screen.fullScreen = value;
                     break;
-                case "toggle_Bloom":
+                case nameof(toggle_Bloom):
                     break;
             }
         }

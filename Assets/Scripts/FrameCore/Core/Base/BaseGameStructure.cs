@@ -26,13 +26,17 @@ namespace FrameCore
         private bool _isInited = false;
         private ModelContainer _modelContainer;
         private SystemContainer _systemContainer;
-        private UtilityContainer _utilityContainer = new UtilityContainer();
-        private EventContainer _eventContainer = new EventContainer();
+        private UtilityContainer _utilityContainer;
+        private CommandContainer _commandContainer;
+        private EventContainer _eventContainer;
 
         public BaseGameStructure()
         {
             _modelContainer = new ModelContainer(this);
             _systemContainer = new SystemContainer(this);
+            _utilityContainer = new UtilityContainer();
+            _commandContainer = new CommandContainer(this);
+            _eventContainer = new EventContainer();
         }
 
         private static void InitModule()
@@ -75,14 +79,10 @@ namespace FrameCore
             return _utilityContainer.GetUtility<TUtility>();
         }
 
+        //TODO:发送Command时，不new对象，减少GC
         public void SendCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
             ExecuteCommand(command);
-        }
-
-        public void SendCommand<TCommand>() where TCommand : ICommand, new()
-        {
-            ExecuteCommand(new TCommand());
         }
 
         protected virtual void ExecuteCommand(ICommand command)
@@ -91,12 +91,12 @@ namespace FrameCore
             command.Execute();
         }
 
-        public void AddGameEvent<TStruct>(Action<TStruct> EventMethod) where TStruct : struct
+        public void AddGameEventListener<TStruct>(Action<TStruct> EventMethod) where TStruct : struct
         {
             _eventContainer.AddEventListener<TStruct>(EventMethod as Action<TStruct>);
         }
 
-        public void RemoveGameEvent<TStruct>(Action<TStruct> EventMethod) where TStruct : struct
+        public void RemoveGameEventListener<TStruct>(Action<TStruct> EventMethod) where TStruct : struct
         {
             _eventContainer.RemoveReventListener<TStruct>(EventMethod as Action<TStruct>);
         }

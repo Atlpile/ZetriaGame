@@ -7,7 +7,7 @@ namespace FrameCore
 {
     //ATTENTION：该脚本对象修改了初始执行时间，会早于其它的Awake
 
-    public class MonoManager : MonoBehaviour, IMonoManager
+    public sealed class MonoManager : MonoBehaviour, IMonoManager
     {
         private static MonoManager s_instance;
         public static MonoManager Instance => s_instance;

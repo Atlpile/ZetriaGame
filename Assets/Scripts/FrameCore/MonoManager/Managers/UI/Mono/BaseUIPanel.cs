@@ -83,17 +83,17 @@ namespace FrameCore
             }
         }
 
-        public void OnInit()
+        public virtual void OnInit()
         {
 
         }
 
-        public void OnCreate()
+        public virtual void OnCreate()
         {
 
         }
 
-        public void OnRelease()
+        public virtual void OnRelease()
         {
 
         }

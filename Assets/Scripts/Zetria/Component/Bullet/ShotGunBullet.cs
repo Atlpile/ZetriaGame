@@ -13,37 +13,12 @@ namespace Zetria
         public override void OnInit()
         {
             base.OnInit();
-            rb2d.bodyType = RigidbodyType2D.Kinematic;
-            rb2d.freezeRotation = true;
+
+            bulletLeftOffset = new Vector2(-0.5f, 0.75f);
+            bulletRightOffset = new Vector2(0.5f, 0.75f);
         }
 
-        private void FixedUpdate()
-        {
-            Move();
-        }
-
-        public override void SetBulletTransform(bool isRight, bool isCrouch, Transform playerTransform)
-        {
-            base.SetBulletTransform(isRight, isCrouch, playerTransform);
-
-            if (isRight)
-            {
-                if (isCrouch)
-                    this.transform.position = playerTransform.position + info.shortGunBulletRightOffset + info.bulletOffsetWithCrouch;
-                else
-                    this.transform.position = playerTransform.position + info.shortGunBulletRightOffset;
-            }
-            else
-            {
-                if (isCrouch)
-                    this.transform.position = playerTransform.position + info.shortGunBulletLeftOffset + info.bulletOffsetWithCrouch;
-                else
-                    this.transform.position = playerTransform.position + info.shortGunBulletLeftOffset;
-            }
-        }
-
-
-        private void Move()
+        protected override void Move()
         {
             switch (moveType)
             {

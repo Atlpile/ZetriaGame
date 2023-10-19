@@ -17,8 +17,8 @@ namespace FrameCore
 
         void SendCommand<TCommand>(TCommand command) where TCommand : ICommand;
 
-        void AddGameEvent<TStruct>(Action<TStruct> EventMethod) where TStruct : struct;
-        void RemoveGameEvent<TStruct>(Action<TStruct> EventMethod) where TStruct : struct;
+        void AddGameEventListener<TStruct>(Action<TStruct> EventMethod) where TStruct : struct;
+        void RemoveGameEventListener<TStruct>(Action<TStruct> EventMethod) where TStruct : struct;
         void TriggerGameEvent<TStruct>(TStruct structInfo) where TStruct : struct;
     }
 }

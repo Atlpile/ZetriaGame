@@ -8,16 +8,27 @@ namespace Zetria
 {
     public class PlayerShortGunAttackCommand : BaseCommand
     {
-        private Action<GameObject> OnSetBulletPosition;
+        private bool isCrouch;
+        private bool isRight;
+        private Transform playerTransform;
 
-        public PlayerShortGunAttackCommand(Action<GameObject> OnSetBulletPosition)
+        public PlayerShortGunAttackCommand(bool isRight, bool isCrouch, Transform playerTransform)
         {
-            this.OnSetBulletPosition = OnSetBulletPosition;
+            this.isCrouch = isCrouch;
+            this.isRight = isRight;
+            this.playerTransform = playerTransform;
         }
 
         protected override void OnExecute()
         {
+            Manager.GetManager<IAudioManager>().AudioPlay(FrameCore.E_AudioType.Effect, "shotgun_fire");
+            GameStructure.GetModel<IAmmoModel>().ShortGunAmmoInfo.currentCount--;
 
+            GameObject[] bulletObjs = Manager.GetManager<IObjectPoolManager>().GetObjects("ShortGunBullet", 3);
+            foreach (var obj in bulletObjs)
+            {
+                obj.GetComponent<PlayerBullet>().SetBulletTransform(isRight, isCrouch, playerTransform);
+            }
         }
     }
 }

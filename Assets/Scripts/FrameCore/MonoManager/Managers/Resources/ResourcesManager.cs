@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FrameCore
 {
-    public class ResourcesManager : BaseManager, IResourcesManager
+    public sealed class ResourcesManager : BaseManager, IResourcesManager
     {
         private Dictionary<E_ResourcesPath, string> _ResourcePathDic;
 
